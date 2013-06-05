@@ -1,0 +1,14 @@
+set schedule-multiple
+
+dir ~/gcc_build/4.8.0/build/gcc
+dir ~/gcc_build/4.8.0/gcc
+dir ~/gcc_build/4.8.0/gcc/cp
+dir ~/gcc_build/4.8.0/gcc/lto
+source ~/gcc_build/4.8.0/build/gcc/gdbinit.in
+
+python
+import sys
+sys.path.insert(0, '/home/steve/gdb_printers/python')
+from libstdcxx.v6.printers import register_libstdcxx_printers
+register_libstdcxx_printers (None)
+end
