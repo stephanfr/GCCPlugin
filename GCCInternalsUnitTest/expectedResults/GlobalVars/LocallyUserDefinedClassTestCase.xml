@@ -1,0 +1,58 @@
+<dictionary_entry>
+    <name>globalClassWithoutStaticKeyword</name>
+    <uid>2238</uid>
+    <namespace>TestNamespace::</namespace>
+    <static>true</static>
+    <source-info>
+        <file>../testCaseSourceCode/GlobalVars/LocallyUserDefinedClassTestCase.cpp</file>
+        <line>44</line>
+        <char-count>1</char-count>
+        <location>5554</location>
+    </source-info>
+</dictionary_entry>
+<dictionary_entry>
+    <name>globalClass</name>
+    <uid>2228</uid>
+    <namespace>TestNamespace::</namespace>
+    <static>true</static>
+    <source-info>
+        <file>../testCaseSourceCode/GlobalVars/LocallyUserDefinedClassTestCase.cpp</file>
+        <line>42</line>
+        <char-count>1</char-count>
+        <location>5303</location>
+    </source-info>
+</dictionary_entry>
+<global_var>
+    <name>globalClassWithoutStaticKeyword</name>
+    <uid>2238</uid>
+    <source-info>
+        <file>../testCaseSourceCode/GlobalVars/LocallyUserDefinedClassTestCase.cpp</file>
+        <line>44</line>
+        <char-count>1</char-count>
+        <location>5554</location>
+    </source-info>
+    <namespace>TestNamespace::</namespace>
+    <static>true</static>
+    <type>
+        <kind>userDefined</kind>
+        <declaration>LocalClass</declaration>
+        <namespace>LocalNamespace::</namespace>
+    </type>
+</global_var>
+<global_var>
+    <name>globalClass</name>
+    <uid>2228</uid>
+    <source-info>
+        <file>../testCaseSourceCode/GlobalVars/LocallyUserDefinedClassTestCase.cpp</file>
+        <line>42</line>
+        <char-count>1</char-count>
+        <location>5303</location>
+    </source-info>
+    <namespace>TestNamespace::</namespace>
+    <static>true</static>
+    <type>
+        <kind>userDefined</kind>
+        <declaration>LocalClass</declaration>
+        <namespace>LocalNamespace::</namespace>
+    </type>
+</global_var>

@@ -1,0 +1,56 @@
+<dictionary_entry>
+    <name>globaldoubleWithoutStaticKeyword</name>
+    <uid>2196</uid>
+    <namespace>TestNamespace::</namespace>
+    <static>true</static>
+    <source-info>
+        <file>../testCaseSourceCode/GlobalVars/IntrinsicTestCase.cpp</file>
+        <line>19</line>
+        <char-count>1</char-count>
+        <location>2333</location>
+    </source-info>
+</dictionary_entry>
+<dictionary_entry>
+    <name>globalInt</name>
+    <uid>2195</uid>
+    <namespace>TestNamespace::</namespace>
+    <static>true</static>
+    <source-info>
+        <file>../testCaseSourceCode/GlobalVars/IntrinsicTestCase.cpp</file>
+        <line>17</line>
+        <char-count>1</char-count>
+        <location>2080</location>
+    </source-info>
+</dictionary_entry>
+<global_var>
+    <name>globaldoubleWithoutStaticKeyword</name>
+    <uid>2196</uid>
+    <source-info>
+        <file>../testCaseSourceCode/GlobalVars/IntrinsicTestCase.cpp</file>
+        <line>19</line>
+        <char-count>1</char-count>
+        <location>2333</location>
+    </source-info>
+    <namespace>TestNamespace::</namespace>
+    <static>true</static>
+    <type>
+        <kind>fundamental</kind>
+        <declaration>double</declaration>
+    </type>
+</global_var>
+<global_var>
+    <name>globalInt</name>
+    <uid>2195</uid>
+    <source-info>
+        <file>../testCaseSourceCode/GlobalVars/IntrinsicTestCase.cpp</file>
+        <line>17</line>
+        <char-count>1</char-count>
+        <location>2080</location>
+    </source-info>
+    <namespace>TestNamespace::</namespace>
+    <static>true</static>
+    <type>
+        <kind>fundamental</kind>
+        <declaration>int</declaration>
+    </type>
+</global_var>
