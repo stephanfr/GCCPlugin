@@ -66,13 +66,13 @@ namespace GCCInternalsTools
 			return( TypeTree( TREE_TYPE( m_tree ) ) );
 		}
 
-		const CPPModel::UID				UID() const
+		const CPPModel::UID								uid() const
 		{
 			return( CPPModel::UID( DECL_UID( m_tree ), CPPModel::UID::UIDType::DECLARATION ) );
 		}
 
 
-		CPPModel::AccessSpecifier		AccessSpecifier() const
+		CPPModel::AccessSpecifier						accessSpecifier() const
 		{
 			//	We only have tests for PRIVATE or PROTECTED, so if it is not either of those access types then it is PUBLIC
 
@@ -89,13 +89,13 @@ namespace GCCInternalsTools
 		}
 
 
-		const CPPModel::SourceLocation					SourceLocation() const
+		const CPPModel::SourceLocation					sourceLocation() const
 		{
 			return( CPPModel::SourceLocation( DECL_SOURCE_FILE ( m_tree ), DECL_SOURCE_LINE ( m_tree ),  1, DECL_SOURCE_LOCATION( m_tree ) ) );
 		}
 
 
-		const std::string								Namespace() const;
+		const std::string								enclosingNamespace() const;
 
 
 		CPPModel::TypeInfo::Specifier					typeSpecifier() const

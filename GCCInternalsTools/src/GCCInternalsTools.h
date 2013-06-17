@@ -82,7 +82,7 @@ namespace GCCInternalsTools
 			 	 	   	     	  CPPModel::ConstListPtr<CPPModel::Attribute>	attributes,
 			 	 	   	     	  CPPModel::TypeInfo::Specifier					typeSpec,
 			 	 	   	     	  const tree&									treeNode )
-				: CPPModel::DictionaryUnionEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, sourceLocation, attributes, typeSpec ),
+				: CPPModel::DictionaryUnionEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, false, sourceLocation, attributes, typeSpec ),
 				  DictionaryTreeMixin( treeNode )
 			{}
 
@@ -107,7 +107,7 @@ namespace GCCInternalsTools
 			 	 	   	     	     CPPModel::TypeInfo::Specifier					returnTypeSpec,
 			 	 	   	     	     const bool										hiddenFriend,
 			 	 	   	     	     const tree&									treeNode )
-				: CPPModel::DictionaryFunctionEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, sourceLocation, attributes, returnTypeSpec, hiddenFriend ),
+				: CPPModel::DictionaryFunctionEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, false, sourceLocation, attributes, returnTypeSpec, hiddenFriend ),
 				  DictionaryTreeMixin( treeNode )
 			{}
 
@@ -126,11 +126,12 @@ namespace GCCInternalsTools
 			 	 	   	     	      const CPPModel::UID&							uid,
 			 	 	   	     	      const std::string&							name,
 			 	 	   	     	      const std::string&							enclosingNamespace,
+			 	 	   	     	      bool											isStatic,
 			 	 	   	     	      const CPPModel::SourceLocation&				sourceLocation,
 			 	 	   	     	      CPPModel::ConstListPtr<CPPModel::Attribute>	attributes,
 			 	 	   	     	      CPPModel::TypeInfo::Specifier					typeSpec,
 			 	 	   	     	      const tree&									treeNode )
-				: CPPModel::DictionaryGlobalVarEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, sourceLocation, attributes, typeSpec ),
+				: CPPModel::DictionaryGlobalVarEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, attributes, typeSpec ),
 				  DictionaryTreeMixin( treeNode )
 			{}
 

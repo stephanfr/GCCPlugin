@@ -218,7 +218,7 @@ namespace GCCInternalsTools
 
 				const std::string 	baseClassName = DeclTree( TYPE_NAME( TYPE_MAIN_VARIANT( BINFO_TYPE( currentBaseClass )))).identifier();
 
-				std::string			baseNamespace = TypeTree( TYPE_MAIN_VARIANT( BINFO_TYPE( currentBaseClass )) ).Namespace();
+				std::string			baseNamespace = TypeTree( TYPE_MAIN_VARIANT( BINFO_TYPE( currentBaseClass )) ).enclosingNamespace();
 //	TODO lookup base class by GUID and add namespace
 				bool				isVirtual( BINFO_VIRTUAL_P( currentBaseClass ));
 
@@ -307,20 +307,20 @@ namespace GCCInternalsTools
 
 			//	Create the field based on the tree code
 
-			CPPModel::SourceLocation					sourceLocation = itrMember->SourceLocation();
+			CPPModel::SourceLocation					sourceLocation = itrMember->sourceLocation();
 
-			CPPModel::AccessSpecifier					accessSpec = itrMember->AccessSpecifier();
+			CPPModel::AccessSpecifier					accessSpec = itrMember->accessSpecifier();
 
 			switch( itrMember->treeCode() )
 			{
 				case FIELD_DECL:
 				{
-					memberList->push_back( new CPPModel::UnionMember( itrMember->identifier(), itrMember->UID(), itrMember->type( dictionary ), accessSpec, sourceLocation ) );
+					memberList->push_back( new CPPModel::UnionMember( itrMember->identifier(), itrMember->uid(), itrMember->type( dictionary ), accessSpec, sourceLocation ) );
 					break;
 				}
 				default:
 				{
-					memberList->push_back( new CPPModel::UnionMember( itrMember->identifier(), itrMember->UID(), itrMember->type( dictionary ), accessSpec, sourceLocation ) );
+					memberList->push_back( new CPPModel::UnionMember( itrMember->identifier(), itrMember->uid(), itrMember->type( dictionary ), accessSpec, sourceLocation ) );
 					break;
 				}
 			}
@@ -353,9 +353,9 @@ namespace GCCInternalsTools
 
 			bool												isStatic = !DECL_NONSTATIC_MEMBER_P( (const tree&)*itrField );
 
-			CPPModel::SourceLocation							sourceLocation( itrField->SourceLocation() );
+			CPPModel::SourceLocation							sourceLocation( itrField->sourceLocation() );
 
-			CPPModel::AccessSpecifier							accessSpec = itrField->AccessSpecifier();
+			CPPModel::AccessSpecifier							accessSpec = itrField->accessSpecifier();
 
 			CPPModel::ConstListPtr<CPPModel::Attribute>			attributes( GetAttributes( PurposeValueList( DECL_ATTRIBUTES( (const tree&)*itrField ) )));
 
@@ -367,7 +367,7 @@ namespace GCCInternalsTools
 
 					if( !DECL_SELF_REFERENCE_P( (const tree&)*itrField ))
 					{
-						fieldList->push_back( new CPPModel::FieldDeclaration( itrField->identifier(), itrField->UID(), sourceLocation, itrField->type( dictionaryEntry.Dictionary() ), isStatic, accessSpec, attributes ) );
+						fieldList->push_back( new CPPModel::FieldDeclaration( itrField->identifier(), itrField->uid(), sourceLocation, itrField->type( dictionaryEntry.Dictionary() ), isStatic, accessSpec, attributes ) );
 					}
 					break;
 				}
@@ -375,13 +375,13 @@ namespace GCCInternalsTools
 				{
 					if( !itrField->isArtificial() )
 					{
-						fieldList->push_back( new CPPModel::FieldDeclaration( itrField->identifier(), itrField->UID(), sourceLocation, itrField->type( dictionaryEntry.Dictionary() ), isStatic, accessSpec, attributes ) );
+						fieldList->push_back( new CPPModel::FieldDeclaration( itrField->identifier(), itrField->uid(), sourceLocation, itrField->type( dictionaryEntry.Dictionary() ), isStatic, accessSpec, attributes ) );
 					}
 					break;
 				}
 				default:
 				{
-					fieldList->push_back( new CPPModel::FieldDeclaration( itrField->identifier(), itrField->UID(), sourceLocation, itrField->type( dictionaryEntry.Dictionary() ), isStatic, accessSpec, attributes ) );
+					fieldList->push_back( new CPPModel::FieldDeclaration( itrField->identifier(), itrField->uid(), sourceLocation, itrField->type( dictionaryEntry.Dictionary() ), isStatic, accessSpec, attributes ) );
 					break;
 				}
 			}
@@ -434,7 +434,7 @@ namespace GCCInternalsTools
 			const std::string								methodName = itrMethod->identifier();
 			bool											isStatic = !DECL_NONSTATIC_MEMBER_P( (const tree&)*itrMethod );
 
-			CPPModel::AccessSpecifier						accessSpec = itrMethod->AccessSpecifier();
+			CPPModel::AccessSpecifier						accessSpec = itrMethod->accessSpecifier();
 
 			CPPModel::ConstListPtr<CPPModel::Attribute>		attributes( GetAttributes( PurposeValueList( DECL_ATTRIBUTES( (const tree&)*itrMethod ) )));
 
@@ -456,7 +456,7 @@ namespace GCCInternalsTools
 
 			//	Add the method to our list
 
-			methodList->push_back( new CPPModel::MethodDeclaration( methodName, itrMethod->UID(), itrMethod->SourceLocation(), isStatic, accessSpec, DeclOrTypeBaseTree::convert( TREE_TYPE( DECL_RESULT( (const tree&)*itrMethod ) ) )->type( dictionaryEntry.Dictionary() ), attributes, parameterList ) );
+			methodList->push_back( new CPPModel::MethodDeclaration( methodName, itrMethod->uid(), itrMethod->sourceLocation(), isStatic, accessSpec, DeclOrTypeBaseTree::convert( TREE_TYPE( DECL_RESULT( (const tree&)*itrMethod ) ) )->type( dictionaryEntry.Dictionary() ), attributes, parameterList ) );
 		}
 
 		//	Return the list of methods and we are done
@@ -549,6 +549,7 @@ namespace GCCInternalsTools
 															   uid(),
 															   enclosingNamespace(),
 															   sourceLocation(),
+															   isStatic(),
 															   CPPModel::Attributes::deepCopy( attributes() ),
 															   DeclOrTypeBaseTree::convert( TREE_TYPE( getTree() ))->type( Dictionary() ) ));
 
@@ -610,7 +611,7 @@ namespace GCCInternalsTools
 		}
 
 
-		const CPPModel::SourceLocation	sourceLocation = DeclTree( classTree ).SourceLocation();
+		const CPPModel::SourceLocation	sourceLocation = DeclTree( classTree ).sourceLocation();
 		const TypeTree					typeDeclared = TypeTree( TREE_TYPE( classTree ));
 
 		const TypeTree					mainTypeDecl = TypeTree( TYPE_MAIN_VARIANT( (const tree&)typeDeclared ));
@@ -628,12 +629,12 @@ namespace GCCInternalsTools
 
 		if( CPPModel::CPPTypes[(int)typeSpec].classification == CPPModel::TypeInfo::Classification::CLASS )
 		{
-			if( dictionary.UIDIdx().find( typeDeclared.UID() ) == dictionary.UIDIdx().end() )
+			if( dictionary.UIDIdx().find( typeDeclared.uid() ) == dictionary.UIDIdx().end() )
 			{
 				dictionary.insert( new DictionaryClassEntryImpl( dictionary,
-																 mainTypeDecl.UID(),
+																 mainTypeDecl.uid(),
 																 className,
-																 mainTypeDecl.Namespace(),
+																 mainTypeDecl.enclosingNamespace(),
 																 sourceLocation,
 																 GetAttributes( PurposeValueList( TYPE_ATTRIBUTES( (const tree&)mainTypeDecl ) )),
 																 typeSpec,
@@ -670,7 +671,7 @@ namespace GCCInternalsTools
 
 		CPPModel::TypeInfo::Specifier		typeSpec = unionTree.typeSpecifier();
 
-		const CPPModel::UID					unionUID = unionTree.UID();
+		const CPPModel::UID					unionUID = unionTree.uid();
 
 		if( CPPModel::CPPTypes[(int)typeSpec].classification == CPPModel::TypeInfo::Classification::UNION )
 		{
@@ -679,8 +680,8 @@ namespace GCCInternalsTools
 				dictionary.insert(  new DictionaryUnionEntryImpl( dictionary,
 																  unionUID,
 																  unionTree.identifier(),
-																  unionTree.Namespace(),
-																  unionTree.SourceLocation(),
+																  unionTree.enclosingNamespace(),
+																  unionTree.sourceLocation(),
 																  unionTree.treeType().attributes(),
 																  typeSpec,
 																  unionNode ));
@@ -719,7 +720,7 @@ namespace GCCInternalsTools
 
 		CPPModel::TypeInfo::Specifier		typeSpec = functionTree.typeSpecifier();
 
-		const CPPModel::UID					functionUID = functionTree.UID();
+		const CPPModel::UID					functionUID = functionTree.uid();
 
 		//	Make sure at a finer grained level that we have a function
 
@@ -730,8 +731,8 @@ namespace GCCInternalsTools
 				dictionary.insert(  new DictionaryFunctionEntryImpl( dictionary,
 																	 functionUID,
 																	 functionTree.identifier(),
-																	 functionTree.Namespace(),
-																	 functionTree.SourceLocation(),
+																	 functionTree.enclosingNamespace(),
+																	 functionTree.sourceLocation(),
 																	 functionTree.attributes(),
 																	 typeSpec,
 																	 DECL_HIDDEN_FRIEND_P( functionNode ),
@@ -766,7 +767,7 @@ namespace GCCInternalsTools
 			return( false );
 		}
 
-		CPPModel::UID			globalVarUID = globalVarTree.UID();
+		CPPModel::UID			globalVarUID = globalVarTree.uid();
 
 		if( dictionary.UIDIdx().find( globalVarUID ) == dictionary.UIDIdx().end() )
 		{
@@ -775,8 +776,9 @@ namespace GCCInternalsTools
 			dictionary.insert( new DictionaryGlobalVarEntryImpl( dictionary,
 																 globalVarUID,
 																 globalVarTree.identifier(),
-																 globalVarTree.Namespace(),
-																 globalVarTree.SourceLocation(),
+																 globalVarTree.enclosingNamespace(),
+																 TREE_STATIC( globalVarNode ) != 0,
+																 globalVarTree.sourceLocation(),
 																 globalVarTree.attributes(),
 																 globalVarTree.typeSpecifier(),
 																 globalVarNode ));

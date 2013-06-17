@@ -81,18 +81,9 @@ namespace GCCInternalsTools
 	}
 
 
-	const std::string				DeclTree::Namespace() const
+	const std::string				DeclTree::enclosingNamespace() const
 	{
 		std::string			declNamespace = "";
-
-		//	Test to see if this is the std namespace.  If yes, then we are done.
-
-		if( DECL_NAMESPACE_STD_P( m_tree ))
-		{
-			declNamespace = "std::";
-
-			return( declNamespace );
-		}
 
 		//	Functions have to be handled distinctly from Types
 
@@ -100,9 +91,22 @@ namespace GCCInternalsTools
 		{
 			//	Types first, they are pretty straightforward.  Use CP_DECL_CONTEXT.
 
-			for( tree& currentContext = CP_DECL_CONTEXT( m_tree ); currentContext != global_namespace; currentContext = CP_DECL_CONTEXT( currentContext ) )
+			//	Namespaces can be aliased in the AST, make sure we get the original
+
+			tree&			originalNamespace = ORIGINAL_NAMESPACE( CP_DECL_CONTEXT( m_tree ) );
+
+			//	Test to see if this is the std namespace.  If yes, then we are done.
+
+			if( DECL_NAMESPACE_STD_P( originalNamespace ))
 			{
-				declNamespace += std::string( DeclTree( currentContext ).identifier() + NAMESPACE_SEPARATOR );
+				declNamespace = "std::";
+			}
+			else
+			{
+				for( tree& currentContext = originalNamespace; currentContext != global_namespace; currentContext = CP_DECL_CONTEXT( currentContext ) )
+				{
+					declNamespace += std::string( DeclTree( currentContext ).identifier() + NAMESPACE_SEPARATOR );
+				}
 			}
 		}
 		else
@@ -113,11 +117,23 @@ namespace GCCInternalsTools
 			//		as the last element in the list.  If a function is globally scoped, then the context just points to the translation unit.
 			//		If the function is within a namespace, the namespace decl(s) will precede the translation unit decl.
 
-			if( TREE_CODE( DECL_CONTEXT( m_tree )) == NAMESPACE_DECL )
+
+			tree&			originalNamespace = ORIGINAL_NAMESPACE( DECL_CONTEXT( m_tree ) );
+
+			//	Test to see if this is the std namespace.  If yes, then we are done.
+
+			if( DECL_NAMESPACE_STD_P( originalNamespace ))
 			{
-				for( tree& currentContext = DECL_CONTEXT( m_tree ); TREE_CODE( currentContext ) == NAMESPACE_DECL; currentContext = DECL_CONTEXT( currentContext ) )
+				declNamespace = "std::";
+			}
+			else
+			{
+				if( TREE_CODE( originalNamespace ) == NAMESPACE_DECL )
 				{
-					declNamespace += std::string( DeclTree( currentContext ).identifier() + NAMESPACE_SEPARATOR );
+					for( tree& currentContext = originalNamespace; TREE_CODE( currentContext ) == NAMESPACE_DECL; currentContext = DECL_CONTEXT( currentContext ) )
+					{
+						declNamespace += std::string( DeclTree( currentContext ).identifier() + NAMESPACE_SEPARATOR );
+					}
 				}
 			}
 		}

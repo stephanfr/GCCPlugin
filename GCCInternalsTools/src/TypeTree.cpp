@@ -82,18 +82,21 @@ namespace GCCInternalsTools
 	}
 
 
-	const std::string			TypeTree::Namespace() const
+	const std::string			TypeTree::enclosingNamespace() const
 	{
 		std::string			fullNamespace = "";
 
+		//	Namespaces can be aliased in the AST, make sure we get the original
 
-		if( DECL_NAMESPACE_STD_P( m_tree ))
+		tree&			originalNamespace = ORIGINAL_NAMESPACE( CP_TYPE_CONTEXT( m_tree ) );
+
+		if( DECL_NAMESPACE_STD_P( originalNamespace ))
 		{
 			fullNamespace = "std::";
 		}
 		else
 		{
-			for( tree& currentContext = CP_TYPE_CONTEXT( m_tree ); currentContext != global_namespace; currentContext = CP_TYPE_CONTEXT( currentContext ) )
+			for( tree& currentContext = originalNamespace; currentContext != global_namespace; currentContext = CP_TYPE_CONTEXT( currentContext ) )
 			{
 				fullNamespace += std::string( DeclTree( currentContext ).identifier() + NAMESPACE_SEPARATOR );
 			}
@@ -240,7 +243,7 @@ namespace GCCInternalsTools
 
 			case CPPModel::TypeInfo::Classification::CLASS :
 			{
-				const CPPModel::UID typeUID = UID();
+				const CPPModel::UID typeUID = uid();
 
 				const CPPModel::ASTDictionary::UIDIndexConstIterator	entry = dictionary.UIDIdx().find( typeUID );
 
@@ -275,8 +278,8 @@ namespace GCCInternalsTools
 
 					returnValue.reset( new CPPModel::UserDefinedType( currentType,
 																	  convert( TYPE_NAME( m_tree ))->identifier(),
-																	  UID(),
-																	  Namespace(),
+																	  uid(),
+																	  enclosingNamespace(),
 																	  CPPModel::SourceLocation( "", 1, 1, 1 ),
 																	  attributes ));
 				}
@@ -297,7 +300,7 @@ namespace GCCInternalsTools
 
 			case CPPModel::TypeInfo::Classification::UNION :
 			{
-				const CPPModel::UID typeUID = UID();
+				const CPPModel::UID typeUID = uid();
 
 				const CPPModel::ASTDictionary::UIDIndexConstIterator	entry = dictionary.UIDIdx().find( typeUID );
 
@@ -322,12 +325,10 @@ namespace GCCInternalsTools
 
 					CPPModel::ConstListPtr<CPPModel::Attribute>		attributes( new boost::ptr_list<CPPModel::Attribute>() );
 
-					std::string		enclosingNamespace = Namespace();
-
 					returnValue.reset( new CPPModel::UnionType( currentType,
 																convert( TYPE_NAME( m_tree ))->identifier(),
-																UID(),
-																enclosingNamespace,
+																uid(),
+																enclosingNamespace(),
 																CPPModel::SourceLocation( "", 1, 1, 1 ),
 																attributes ) );
 				}

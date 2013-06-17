@@ -60,9 +60,9 @@ namespace GCCInternalsTools
 		//	Virtual Methods
 		//
 
-		virtual const CPPModel::UID							UID() const = 0;
+		virtual const CPPModel::UID							uid() const = 0;
 
-		virtual const std::string							Namespace() const = 0;
+		virtual const std::string							enclosingNamespace() const = 0;
 
 		virtual CPPModel::TypeInfo::Specifier				typeSpecifier() const = 0;
 

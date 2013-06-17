@@ -40,13 +40,13 @@ namespace GCCInternalsTools
 		}
 
 
-		const CPPModel::UID									UID() const
+		const CPPModel::UID									uid() const
 		{
 			return( CPPModel::UID( TYPE_UID( TYPE_MAIN_VARIANT( m_tree ) ), CPPModel::UID::UIDType::TYPE ) );
 		}
 
 
-		const std::string									Namespace() const;
+		const std::string									enclosingNamespace() const;
 
 		std::unique_ptr<const CPPModel::Type>				type( const CPPModel::ASTDictionary&		dictionary ) const;
 
