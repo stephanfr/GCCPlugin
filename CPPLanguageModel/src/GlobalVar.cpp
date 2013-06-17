@@ -63,6 +63,7 @@ namespace CPPModel
 
 		SourceElement::toXML( outputStream, indentLevel + 1, options );
 		Namespace::toXML( outputStream, indentLevel + 1, options );
+		Static::toXML( outputStream, indentLevel + 1, options );
 		type().toXML( outputStream, indentLevel + 1, addOption( options, SerializationOptions::NO_ATTRIBUTES ));
 		Attributes::toXML( outputStream, indentLevel + 1, options );
 

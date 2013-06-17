@@ -44,15 +44,15 @@ namespace CPPModel
 		virtual ~SourceElement() {};
 
 
-		const UID&					uid() const
+		const UID&				uid() const
 		{
 			return( m_uid );
 		}
 
 
-		std::ostream&	toXML( std::ostream&			outputStream,
-							   int						indentLevel,
-							   SerializationOptions		options ) const;
+		std::ostream&			toXML( std::ostream&			outputStream,
+							   	   	   int						indentLevel,
+							   	   	   SerializationOptions		options ) const;
 
 	private :
 

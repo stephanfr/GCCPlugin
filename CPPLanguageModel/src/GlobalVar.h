@@ -19,7 +19,7 @@ namespace CPPModel
 {
 
 
-class GlobalVarDefinition : public SourceElement, public Namespace, public Attributes
+class GlobalVarDefinition : public SourceElement, public Namespace, public Static, public Attributes
 	{
 	public :
 
@@ -31,10 +31,12 @@ class GlobalVarDefinition : public SourceElement, public Namespace, public Attri
 							 const UID&							uid,
 							 const std::string&					enclosingNamespace,
 							 const SourceLocation&				sourceLocation,
+							 bool								isStatic,
 							 ConstListPtr<Attribute>			attributes,
 							 std::unique_ptr<const Type>		varType )
 			: SourceElement( name, uid, sourceLocation ),
 			  Namespace( enclosingNamespace ),
+			  Static( isStatic ),
 			  Attributes( attributes ),
 			  m_varType( std::move( varType ) )
 		{}

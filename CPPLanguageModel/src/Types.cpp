@@ -41,7 +41,13 @@ namespace CPPModel
 											 int					indentLevel,
 											 SerializationOptions	options ) const
 	{
-		outputStream << XMLIndentTable::GetIndent( indentLevel ) << "<type>" << CPPTypes[(int)TypeInfo::Specifier::UNRECOGNIZED].label.c_str() << "</type>\n";
+		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
+		const std::string&		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+
+		outputStream << currentIndent << "<type>\n";
+		outputStream << currentIndentPlusOne << "<kind>unrecognized</kind>\n";
+		outputStream << currentIndent << "</type>\n";
+
 		Attributes::toXML( outputStream, indentLevel, options );
 
 		return( outputStream );
@@ -52,7 +58,14 @@ namespace CPPModel
 											int						indentLevel,
 											SerializationOptions	options ) const
 	{
-		outputStream << XMLIndentTable::GetIndent( indentLevel ) << "<type>" << CPPTypes[(int)type()].label.c_str() << "</type>\n";
+		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
+		const std::string&		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+
+		outputStream << currentIndent << "<type>\n";
+		outputStream << currentIndentPlusOne << "<kind>fundamental</kind>\n";
+		outputStream << currentIndentPlusOne << "<declaration>" << CPPTypes[(int)type()].label.c_str() << "</declaration>\n";
+		outputStream << currentIndent << "</type>\n";
+
 		Attributes::toXML( outputStream, indentLevel, options );
 
 		return( outputStream );
@@ -63,8 +76,14 @@ namespace CPPModel
 											int						indentLevel,
 											SerializationOptions	options ) const
 	{
-		Namespace::toXML( outputStream, indentLevel, options );
-		outputStream << XMLIndentTable::GetIndent( indentLevel ) << "<type>" << name().c_str() << "</type>\n";
+		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
+		const std::string&		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+
+		outputStream << currentIndent << "<type>\n";
+		outputStream << currentIndentPlusOne << "<kind>userDefined</kind>\n";
+		outputStream << currentIndentPlusOne << "<declaration>" << name().c_str() << "</declaration>\n";
+		Namespace::toXML( outputStream, indentLevel + 1, options );
+		outputStream << currentIndent << "</type>\n";
 
 		Attributes::toXML( outputStream, indentLevel, options );
 
@@ -78,20 +97,22 @@ namespace CPPModel
 	{
 		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
 		const std::string&		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+		const std::string&		currentIndentPlusTwo = XMLIndentTable::GetIndent( indentLevel + 2 );
 
 
 		outputStream << currentIndent << "<type>\n";
-		outputStream << currentIndentPlusOne;
+		outputStream << currentIndentPlusOne << "<kind>derived</kind>\n";
+		outputStream << currentIndentPlusOne << "<declaration>\n";
 
 		Type*		currentBaseType = (Type*)this;
 		while( currentBaseType->kind() == Type::Kind::DERIVED )
 		{
-			outputStream << "<operator>" << CPPTypes[(int)currentBaseType->type()].label << "</operator>";
+			outputStream << currentIndentPlusTwo << "<operator>" << CPPTypes[(int)currentBaseType->type()].label << "</operator>\n";
 			currentBaseType = (Type*)(&(((DerivedType*)currentBaseType)->baseType()));
 		}
-		outputStream << "\n";
 
-		((Type*)currentBaseType)->toXML( outputStream, indentLevel + 1, options );
+		((Type*)currentBaseType)->toXML( outputStream, indentLevel + 2, options );
+		outputStream << currentIndentPlusOne << "</declaration>\n";
 
 		outputStream << currentIndent << "</type>\n";
 
@@ -106,8 +127,15 @@ namespace CPPModel
 									  int						indentLevel,
 									  SerializationOptions		options ) const
 	{
+		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
+		const std::string&		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+
+
+		outputStream << currentIndent << "<type>\n";
+		outputStream << currentIndentPlusOne << "<kind>union</kind>\n";
+		outputStream << currentIndentPlusOne << "<declaration>" << name().c_str() << "</declaration>\n";
 		Namespace::toXML( outputStream, indentLevel, options );
-		outputStream << XMLIndentTable::GetIndent( indentLevel ) << "<union>" << name().c_str() << "</union>\n";
+		outputStream << currentIndent << "</type>\n";
 
 		return( outputStream );
 	}

@@ -41,6 +41,7 @@ namespace CPPModel
 				   	     const CPPModel::UID&			uid,
 				   	     const std::string&				name,
 				   	     const std::string&				enclosingNamespace,
+				   	     bool							isStatic,
 				   	     const SourceLocation&			sourceLocation,
 				   	     ConstListPtr<Attribute>&		attributes )
 			: Attributes( attributes ),
@@ -48,6 +49,7 @@ namespace CPPModel
 			  m_uid( uid ),
 			  m_name( name ),
 			  m_enclosingNamespace( enclosingNamespace ),
+			  m_static( isStatic ),
 			  m_sourceLocation( sourceLocation ),
 			  m_fqName( std::string( enclosingNamespace ) + std::string( name ) )
 			{}
@@ -84,6 +86,11 @@ namespace CPPModel
 			return( m_fqName );
 		}
 
+		const bool						isStatic() const
+		{
+			return( m_static );
+		}
+
 		const SourceLocation&			sourceLocation() const
 		{
 			return( m_sourceLocation );
@@ -112,6 +119,8 @@ namespace CPPModel
 		const SourceLocation			m_sourceLocation;
 
 		const std::string				m_fqName;
+
+		const bool						m_static;
 	};
 
 
@@ -127,7 +136,7 @@ namespace CPPModel
 				   	    	  const SourceLocation&				sourceLocation,
 				   	    	  ConstListPtr<Attribute>&			attributeList,
 				   	    	  TypeInfo::Specifier				typeSpec )
-			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, sourceLocation, attributeList ),
+			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, false, sourceLocation, attributeList ),
 			  m_typeSpec( typeSpec )
 			{}
 
@@ -146,6 +155,8 @@ namespace CPPModel
 		{
 			return( m_typeSpec );
 		}
+
+		const bool								isStatic() const = delete;
 
 
 		virtual bool		GetClassDefinition( const CPPModel::ParseOptions&							options,
@@ -169,10 +180,11 @@ namespace CPPModel
 				   	    	  const CPPModel::UID&			uid,
 				   	    	  const std::string&			name,
 				   	    	  const std::string&			enclosingNamespace,
+						   	  bool							isStatic,
 				   	    	  const SourceLocation&			sourceLocation,
 				   	    	  ConstListPtr<Attribute>&		attributeList,
 				   	    	  TypeInfo::Specifier			typeSpec )
-			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, sourceLocation, attributeList ),
+			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, attributeList ),
 			  m_typeSpec( typeSpec )
 			{}
 
@@ -213,11 +225,12 @@ namespace CPPModel
 				   	    		 const CPPModel::UID&			uid,
 				   	    		 const std::string&				name,
 				   	    		 const std::string&				enclosingNamespace,
+						   	     bool							isStatic,
 				   	    		 const SourceLocation&			sourceLocation,
 				   	    		 ConstListPtr<Attribute>&		attributeList,
 				   	    		 TypeInfo::Specifier			returnTypeSpec,
 				   	    		 const bool						hiddenFriend )
-			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, sourceLocation, attributeList ),
+			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, attributeList ),
 			  m_returnTypeSpec( returnTypeSpec ),
 			  m_hiddenFriend( hiddenFriend )
 			{}
@@ -264,10 +277,11 @@ namespace CPPModel
 				   	    		  const CPPModel::UID&			uid,
 				   	    		  const std::string&			name,
 				   	    		  const std::string&			enclosingNamespace,
+				   	    		  bool							isStatic,
 				   	    		  const SourceLocation&			sourceLocation,
 				   	    		  ConstListPtr<Attribute>&		attributes,
 				   	    		  TypeInfo::Specifier			typeSpec )
-			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, sourceLocation, attributes ),
+			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, attributes ),
 			  m_typeSpec( typeSpec )
 			{}
 

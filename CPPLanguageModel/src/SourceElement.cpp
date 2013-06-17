@@ -46,7 +46,7 @@ namespace CPPModel
 		NamedEntity::toXML( outputStream, indentLevel, options );
 		outputStream << currentIndent << "<uid>" << (boost::lexical_cast<std::string>(uid().value())) << "</uid>\n";
 
-		SourceLocation::toXML( outputStream, indentLevel + 1, options );
+		SourceLocation::toXML( outputStream, indentLevel, options );
 
 		return( outputStream );
 	}

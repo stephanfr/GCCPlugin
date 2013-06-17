@@ -67,6 +67,15 @@ namespace CPPModel
 		outputStream << currentIndentPlusOne << "<uid>" << (boost::lexical_cast<std::string>(uid().value())) << "</uid>\n";
 		outputStream << currentIndentPlusOne << "<namespace>" << enclosingNamespace() << "</namespace>\n";
 
+		//	Be careful below, classes cannot be static and are fixed false in the constructor for their
+		//		dictionary entry.  If you punch out the 'static' flag all the time then it will
+		//		always appear as false for classes (beyond just not making sense for classes anyway).
+
+		if( isStatic() )
+		{
+			outputStream << currentIndentPlusOne << "<static>true</static>\n";
+		}
+
 		sourceLocation().toXML( outputStream, indentLevel + 1, options );
 
 		Attributes::toXML( outputStream, indentLevel + 1, options );
