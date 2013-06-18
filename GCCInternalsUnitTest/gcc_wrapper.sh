@@ -3,6 +3,19 @@
 TEST_DIRECTORY=$1
 TEST_NAME=$2
 
+if [  ! -d "temp" ]; then
+    /bin/mkdir temp
+fi
+
+if [  ! -d "results" ]; then
+    /bin/mkdir results
+ fi
+
+if [  ! -d "results/$TEST_DIRECTORY" ]; then
+    /bin/mkdir results/$TEST_DIRECTORY
+fi
+
+
 cd temp
 
 /usr/gcc-4.8.0/bin/g++-4.8.0 -S -O0 -MMD -MP\
