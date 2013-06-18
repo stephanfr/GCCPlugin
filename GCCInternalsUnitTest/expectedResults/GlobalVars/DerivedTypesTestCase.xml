@@ -1,6 +1,6 @@
 <dictionary_entry>
     <name>refGlobalInt</name>
-    <uid>2235</uid>
+    <uid>2003</uid>
     <namespace>TestNamespace::</namespace>
     <static>true</static>
     <source-info>
@@ -12,7 +12,7 @@
 </dictionary_entry>
 <dictionary_entry>
     <name>globalInt</name>
-    <uid>2234</uid>
+    <uid>2002</uid>
     <namespace>TestNamespace::</namespace>
     <static>true</static>
     <source-info>
@@ -24,7 +24,7 @@
 </dictionary_entry>
 <dictionary_entry>
     <name>hdlGlobalFloatWithoutStaticKeyword</name>
-    <uid>2233</uid>
+    <uid>2001</uid>
     <namespace>TestNamespace::</namespace>
     <static>true</static>
     <source-info>
@@ -36,7 +36,7 @@
 </dictionary_entry>
 <dictionary_entry>
     <name>hdlGlobalFloat</name>
-    <uid>2232</uid>
+    <uid>2000</uid>
     <namespace>TestNamespace::</namespace>
     <static>true</static>
     <source-info>
@@ -48,7 +48,7 @@
 </dictionary_entry>
 <dictionary_entry>
     <name>ptrGlobalLongWithoutStaticKeyword</name>
-    <uid>2231</uid>
+    <uid>1999</uid>
     <namespace>TestNamespace::</namespace>
     <static>true</static>
     <source-info>
@@ -60,7 +60,7 @@
 </dictionary_entry>
 <dictionary_entry>
     <name>ptrGlobalLong</name>
-    <uid>2230</uid>
+    <uid>1998</uid>
     <namespace>TestNamespace::</namespace>
     <static>true</static>
     <source-info>
@@ -72,7 +72,7 @@
 </dictionary_entry>
 <dictionary_entry>
     <name>ptrGlobalClassWithoutStaticKeyword</name>
-    <uid>2229</uid>
+    <uid>1997</uid>
     <namespace>TestNamespace::</namespace>
     <static>true</static>
     <source-info>
@@ -84,7 +84,7 @@
 </dictionary_entry>
 <dictionary_entry>
     <name>ptrGlobalClass</name>
-    <uid>2228</uid>
+    <uid>1996</uid>
     <namespace>TestNamespace::</namespace>
     <static>true</static>
     <source-info>
@@ -96,7 +96,7 @@
 </dictionary_entry>
 <global_var>
     <name>refGlobalInt</name>
-    <uid>2235</uid>
+    <uid>2003</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>55</line>
@@ -118,7 +118,7 @@
 </global_var>
 <global_var>
     <name>globalInt</name>
-    <uid>2234</uid>
+    <uid>2002</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>54</line>
@@ -134,7 +134,7 @@
 </global_var>
 <global_var>
     <name>hdlGlobalFloatWithoutStaticKeyword</name>
-    <uid>2233</uid>
+    <uid>2001</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>52</line>
@@ -157,7 +157,7 @@
 </global_var>
 <global_var>
     <name>hdlGlobalFloat</name>
-    <uid>2232</uid>
+    <uid>2000</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>50</line>
@@ -180,7 +180,7 @@
 </global_var>
 <global_var>
     <name>ptrGlobalLongWithoutStaticKeyword</name>
-    <uid>2231</uid>
+    <uid>1999</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>48</line>
@@ -202,7 +202,7 @@
 </global_var>
 <global_var>
     <name>ptrGlobalLong</name>
-    <uid>2230</uid>
+    <uid>1998</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>46</line>
@@ -224,7 +224,7 @@
 </global_var>
 <global_var>
     <name>ptrGlobalClassWithoutStaticKeyword</name>
-    <uid>2229</uid>
+    <uid>1997</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>44</line>
@@ -247,7 +247,7 @@
 </global_var>
 <global_var>
     <name>ptrGlobalClass</name>
-    <uid>2228</uid>
+    <uid>1996</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>42</line>

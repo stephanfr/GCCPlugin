@@ -28,7 +28,9 @@
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.1715269429" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug">
 								<option id="gnu.cpp.compiler.exe.debug.option.optimization.level.1913825898" name="Optimization Level" superClass="gnu.cpp.compiler.exe.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.exe.debug.option.debugging.level.1381733116" name="Debug Level" superClass="gnu.cpp.compiler.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.option.include.paths.1931550855" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath"/>
+								<option id="gnu.cpp.compiler.option.include.paths.1931550855" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/contrib}&quot;"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.2046337559" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.649003644" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.debug">
@@ -63,17 +65,28 @@
 							<tool id="cdt.managedbuild.tool.gnu.archiver.base.1744743615" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.1757534075"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.379257487" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.1715269429">
 								<option id="gnu.cpp.compiler.option.include.paths.1229204580" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsUnitTest/GCCInternalsUnitTest/contrib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsUnitTest/GCCInternalsUnitTest/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/contrib}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.459613695" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.84874827" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.649003644">
+								<option id="gnu.c.compiler.option.include.paths.1121359178" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsUnitTest/GCCInternalsUnitTest/contrib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsUnitTest/GCCInternalsUnitTest/src}&quot;"/>
+									<listOptionValue builtIn="false" value="/home/steve/workspace/GCCInternalsUnitTest/contrib"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1609681077" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.1381626975" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug.600313650"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.170848938" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.672969557"/>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.exe.debug.1342825087" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.exe.debug.486611088">
+								<option id="gnu.both.asm.option.include.paths.655562189" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsUnitTest/GCCInternalsUnitTest/contrib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsUnitTest/GCCInternalsUnitTest/src}&quot;"/>
+									<listOptionValue builtIn="false" value="/home/steve/workspace/GCCInternalsUnitTest/contrib"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1696037910" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 						</toolChain>
@@ -84,25 +97,34 @@
 							<tool id="cdt.managedbuild.tool.gnu.archiver.base.572963738" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.1757534075"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.408164727" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.1715269429">
 								<option id="gnu.cpp.compiler.option.include.paths.1364458485" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsUnitTest/GCCInternalsUnitTest/contrib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/contrib}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.83090973" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.548653878" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.649003644">
+								<option id="gnu.c.compiler.option.include.paths.482252993" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsUnitTest/GCCInternalsUnitTest/contrib}&quot;"/>
+									<listOptionValue builtIn="false" value="/home/steve/workspace/GCCInternalsUnitTest/contrib"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.145975418" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.1132310725" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug.600313650"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.1988233536" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.672969557"/>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.exe.debug.1051115784" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.exe.debug.486611088">
+								<option id="gnu.both.asm.option.include.paths.757038747" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsUnitTest/GCCInternalsUnitTest/contrib}&quot;"/>
+									<listOptionValue builtIn="false" value="/home/steve/workspace/GCCInternalsUnitTest/contrib"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.353341267" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="test|test/TestUTTest.cpp|test/GlobalVarTests.cpp|gtest|testCaseSourceCode|contrib-old|testCaseSourceCode-old|GlobalVars|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="gtest|test/GlobalVarTests.cpp|test/TestUTTest.cpp|Functions|testCaseSourceCode|test|contrib-old|GlobalVars|testCaseSourceCode-old|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 						<entry excluding="GlobalVarTests.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="test"/>
-						<entry excluding="GlobalVarTestCase1.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="testCaseSourceCode"/>
+						<entry excluding="GlobalVars/AttributesTestCase.cpp|GlobalVarTestCase1.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="testCaseSourceCode"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -130,7 +152,9 @@
 							<tool command="g++" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GCCErrorParser" id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.release.1154965355" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.release">
 								<option id="gnu.cpp.compiler.exe.release.option.optimization.level.508444089" name="Optimization Level" superClass="gnu.cpp.compiler.exe.release.option.optimization.level" value="gnu.cpp.compiler.optimization.level.most" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.exe.release.option.debugging.level.1556047084" name="Debug Level" superClass="gnu.cpp.compiler.exe.release.option.debugging.level" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.option.include.paths.1769639180" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath"/>
+								<option id="gnu.cpp.compiler.option.include.paths.1769639180" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/contrib}&quot;"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1402990541" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool command="gcc" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GCCErrorParser" id="cdt.managedbuild.tool.gnu.c.compiler.exe.release.2064179362" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.release">
@@ -159,8 +183,9 @@
 							<tool id="cdt.managedbuild.tool.gnu.archiver.base.1201121714" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.576883102"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.release.1649090474" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.release.1154965355">
 								<option id="gnu.cpp.compiler.option.include.paths.1547877855" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsUnitTest/GCCInternalsUnitTest/contrib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsUnitTest/GCCInternalsUnitTest/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/contrib}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1810562893" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
@@ -180,6 +205,7 @@
 							<tool id="cdt.managedbuild.tool.gnu.archiver.base.755026347" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.576883102"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.release.2057294564" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.release.1154965355">
 								<option id="gnu.cpp.compiler.option.include.paths.341936787" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsUnitTest/GCCInternalsUnitTest/contrib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/contrib}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.765022947" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
@@ -195,11 +221,12 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="test|test/GlobalVarTests.cpp|test/TestUTTest.cpp|gtest|testCaseSourceCode|contrib-old|GlobalVars|testCaseSourceCode-old|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Functions|test|test/GlobalVarTests.cpp|test/TestUTTest.cpp|gtest|testCaseSourceCode|contrib-old|GlobalVars|testCaseSourceCode-old|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 						<entry excluding="GlobalVarTests.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="test"/>
-						<entry excluding="GlobalVarTestCase1.cpp|GlobalVars" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="testCaseSourceCode"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="testCaseSourceCode/GlobalVars"/>
+						<entry excluding="Functions|GlobalVarTestCase1.cpp|GlobalVars" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="testCaseSourceCode"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="testCaseSourceCode/Functions"/>
+						<entry excluding="AttributesTestCase.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="testCaseSourceCode/GlobalVars"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

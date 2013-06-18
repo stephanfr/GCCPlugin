@@ -1,35 +1,35 @@
 <dictionary_entry>
     <name>globalStringWithoutStaticKeyword</name>
-    <uid>11804</uid>
+    <uid>19340</uid>
     <namespace>TestNamespace::</namespace>
     <static>true</static>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/NonIntrinsicTestCase.cpp</file>
         <line>22</line>
         <char-count>1</char-count>
-        <location>3260337</location>
+        <location>4818769</location>
     </source-info>
 </dictionary_entry>
 <dictionary_entry>
     <name>globalString</name>
-    <uid>11803</uid>
+    <uid>19339</uid>
     <namespace>TestNamespace::</namespace>
     <static>true</static>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/NonIntrinsicTestCase.cpp</file>
         <line>20</line>
         <char-count>1</char-count>
-        <location>3260086</location>
+        <location>4818518</location>
     </source-info>
 </dictionary_entry>
 <global_var>
     <name>globalStringWithoutStaticKeyword</name>
-    <uid>11804</uid>
+    <uid>19340</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/NonIntrinsicTestCase.cpp</file>
         <line>22</line>
         <char-count>1</char-count>
-        <location>3260337</location>
+        <location>4818769</location>
     </source-info>
     <namespace>TestNamespace::</namespace>
     <static>true</static>
@@ -41,12 +41,12 @@
 </global_var>
 <global_var>
     <name>globalString</name>
-    <uid>11803</uid>
+    <uid>19339</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/NonIntrinsicTestCase.cpp</file>
         <line>20</line>
         <char-count>1</char-count>
-        <location>3260086</location>
+        <location>4818518</location>
     </source-info>
     <namespace>TestNamespace::</namespace>
     <static>true</static>

@@ -1,5 +1,5 @@
 /*
- * TestUTTest.cpp
+ * GlobalVarTests.cpp
  *
  *  Created on: Jun 9, 2013
  *      Author: steve
@@ -20,6 +20,7 @@ namespace
 	  ForkGCCTestCase( "GlobalVars", "NonIntrinsicTestCase" );
 	  ForkGCCTestCase( "GlobalVars", "LocallyUserDefinedClassTestCase" );
 	  ForkGCCTestCase( "GlobalVars", "DerivedTypesTestCase" );
+	  ForkGCCTestCase( "GlobalVars", "AttributesTestCase" );
   }
 }
 

@@ -4,11 +4,20 @@
     <namespace>TestNamespace::</namespace>
     <static>true</static>
     <source-info>
-        <file>../testCaseSourceCode/GlobalVars/IntrinsicTestCase.cpp</file>
+        <file>../testCaseSourceCode/GlobalVars/AttributesTestCase.cpp</file>
         <line>19</line>
         <char-count>1</char-count>
         <location>2333</location>
     </source-info>
+    <attributes>
+        <attribute>
+            <name>attribute1</name>
+            <arguments>
+                <constant type="STRING">arg2</constant>
+                <constant type="STRING">arg3</constant>
+            </arguments>
+        </attribute>
+    </attributes>
 </dictionary_entry>
 <dictionary_entry>
     <name>globalInt</name>
@@ -16,17 +25,25 @@
     <namespace>TestNamespace::</namespace>
     <static>true</static>
     <source-info>
-        <file>../testCaseSourceCode/GlobalVars/IntrinsicTestCase.cpp</file>
+        <file>../testCaseSourceCode/GlobalVars/AttributesTestCase.cpp</file>
         <line>17</line>
         <char-count>1</char-count>
         <location>2080</location>
     </source-info>
+    <attributes>
+        <attribute>
+            <name>attribute1</name>
+            <arguments>
+                <constant type="STRING">arg1</constant>
+            </arguments>
+        </attribute>
+    </attributes>
 </dictionary_entry>
 <global_var>
     <name>globaldoubleWithoutStaticKeyword</name>
     <uid>1961</uid>
     <source-info>
-        <file>../testCaseSourceCode/GlobalVars/IntrinsicTestCase.cpp</file>
+        <file>../testCaseSourceCode/GlobalVars/AttributesTestCase.cpp</file>
         <line>19</line>
         <char-count>1</char-count>
         <location>2333</location>
@@ -37,12 +54,21 @@
         <kind>fundamental</kind>
         <declaration>double</declaration>
     </type>
+    <attributes>
+        <attribute>
+            <name>attribute1</name>
+            <arguments>
+                <constant type="STRING">arg2</constant>
+                <constant type="STRING">arg3</constant>
+            </arguments>
+        </attribute>
+    </attributes>
 </global_var>
 <global_var>
     <name>globalInt</name>
     <uid>1960</uid>
     <source-info>
-        <file>../testCaseSourceCode/GlobalVars/IntrinsicTestCase.cpp</file>
+        <file>../testCaseSourceCode/GlobalVars/AttributesTestCase.cpp</file>
         <line>17</line>
         <char-count>1</char-count>
         <location>2080</location>
@@ -53,4 +79,12 @@
         <kind>fundamental</kind>
         <declaration>int</declaration>
     </type>
+    <attributes>
+        <attribute>
+            <name>attribute1</name>
+            <arguments>
+                <constant type="STRING">arg1</constant>
+            </arguments>
+        </attribute>
+    </attributes>
 </global_var>
