@@ -18,7 +18,7 @@ fi
 
 cd temp
 
-/usr/gcc-4.8.0/bin/g++-4.8.0 -S -O0 -MMD -MP\
+/usr/gcc-4.8.0/bin/g++-4.8.0 -S \
 							     -fplugin=../../GCCInternalsUTFixture/Debug/libGCCInternalsUTFixture.so \
                                                              -fplugin-arg-libGCCInternalsUTFixture-outputFilename=../results/$TEST_DIRECTORY/$TEST_NAME.xml \
                                                              -o $TEST_DIRECTORY_$TEST_NAME.junk \
