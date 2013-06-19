@@ -7,10 +7,6 @@
 
 
 
-//	Both of these variables will be marked as 'static' as both have the
-//		same storage type wrt compiling, the static keyword should
-//		just restrict the scope of the integer to this translation unit.
-
 
 namespace TestNamespace
 {

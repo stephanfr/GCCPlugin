@@ -66,6 +66,20 @@ namespace GCCInternalsTools
 			return( TypeTree( TREE_TYPE( m_tree ) ) );
 		}
 
+		const std::string								identifier() const
+		{
+			const tree&		declName = DECL_NAME( m_tree );
+
+			if( declName == 0 )
+			{
+				return( "[No Identifier]" );
+			}
+
+			const char* identifier = IDENTIFIER_POINTER( declName );
+
+			return( identifier ? std::string( identifier ) : std::string( "[No Identifier]" ));
+		}
+
 		const CPPModel::UID								uid() const
 		{
 			return( CPPModel::UID( DECL_UID( m_tree ), CPPModel::UID::UIDType::DECLARATION ) );

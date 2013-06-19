@@ -563,24 +563,28 @@ namespace GCCInternalsTools
 	{
 		cp_binding_level*		currentLevel = NAMESPACE_LEVEL( namespaceNode );
 
-		for( tree currentDecl = currentLevel->names; currentDecl != 0; currentDecl = TREE_CHAIN( currentDecl ) )
+		DeclList		elements = currentLevel->names;
+
+		for( DeclList::iterator itrDecl = elements.begin(); itrDecl != elements.end(); ++itrDecl )
 		{
-			if( DECL_IS_BUILTIN( currentDecl ) )
+			if( DECL_IS_BUILTIN( (tree&)itrDecl ) )
 			{
 				continue;
 			}
 
-			decoder.Decode( currentDecl, *this );
+			decoder.Decode( (tree&)itrDecl, *this );
 		}
 
-		for( tree currentDecl = currentLevel->namespaces; currentDecl != 0; currentDecl = TREE_CHAIN( currentDecl ) )
+		NamespaceList	nestedNamespaces = currentLevel->namespaces;
+
+		for( NamespaceList::iterator itrNested = nestedNamespaces.begin(); itrNested != nestedNamespaces.end(); ++itrNested )
 		{
-			if( DECL_IS_BUILTIN( currentDecl ) )
+			if( DECL_IS_BUILTIN( (tree&)itrNested ))
 			{
 				continue;
 			}
 
-			DecodingPass( currentDecl, decoder );
+			DecodingPass( (tree&)itrNested, decoder );
 		}
 	}
 

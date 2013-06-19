@@ -9,6 +9,7 @@
 #include "gtest/gtest.h"
 
 #include "GlobalVarTests.cpp"
+#include "FunctionTests.cpp"
 
 
 int main( int argc, char** argv)

@@ -108,7 +108,9 @@ namespace CPPModel
 
 		SourceElement::toXML( outputStream, indentLevel + 1, options );
 		Namespace::toXML( outputStream, indentLevel + 1, options );
-		returnType().toXML( outputStream, indentLevel + 1, addOption( options, SerializationOptions::NO_ATTRIBUTES ));
+		outputStream << currentIndentPlusOne << "<returnType>\n";
+		returnType().toXML( outputStream, indentLevel + 2, addOption( options, SerializationOptions::NO_ATTRIBUTES ));
+		outputStream << currentIndentPlusOne << "</returnType>\n";
 		Attributes::toXML( outputStream, indentLevel + 1, options );
 
 		m_parameters.toXML( outputStream, indentLevel + 1, options );

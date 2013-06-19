@@ -41,24 +41,11 @@ namespace GCCInternalsTools
 			return( m_tree == NULL );
 		}
 
-		const std::string					identifier() const
-		{
-			const tree&		declName = DECL_NAME( m_tree );
-
-			if( declName == 0 )
-			{
-				return( "[No Identifier]" );
-			}
-
-			const char* identifier = IDENTIFIER_POINTER( declName );
-
-			return( identifier ? std::string( identifier ) : std::string( "[No Identifier]" ));
-		}
-
-
 		//
 		//	Virtual Methods
 		//
+
+		virtual const std::string							identifier() const = 0;
 
 		virtual const CPPModel::UID							uid() const = 0;
 

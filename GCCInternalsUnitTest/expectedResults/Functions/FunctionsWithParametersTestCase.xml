@@ -1,0 +1,146 @@
+<dictionary_entry>
+    <name>FunctionReturningString</name>
+    <uid>19349</uid>
+    <namespace>TestNamespace::</namespace>
+    <source-info>
+        <file>../testCaseSourceCode/Functions/FunctionsWithParametersTestCase.cpp</file>
+        <line>25</line>
+        <char-count>1</char-count>
+        <location>4819151</location>
+    </source-info>
+</dictionary_entry>
+<dictionary_entry>
+    <name>FunctionReturningInt</name>
+    <uid>19344</uid>
+    <namespace>TestNamespace::</namespace>
+    <source-info>
+        <file>../testCaseSourceCode/Functions/FunctionsWithParametersTestCase.cpp</file>
+        <line>19</line>
+        <char-count>1</char-count>
+        <location>4818377</location>
+    </source-info>
+</dictionary_entry>
+<dictionary_entry>
+    <name>FunctionReturningVoid</name>
+    <uid>19340</uid>
+    <namespace>TestNamespace::</namespace>
+    <source-info>
+        <file>../testCaseSourceCode/Functions/FunctionsWithParametersTestCase.cpp</file>
+        <line>17</line>
+        <char-count>1</char-count>
+        <location>4818121</location>
+    </source-info>
+</dictionary_entry>
+<function>
+    <name>FunctionReturningString</name>
+    <uid>19349</uid>
+    <source-info>
+        <file>../testCaseSourceCode/Functions/FunctionsWithParametersTestCase.cpp</file>
+        <line>25</line>
+        <char-count>1</char-count>
+        <location>4819151</location>
+    </source-info>
+    <namespace>TestNamespace::</namespace>
+    <returnType>
+        <type>
+            <kind>derived</kind>
+            <declaration>
+                <operator>reference</operator>
+                <type>
+                    <kind>userDefined</kind>
+                    <declaration>string</declaration>
+                    <namespace>std::</namespace>
+                </type>
+            </declaration>
+        </type>
+    </returnType>
+    <parameters>
+        <parameter>
+            <name>stringParameter</name>
+            <type>
+                <kind>derived</kind>
+                <declaration>
+                    <operator>reference</operator>
+                    <type>
+                        <kind>userDefined</kind>
+                        <declaration>string</declaration>
+                        <namespace>std::</namespace>
+                    </type>
+                </declaration>
+            </type>
+        </parameter>
+        <parameter>
+            <name>doubleParameter</name>
+            <type>
+                <kind>fundamental</kind>
+                <declaration>double</declaration>
+            </type>
+        </parameter>
+        <parameter>
+            <name>longParameter</name>
+            <type>
+                <kind>fundamental</kind>
+                <declaration>long int</declaration>
+            </type>
+        </parameter>
+    </parameters>
+</function>
+<function>
+    <name>FunctionReturningInt</name>
+    <uid>19344</uid>
+    <source-info>
+        <file>../testCaseSourceCode/Functions/FunctionsWithParametersTestCase.cpp</file>
+        <line>19</line>
+        <char-count>1</char-count>
+        <location>4818377</location>
+    </source-info>
+    <namespace>TestNamespace::</namespace>
+    <returnType>
+        <type>
+            <kind>fundamental</kind>
+            <declaration>int</declaration>
+        </type>
+    </returnType>
+    <parameters>
+        <parameter>
+            <name>intParameter</name>
+            <type>
+                <kind>fundamental</kind>
+                <declaration>int</declaration>
+            </type>
+        </parameter>
+        <parameter>
+            <name>floatParameter</name>
+            <type>
+                <kind>fundamental</kind>
+                <declaration>float</declaration>
+            </type>
+        </parameter>
+    </parameters>
+</function>
+<function>
+    <name>FunctionReturningVoid</name>
+    <uid>19340</uid>
+    <source-info>
+        <file>../testCaseSourceCode/Functions/FunctionsWithParametersTestCase.cpp</file>
+        <line>17</line>
+        <char-count>1</char-count>
+        <location>4818121</location>
+    </source-info>
+    <namespace>TestNamespace::</namespace>
+    <returnType>
+        <type>
+            <kind>fundamental</kind>
+            <declaration>void</declaration>
+        </type>
+    </returnType>
+    <parameters>
+        <parameter>
+            <name>intParameter</name>
+            <type>
+                <kind>fundamental</kind>
+                <declaration>int</declaration>
+            </type>
+        </parameter>
+    </parameters>
+</function>

@@ -5,9 +5,9 @@
     <static>true</static>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/AttributesTestCase.cpp</file>
-        <line>19</line>
+        <line>15</line>
         <char-count>1</char-count>
-        <location>2333</location>
+        <location>1821</location>
     </source-info>
     <attributes>
         <attribute>
@@ -26,9 +26,9 @@
     <static>true</static>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/AttributesTestCase.cpp</file>
-        <line>17</line>
+        <line>13</line>
         <char-count>1</char-count>
-        <location>2080</location>
+        <location>1568</location>
     </source-info>
     <attributes>
         <attribute>
@@ -44,9 +44,9 @@
     <uid>1961</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/AttributesTestCase.cpp</file>
-        <line>19</line>
+        <line>15</line>
         <char-count>1</char-count>
-        <location>2333</location>
+        <location>1821</location>
     </source-info>
     <namespace>TestNamespace::</namespace>
     <static>true</static>
@@ -69,9 +69,9 @@
     <uid>1960</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/AttributesTestCase.cpp</file>
-        <line>17</line>
+        <line>13</line>
         <char-count>1</char-count>
-        <location>2080</location>
+        <location>1568</location>
     </source-info>
     <namespace>TestNamespace::</namespace>
     <static>true</static>

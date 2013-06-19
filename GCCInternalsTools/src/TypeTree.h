@@ -40,6 +40,20 @@ namespace GCCInternalsTools
 		}
 
 
+		const std::string									identifier() const
+		{
+			const tree&		typeName = TYPE_NAME( m_tree );
+
+			if( typeName == 0 )
+			{
+				return( "[No Identifier]" );
+			}
+
+			const char* identifier = IDENTIFIER_POINTER( typeName );
+
+			return( identifier ? std::string( identifier ) : std::string( "[No Identifier]" ));
+		}
+
 		const CPPModel::UID									uid() const
 		{
 			return( CPPModel::UID( TYPE_UID( TYPE_MAIN_VARIANT( m_tree ) ), CPPModel::UID::UIDType::TYPE ) );

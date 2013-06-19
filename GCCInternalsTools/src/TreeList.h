@@ -208,6 +208,9 @@ namespace GCCInternalsTools
 
 	//	Field lists contain a variety elements, thus passing zero to disable the type checking
 
+	typedef TreeList<DeclTree, 0>							DeclList;
+	typedef TreeList<DeclTree, NAMESPACE_DECL>				NamespaceList;
+
 	typedef TreeList<DeclTree, 0>							FieldList;
 
 	typedef TreeList<DeclTree, FUNCTION_DECL>				FunctionList;
