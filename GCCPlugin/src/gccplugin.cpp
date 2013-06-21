@@ -29,6 +29,7 @@ Contributors:
 
 #include <boost/lexical_cast.hpp>
 #include <boost/ptr_container/ptr_list.hpp>
+#include <boost/ptr_container/ptr_map.hpp>
 
 #include "config.h"
 
@@ -52,6 +53,7 @@ Contributors:
 #include "Static.h"
 #include "Access.h"
 #include "SourceElement.h"
+#include "ASTEntry.h"
 #include "Types.h"
 #include "Union.h"
 #include "Function.h"
@@ -68,6 +70,7 @@ Contributors:
 
 
 #include "GCCInternalsTools.h"
+#include "ASTModifiers.h"
 
 #include "plugin.h"
 #include "tree-pass.h"
@@ -118,22 +121,12 @@ static void RegisterAttributes( void*		eventData,
 }
 
 
-
-static void GateCallback( void*		eventData,
-		  	   	   	      void*		userData )
+void DumpAST( std::shared_ptr<GCCInternalsTools::ASTDictionaryImpl>&	astDict )
 {
-	//	If there has been an error, fall through and let the compiler handle it
-
-	if( errorcount || sorrycount )
+	for( CPPModel::ASTDictionary::NamespaceMapConstIterator itrNamespace = astDict->namespaces().begin(); itrNamespace != astDict->namespaces().end(); itrNamespace++ )
 	{
-		return;
+		itrNamespace->second->toXML( std::cerr, 0, CPPModel::XMLSerializable::SerializationOptions::NONE );
 	}
-
-	std::cerr << "Processing File: " << main_input_filename << std::endl;
-
-	std::shared_ptr<GCCInternalsTools::ASTDictionaryImpl>	astDict( new GCCInternalsTools::ASTDictionaryImpl() );
-
-	astDict->Build();
 
 	for( CPPModel::ASTDictionary::NamespaceIndexConstIterator namespaceIndex = astDict->NamespaceIdx().lower_bound( "TestNamespace::" ); namespaceIndex != astDict->NamespaceIdx().upper_bound( "TestNamespace::" ); namespaceIndex++ )
 	{
@@ -170,14 +163,41 @@ static void GateCallback( void*		eventData,
 		}
 		else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::GLOBAL_VAR )
 		{
-			std::unique_ptr<const CPPModel::GlobalVarDefinition>		globalVarDef;
+			std::unique_ptr<const CPPModel::GlobalVarEntry>		globalVarEntry;
 
-			((CPPModel::DictionaryGlobalVarEntry*)&(**namespaceIndex))->GetGlobalVarDefinition( parseOptions, globalVarDef );
+			((CPPModel::DictionaryGlobalVarEntry*)&(**namespaceIndex))->GetGlobalVarEntry( parseOptions, globalVarEntry );
 
-			globalVarDef->toXML( std::cerr, 0, CPPModel::XMLSerializable::SerializationOptions::NONE );
+			globalVarEntry->toXML( std::cerr, 0, CPPModel::XMLSerializable::SerializationOptions::NONE );
 		}
-
 	}
+}
+
+
+static void GateCallback( void*		eventData,
+		  	   	   	      void*		userData )
+{
+	//	If there has been an error, fall through and let the compiler handle it
+
+	if( errorcount || sorrycount )
+	{
+		return;
+	}
+
+	std::cerr << "Processing File: " << main_input_filename << std::endl;
+
+	std::shared_ptr<GCCInternalsTools::ASTDictionaryImpl>	astDict( new GCCInternalsTools::ASTDictionaryImpl() );
+
+	astDict->Build();
+
+	CPPModel::GlobalVarDeclaration		globalVarDec( "testVar",
+													  "TestNamespace",
+													  true,
+													  CPPModel::Attributes::emptyList(),
+													  std::unique_ptr<CPPModel::Type>( new CPPModel::FundamentalType( CPPModel::TypeInfo::Specifier::INT ) ) );
+
+	GCCInternalsTools::AddGlobalVar( *astDict, globalVarDec );
+
+	DumpAST( astDict );
 }
 
 

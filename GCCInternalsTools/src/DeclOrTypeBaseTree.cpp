@@ -14,6 +14,7 @@ Contributors:
 #include <cassert>
 
 #include <memory>
+#include <map>
 
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/identity.hpp>
@@ -21,6 +22,7 @@ Contributors:
 #include <boost/multi_index/member.hpp>
 
 #include <boost/ptr_container/ptr_list.hpp>
+#include <boost/ptr_container/ptr_map.hpp>
 
 #include "config.h"
 
@@ -41,6 +43,7 @@ Contributors:
 #include "Static.h"
 #include "Access.h"
 #include "SourceElement.h"
+#include "ASTEntry.h"
 #include "Types.h"
 #include "Union.h"
 #include "Function.h"

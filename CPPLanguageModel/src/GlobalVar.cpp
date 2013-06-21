@@ -42,6 +42,7 @@ Contributors:
 #include "Static.h"
 #include "Access.h"
 #include "SourceElement.h"
+#include "ASTEntry.h"
 #include "Types.h"
 
 #include "GlobalVar.h"
@@ -51,9 +52,31 @@ Contributors:
 namespace CPPModel
 {
 
-	std::ostream&	GlobalVarDefinition::toXML( std::ostream&			outputStream,
-					   	   	   	   	   	   	    int						indentLevel,
-					   	   	   	   	   	   	    SerializationOptions	options ) const
+	std::ostream&	GlobalVarDeclaration::toXML( std::ostream&				outputStream,
+										   	     int						indentLevel,
+										   	     SerializationOptions		options ) const
+	{
+		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
+		std::string		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+
+
+		outputStream << currentIndent << "<global_var_decl>\n";
+
+		NamedEntity::toXML( outputStream, indentLevel + 1, options );
+		Namespace::toXML( outputStream, indentLevel + 1, options );
+		Static::toXML( outputStream, indentLevel + 1, options );
+		type().toXML( outputStream, indentLevel + 1, addOption( options, SerializationOptions::NO_ATTRIBUTES ));
+		Attributes::toXML( outputStream, indentLevel + 1, options );
+
+		outputStream << currentIndent << "</global_var_decl>\n";
+
+		return( outputStream );
+	}
+
+
+	std::ostream&	GlobalVarEntry::toXML( std::ostream&			outputStream,
+					   	   	   	   	   	   int						indentLevel,
+					   	   	   	   	   	   SerializationOptions		options ) const
 	{
 		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
 		std::string		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
@@ -61,8 +84,9 @@ namespace CPPModel
 
 		outputStream << currentIndent << "<global_var>\n";
 
-		SourceElement::toXML( outputStream, indentLevel + 1, options );
+		NamedEntity::toXML( outputStream, indentLevel + 1, options );
 		Namespace::toXML( outputStream, indentLevel + 1, options );
+		ASTEntry::toXML( outputStream, indentLevel + 1, options );
 		Static::toXML( outputStream, indentLevel + 1, options );
 		type().toXML( outputStream, indentLevel + 1, addOption( options, SerializationOptions::NO_ATTRIBUTES ));
 		Attributes::toXML( outputStream, indentLevel + 1, options );

@@ -136,9 +136,24 @@ namespace GCCInternalsTools
 			{}
 
 
-		bool		GetGlobalVarDefinition( const CPPModel::ParseOptions&								options,
-										    std::unique_ptr<const CPPModel::GlobalVarDefinition>&		globalVarDef ) const;
+		bool		GetGlobalVarEntry( const CPPModel::ParseOptions&							options,
+									   std::unique_ptr<const CPPModel::GlobalVarEntry>&			globalVarEntry ) const;
 
+	};
+
+
+	class NamespaceEntryImpl : public CPPModel::NamespaceEntry, public DictionaryTreeMixin
+	{
+	public :
+
+		NamespaceEntryImpl( const CPPModel::UID&							uid,
+				   	    	const std::string&								name,
+				   	    	const std::string&								enclosingNamespace,
+				   	    	CPPModel::ConstListPtr<CPPModel::Attribute>&	attributes,
+	 	 	   	     	    const tree&										treeNode )
+			: CPPModel::NamespaceEntry( uid, name, enclosingNamespace, attributes ),
+			  DictionaryTreeMixin( treeNode )
+			{}
 	};
 
 
@@ -221,9 +236,10 @@ namespace GCCInternalsTools
 
 
 
-	bool									ConvertAttribute( const tree&													identifier,
-															  const tree&													arguments,
-															  std::unique_ptr<const CPPModel::Attribute>&					attribute );
+	bool					ConvertAttribute( const tree&										identifier,
+											  const tree&										arguments,
+											  std::unique_ptr<const CPPModel::Attribute>&		attribute );
+
 }
 
 

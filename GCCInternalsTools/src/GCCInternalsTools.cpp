@@ -30,6 +30,7 @@ Contributors:
 
 #include <boost/lexical_cast.hpp>
 #include <boost/ptr_container/ptr_list.hpp>
+#include <boost/ptr_container/ptr_map.hpp>
 
 #include "config.h"
 
@@ -53,6 +54,7 @@ Contributors:
 #include "Static.h"
 #include "Access.h"
 #include "SourceElement.h"
+#include "ASTEntry.h"
 #include "Types.h"
 #include "Union.h"
 #include "Function.h"
@@ -542,16 +544,16 @@ namespace GCCInternalsTools
 	}
 
 
-	bool		DictionaryGlobalVarEntryImpl::GetGlobalVarDefinition( const CPPModel::ParseOptions&								options,
-											   	   	   	   	   	   	  std::unique_ptr<const CPPModel::GlobalVarDefinition>&		globalVarDef ) const
+	bool		DictionaryGlobalVarEntryImpl::GetGlobalVarEntry( const CPPModel::ParseOptions&							options,
+											   	   	   	   	   	 std::unique_ptr<const CPPModel::GlobalVarEntry>&		globalVarEntry ) const
 	{
-		globalVarDef.reset( new CPPModel::GlobalVarDefinition( name(),
-															   uid(),
-															   enclosingNamespace(),
-															   sourceLocation(),
-															   isStatic(),
-															   CPPModel::Attributes::deepCopy( attributes() ),
-															   DeclOrTypeBaseTree::convert( TREE_TYPE( getTree() ))->type( Dictionary() ) ));
+		globalVarEntry.reset( new CPPModel::GlobalVarEntry( name(),
+															uid(),
+															enclosingNamespace(),
+															sourceLocation(),
+															isStatic(),
+															CPPModel::Attributes::deepCopy( attributes() ),
+															DeclOrTypeBaseTree::convert( TREE_TYPE( getTree() ))->type( Dictionary() ) ));
 
 		return( true );
 	}
@@ -561,6 +563,16 @@ namespace GCCInternalsTools
 	void 	ASTDictionaryImpl::DecodingPass( const tree&			namespaceNode,
 							  	  	  	  	 ITreeDecoder&			decoder )
 	{
+		DeclTree		namespaceTree( namespaceNode );
+
+		CPPModel::ConstListPtr<CPPModel::Attribute>			noAttributes( CPPModel::Attributes::emptyList() );
+
+		AddNamespace( new NamespaceEntryImpl( namespaceTree.uid(),
+											  namespaceTree.identifier(),
+											  namespaceTree.enclosingNamespace(),
+											  noAttributes,
+											  namespaceNode ) );
+
 		cp_binding_level*		currentLevel = NAMESPACE_LEVEL( namespaceNode );
 
 		DeclList		elements = currentLevel->names;
@@ -635,7 +647,7 @@ namespace GCCInternalsTools
 		{
 			if( dictionary.UIDIdx().find( typeDeclared.uid() ) == dictionary.UIDIdx().end() )
 			{
-				dictionary.insert( new DictionaryClassEntryImpl( dictionary,
+				dictionary.Insert( new DictionaryClassEntryImpl( dictionary,
 																 mainTypeDecl.uid(),
 																 className,
 																 mainTypeDecl.enclosingNamespace(),
@@ -681,7 +693,7 @@ namespace GCCInternalsTools
 		{
 			if( dictionary.UIDIdx().find( unionUID ) == dictionary.UIDIdx().end() )
 			{
-				dictionary.insert(  new DictionaryUnionEntryImpl( dictionary,
+				dictionary.Insert(  new DictionaryUnionEntryImpl( dictionary,
 																  unionUID,
 																  unionTree.identifier(),
 																  unionTree.enclosingNamespace(),
@@ -732,7 +744,7 @@ namespace GCCInternalsTools
 		{
 			if( dictionary.UIDIdx().find( functionUID ) == dictionary.UIDIdx().end() )
 			{
-				dictionary.insert(  new DictionaryFunctionEntryImpl( dictionary,
+				dictionary.Insert(  new DictionaryFunctionEntryImpl( dictionary,
 																	 functionUID,
 																	 functionTree.identifier(),
 																	 functionTree.enclosingNamespace(),
@@ -777,7 +789,7 @@ namespace GCCInternalsTools
 		{
 			//	Build and insert the dictionary entry
 
-			dictionary.insert( new DictionaryGlobalVarEntryImpl( dictionary,
+			dictionary.Insert( new DictionaryGlobalVarEntryImpl( dictionary,
 																 globalVarUID,
 																 globalVarTree.identifier(),
 																 globalVarTree.enclosingNamespace(),
@@ -820,5 +832,7 @@ namespace GCCInternalsTools
 			DecodingPass( global_namespace, (ITreeDecoder&)globalVarDecoder );
 		}
 	}
+
+
 
 }

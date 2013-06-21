@@ -19,22 +19,20 @@ namespace CPPModel
 {
 
 
-class GlobalVarDefinition : public SourceElement, public Namespace, public Static, public Attributes
+	class GlobalVarDeclaration : public NamedEntity, public Namespace, public Static, public Attributes
 	{
 	public :
 
-		GlobalVarDefinition() = delete;
-		GlobalVarDefinition( GlobalVarDefinition& ) = delete;
-		GlobalVarDefinition( const GlobalVarDefinition& ) = delete;
+		GlobalVarDeclaration() = delete;
+		GlobalVarDeclaration( GlobalVarDeclaration& ) = delete;
+		GlobalVarDeclaration( const GlobalVarDeclaration& ) = delete;
 
-		GlobalVarDefinition( const std::string&					name,
-							 const UID&							uid,
-							 const std::string&					enclosingNamespace,
-							 const SourceLocation&				sourceLocation,
-							 bool								isStatic,
-							 ConstListPtr<Attribute>			attributes,
-							 std::unique_ptr<const Type>		varType )
-			: SourceElement( name, uid, sourceLocation ),
+		GlobalVarDeclaration( const std::string&				name,
+							  const std::string&				enclosingNamespace,
+							  bool								isStatic,
+							  ConstListPtr<Attribute>			attributes,
+							  std::unique_ptr<const Type>		varType )
+			: NamedEntity( name ),
 			  Namespace( enclosingNamespace ),
 			  Static( isStatic ),
 			  Attributes( attributes ),
@@ -56,6 +54,33 @@ class GlobalVarDefinition : public SourceElement, public Namespace, public Stati
 
 		const std::unique_ptr<const Type>				m_varType;
 
+	};
+
+
+
+	class GlobalVarEntry : public GlobalVarDeclaration, public ASTEntry
+	{
+	public :
+
+		GlobalVarEntry() = delete;
+		GlobalVarEntry( GlobalVarEntry& ) = delete;
+		GlobalVarEntry( const GlobalVarEntry& ) = delete;
+
+		GlobalVarEntry( const std::string&				name,
+						const UID&						uid,
+						const std::string&				enclosingNamespace,
+						const SourceLocation&			sourceLocation,
+						bool							isStatic,
+						ConstListPtr<Attribute>			attributes,
+						std::unique_ptr<const Type>		varType )
+			: GlobalVarDeclaration( name, enclosingNamespace, isStatic, std::move( attributes ), std::move( varType ) ),
+			  ASTEntry( uid, sourceLocation )
+		{}
+
+
+		std::ostream&	toXML( std::ostream&			outputStream,
+							   int						indentLevel,
+							   SerializationOptions		options ) const;
 	};
 
 }

@@ -31,6 +31,7 @@ Contributors:
 
 #include <boost/lexical_cast.hpp>
 #include <boost/ptr_container/ptr_list.hpp>
+#include <boost/ptr_container/ptr_map.hpp>
 
 #include "config.h"
 
@@ -54,6 +55,7 @@ Contributors:
 #include "Static.h"
 #include "Access.h"
 #include "SourceElement.h"
+#include "ASTEntry.h"
 #include "Types.h"
 #include "Union.h"
 #include "Function.h"

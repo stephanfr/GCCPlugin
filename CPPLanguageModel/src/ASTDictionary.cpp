@@ -17,7 +17,9 @@ Contributors:
 #include <memory>
 #include <ostream>
 #include <string>
+#include <map>
 
+#include <boost/ptr_container/ptr_map.hpp>
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/identity.hpp>
 #include <boost/multi_index/ordered_index.hpp>
@@ -26,6 +28,7 @@ Contributors:
 #include <boost/lexical_cast.hpp>
 
 #include <boost/ptr_container/ptr_list.hpp>
+#include <boost/ptr_container/ptr_map.hpp>
 
 #include "ListAliases.h"
 
@@ -40,6 +43,7 @@ Contributors:
 #include "Static.h"
 #include "Access.h"
 #include "SourceElement.h"
+#include "ASTEntry.h"
 #include "Types.h"
 #include "Function.h"
 #include "GlobalVar.h"
@@ -81,6 +85,28 @@ namespace CPPModel
 		Attributes::toXML( outputStream, indentLevel + 1, options );
 
 		outputStream << currentIndent << "</dictionary_entry>\n";
+
+		return( outputStream );
+	}
+
+
+	std::ostream&	NamespaceEntry::toXML( std::ostream&			outputStream,
+											int						indentLevel,
+											SerializationOptions	options ) const
+	{
+		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
+		const std::string&		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+
+
+		outputStream << currentIndent << "<namespace_entry>\n";
+
+		outputStream << currentIndentPlusOne << "<name>" << name() << "</name>\n";
+		outputStream << currentIndentPlusOne << "<uid>" << (boost::lexical_cast<std::string>(uid().value())) << "</uid>\n";
+		outputStream << currentIndentPlusOne << "<namespace>" << enclosingNamespace() << "</namespace>\n";
+
+		Attributes::toXML( outputStream, indentLevel + 1, options );
+
+		outputStream << currentIndent << "</namespace_entry>\n";
 
 		return( outputStream );
 	}

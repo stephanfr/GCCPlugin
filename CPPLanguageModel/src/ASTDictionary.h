@@ -30,6 +30,7 @@ namespace CPPModel
 
 	class ASTDictionary;
 
+
 	class DictionaryEntry : public virtual XMLSerializable, public Attributes
 	{
 	public :
@@ -122,6 +123,7 @@ namespace CPPModel
 
 		const bool						m_static;
 	};
+
 
 
 
@@ -302,14 +304,70 @@ namespace CPPModel
 		}
 
 
-		virtual bool		GetGlobalVarDefinition( const CPPModel::ParseOptions&								options,
-												    std::unique_ptr<const CPPModel::GlobalVarDefinition>&		globalVarDef ) const = 0;
+		virtual bool		GetGlobalVarEntry( const CPPModel::ParseOptions&						options,
+											   std::unique_ptr<const CPPModel::GlobalVarEntry>&		globalVarEntry ) const = 0;
 
 	private :
 
 		const TypeInfo::Specifier			m_typeSpec;
 	};
 
+
+
+
+	class NamespaceEntry : public virtual XMLSerializable, public Attributes
+	{
+	public :
+
+		NamespaceEntry( const CPPModel::UID&			uid,
+				   	    const std::string&				name,
+				   	    const std::string&				enclosingNamespace,
+				   	    ConstListPtr<Attribute>&		attributes )
+			: Attributes( attributes ),
+			  m_uid( uid ),
+			  m_name( name ),
+			  m_enclosingNamespace( enclosingNamespace ),
+			  m_fqName( std::string( enclosingNamespace ) + std::string( name ) )
+			{}
+
+
+		virtual ~NamespaceEntry()
+		{}
+
+
+		const CPPModel::UID&			uid() const
+		{
+			return( m_uid );
+		}
+
+		const std::string&				name() const
+		{
+			return( m_name );
+		}
+
+		const std::string&				enclosingNamespace() const
+		{
+			return( m_enclosingNamespace );
+		}
+
+		const std::string&				fullyQualifiedName() const
+		{
+			return( m_fqName );
+		}
+
+		virtual std::ostream&	toXML( std::ostream&			outputStream,
+									   int						indentLevel,
+									   SerializationOptions		options ) const;
+
+	private :
+
+		const CPPModel::UID				m_uid;
+
+		const std::string				m_name;
+		const std::string				m_enclosingNamespace;
+
+		const std::string				m_fqName;
+	};
 
 
 
@@ -325,6 +383,11 @@ namespace CPPModel
 			struct FQName {};
 			struct Location {};
 		};
+
+
+		typedef boost::ptr_map<const std::string, NamespaceEntry >						NamespaceMap;
+		typedef boost::ptr_map<const std::string, NamespaceEntry >::const_iterator		NamespaceMapConstIterator;
+
 
 		//	The following typedef is for use in the code to keep the Eclipse IDE from complaining when iterators are de-referenced
 
@@ -370,7 +433,8 @@ namespace CPPModel
 
 
 		ASTDictionary()
-			: m_dictionary( new DictionaryType() )
+			: m_dictionary( new DictionaryType() ),
+			  m_namespaces( new boost::ptr_map<const std::string, NamespaceEntry>() )
 		{}
 
 		virtual ~ASTDictionary()
@@ -406,7 +470,7 @@ namespace CPPModel
 		}
 
 
-		bool		insert( DictionaryEntry*		entryToAdd )
+		bool		Insert( DictionaryEntry*		entryToAdd )
 		{
 			std::pair<CPPModel::ASTDictionary::constIterator,bool> insertResult = m_dictionary->insert( std::shared_ptr<CPPModel::DictionaryEntry>( entryToAdd ) );
 
@@ -414,11 +478,43 @@ namespace CPPModel
 		}
 
 
+		bool		AddNamespace( NamespaceEntry*	namespaceToAdd )
+		{
+			std::pair<boost::ptr_map<const std::string, NamespaceEntry >::const_iterator, bool>		insertResult = m_namespaces->insert( namespaceToAdd->fullyQualifiedName(), namespaceToAdd );
+
+			return( insertResult.second );
+		}
+
+		bool		GetNamespace( const std::string&			fullyQualifiedName,
+								  const NamespaceEntry*&		namespaceEntry )
+		{
+			boost::ptr_map<const std::string, NamespaceEntry >::const_iterator		itrNamespace = m_namespaces->find( fullyQualifiedName );
+
+			if( itrNamespace != m_namespaces->end() )
+			{
+				namespaceEntry = (*itrNamespace).second;
+
+				return( true );
+			}
+
+			namespaceEntry = NULL;
+
+			return( false );
+		}
+
+		const NamespaceMap&			namespaces() const
+		{
+			return( *m_namespaces );
+		}
+
+
 
 
 	protected :
 
-		std::shared_ptr<DictionaryType>		m_dictionary;
+		std::shared_ptr<DictionaryType>											m_dictionary;
+
+		std::unique_ptr<boost::ptr_map<const std::string, NamespaceEntry >>		m_namespaces;
 	};
 
 }	//	namespace CPPModel

@@ -28,7 +28,7 @@ namespace CPPModel
 					    long			lineNumber,
 					    int				characterCount,
 					    long			location )
-			: m_fileName( fileName ),
+			: m_fileName( fileName != NULL ? fileName : "" ),
 			  m_lineNumber( lineNumber ),
 			  m_characterCount( characterCount ),
 			  m_location( location )
@@ -41,7 +41,15 @@ namespace CPPModel
 			  m_location( locationToCopy.m_location )
 		{}
 
+		virtual ~SourceLocation()
+		{}
 
+
+
+		virtual const bool			isUnknown() const
+		{
+			return( false );
+		}
 
 		const std::string&			fileName() const
 		{
@@ -74,9 +82,9 @@ namespace CPPModel
 
 		//	Implementation of XMLSerializable virtual method
 
-		std::ostream&	toXML( std::ostream&			outputStream,
-							   int						indentLevel,
-							   SerializationOptions		options ) const;
+		virtual std::ostream&	toXML( std::ostream&			outputStream,
+							   	   	   int						indentLevel,
+							   	   	   SerializationOptions		options ) const;
 
 	private :
 

@@ -36,10 +36,19 @@ namespace CPPModel
 		const std::string&		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
 
 		outputStream << currentIndent << "<source-info>\n";
-		outputStream << currentIndentPlusOne << "<file>" << m_fileName << "</file>\n";
-		outputStream << currentIndentPlusOne << "<line>" << (boost::lexical_cast<std::string>(m_lineNumber)) << "</line>\n";
-		outputStream << currentIndentPlusOne << "<char-count>" << (boost::lexical_cast<std::string>(m_characterCount)) << "</char-count>\n";
-		outputStream << currentIndentPlusOne << "<location>" << (boost::lexical_cast<std::string>(m_location)) << "</location>\n";
+
+		if( !m_fileName.empty() )
+		{
+			outputStream << currentIndentPlusOne << "<file>" << m_fileName << "</file>\n";
+			outputStream << currentIndentPlusOne << "<line>" << (boost::lexical_cast<std::string>(m_lineNumber)) << "</line>\n";
+			outputStream << currentIndentPlusOne << "<char-count>" << (boost::lexical_cast<std::string>(m_characterCount)) << "</char-count>\n";
+			outputStream << currentIndentPlusOne << "<location>" << (boost::lexical_cast<std::string>(m_location)) << "</location>\n";
+		}
+		else
+		{
+			outputStream << currentIndentPlusOne << "<unknown>true</unknown>\n";
+		}
+
 		outputStream << currentIndent << "</source-info>\n";
 
 		return( outputStream );
