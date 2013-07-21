@@ -47,14 +47,16 @@ Contributors:
 #include "Constants.h"
 #include "Serialization.h"
 #include "ConstantValue.h"
+#include "CompilerSpecific.h"
 #include "NamedEntity.h"
 #include "Attribute.h"
 #include "UID.h"
 #include "SourceLocation.h"
-#include "Namespace.h"
 #include "Static.h"
 #include "Access.h"
 #include "SourceElement.h"
+#include "Namespace.h"
+#include "NamespaceScoped.h"
 #include "ASTEntry.h"
 #include "Types.h"
 #include "Union.h"
@@ -97,18 +99,25 @@ namespace GCCInternalsTools
 
 			tree&			originalNamespace = ORIGINAL_NAMESPACE( CP_DECL_CONTEXT( m_tree ) );
 
-			//	Test to see if this is the std namespace.  If yes, then we are done.
+			//	If this is the global namespace, return the scope resolution operator
+
+			if( originalNamespace == global_namespace )
+			{
+				return( CPPModel::SCOPE_RESOLUTION_OPERATOR );
+			}
+
+			//	If this is the standard library namespace, then return that constant now
 
 			if( DECL_NAMESPACE_STD_P( originalNamespace ))
 			{
-				declNamespace = "std::";
+				return( CPPModel::STD_NAMESPACE_LABEL );
 			}
-			else
+
+			//	We have to build the namespace context by context
+
+			for( tree& currentContext = originalNamespace; currentContext != global_namespace; currentContext = CP_DECL_CONTEXT( currentContext ) )
 			{
-				for( tree& currentContext = originalNamespace; currentContext != global_namespace; currentContext = CP_DECL_CONTEXT( currentContext ) )
-				{
-					declNamespace += std::string( DeclTree( currentContext ).identifier() + NAMESPACE_SEPARATOR );
-				}
+				declNamespace += DeclTree( currentContext ).identifier() + CPPModel::SCOPE_RESOLUTION_OPERATOR;
 			}
 		}
 		else
@@ -122,23 +131,37 @@ namespace GCCInternalsTools
 
 			tree&			originalNamespace = ORIGINAL_NAMESPACE( DECL_CONTEXT( m_tree ) );
 
-			//	Test to see if this is the std namespace.  If yes, then we are done.
+			//	If this is the global namespace, return the scope resolution operator
+
+			if( TREE_CODE( originalNamespace ) != NAMESPACE_DECL )
+			{
+				return( CPPModel::SCOPE_RESOLUTION_OPERATOR );
+			}
+
+			//	If this is the standard library namespace, then return that constant now
 
 			if( DECL_NAMESPACE_STD_P( originalNamespace ))
 			{
-				declNamespace = "std::";
+				return( CPPModel::STD_NAMESPACE_LABEL );
+			}
+
+			//	Build the namespace up level by level.  For functions, if the original namespace is not
+			//		a namespace decl then we have the global namespace
+
+			if( TREE_CODE( originalNamespace ) == NAMESPACE_DECL )
+			{
+				for( tree& currentContext = originalNamespace; TREE_CODE( currentContext ) == NAMESPACE_DECL; currentContext = DECL_CONTEXT( currentContext ) )
+				{
+					declNamespace += DeclTree( currentContext ).identifier() + CPPModel::SCOPE_RESOLUTION_OPERATOR;
+				}
 			}
 			else
 			{
-				if( TREE_CODE( originalNamespace ) == NAMESPACE_DECL )
-				{
-					for( tree& currentContext = originalNamespace; TREE_CODE( currentContext ) == NAMESPACE_DECL; currentContext = DECL_CONTEXT( currentContext ) )
-					{
-						declNamespace += std::string( DeclTree( currentContext ).identifier() + NAMESPACE_SEPARATOR );
-					}
-				}
+				declNamespace = CPPModel::SCOPE_RESOLUTION_OPERATOR;
 			}
 		}
+
+		//	Return the namespace
 
 		return( declNamespace );
 	}

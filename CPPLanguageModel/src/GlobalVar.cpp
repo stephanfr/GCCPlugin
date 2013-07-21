@@ -34,14 +34,16 @@ Contributors:
 #include "Constants.h"
 #include "Serialization.h"
 #include "ConstantValue.h"
+#include "CompilerSpecific.h"
 #include "NamedEntity.h"
 #include "Attribute.h"
 #include "UID.h"
 #include "SourceLocation.h"
-#include "Namespace.h"
 #include "Static.h"
 #include "Access.h"
 #include "SourceElement.h"
+#include "Namespace.h"
+#include "NamespaceScoped.h"
 #include "ASTEntry.h"
 #include "Types.h"
 
@@ -63,10 +65,10 @@ namespace CPPModel
 		outputStream << currentIndent << "<global_var_decl>\n";
 
 		NamedEntity::toXML( outputStream, indentLevel + 1, options );
-		Namespace::toXML( outputStream, indentLevel + 1, options );
+		NamespaceScoped::toXML( outputStream, indentLevel + 1, options );
 		Static::toXML( outputStream, indentLevel + 1, options );
-		type().toXML( outputStream, indentLevel + 1, addOption( options, SerializationOptions::NO_ATTRIBUTES ));
-		Attributes::toXML( outputStream, indentLevel + 1, options );
+		type().toXML( outputStream, indentLevel + 1, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+		attributes().toXML( outputStream, indentLevel + 1, options );
 
 		outputStream << currentIndent << "</global_var_decl>\n";
 
@@ -85,11 +87,11 @@ namespace CPPModel
 		outputStream << currentIndent << "<global_var>\n";
 
 		NamedEntity::toXML( outputStream, indentLevel + 1, options );
-		Namespace::toXML( outputStream, indentLevel + 1, options );
+		NamespaceScoped::toXML( outputStream, indentLevel + 1, options );
 		ASTEntry::toXML( outputStream, indentLevel + 1, options );
 		Static::toXML( outputStream, indentLevel + 1, options );
-		type().toXML( outputStream, indentLevel + 1, addOption( options, SerializationOptions::NO_ATTRIBUTES ));
-		Attributes::toXML( outputStream, indentLevel + 1, options );
+		type().toXML( outputStream, indentLevel + 1, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+		attributes().toXML( outputStream, indentLevel + 1, options );
 
 		outputStream << currentIndent << "</global_var>\n";
 

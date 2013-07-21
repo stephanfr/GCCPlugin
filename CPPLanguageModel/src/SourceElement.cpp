@@ -23,7 +23,6 @@ Contributors:
 
 #include "Constants.h"
 #include "Serialization.h"
-#include "Namespace.h"
 #include "NamedEntity.h"
 #include "ConstantValue.h"
 #include "Attribute.h"
@@ -40,11 +39,8 @@ namespace CPPModel
 										  int						indentLevel,
 										  SerializationOptions		options ) const
 	{
-		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-
-
 		NamedEntity::toXML( outputStream, indentLevel, options );
-		outputStream << currentIndent << "<uid>" << (boost::lexical_cast<std::string>(uid().value())) << "</uid>\n";
+		UID::toXML( outputStream, indentLevel, options );
 
 		SourceLocation::toXML( outputStream, indentLevel, options );
 

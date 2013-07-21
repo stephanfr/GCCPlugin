@@ -23,6 +23,7 @@ Contributors:
 
 
 #include "Serialization.h"
+#include "CompilerSpecific.h"
 
 
 namespace CPPModel
@@ -95,5 +96,18 @@ namespace CPPModel
 		{ std::string( 63 * XML_INDENT_SIZE, ' ' ) },
 		{ std::string( 64 * XML_INDENT_SIZE, ' ' ) }
 	};
+
+
+	bool						MatchOptions( SerializationOptions			firstOption,
+							  	  	  	  	  SerializationOptions			secondOption )
+	{
+		return( (std::int64_t)firstOption && (std::int64_t)secondOption );
+	}
+
+	SerializationOptions		AddOption( SerializationOptions				option,
+						   	   	   	   	   SerializationOptions				optionToAdd )
+	{
+		return( (SerializationOptions)((std::int64_t)option | (std::int64_t)optionToAdd) );
+	}
 
 }

@@ -23,12 +23,17 @@ Contributors:
 
 #include "Constants.h"
 #include "Serialization.h"
-#include "Namespace.h"
-#include "NamedEntity.h"
 #include "ConstantValue.h"
+#include "CompilerSpecific.h"
+#include "NamedEntity.h"
 #include "Attribute.h"
 #include "UID.h"
 #include "SourceLocation.h"
+#include "Static.h"
+#include "Access.h"
+#include "SourceElement.h"
+#include "Namespace.h"
+#include "NamespaceScoped.h"
 
 #include "ASTEntry.h"
 
@@ -43,7 +48,7 @@ namespace CPPModel
 		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
 
 
-		outputStream << currentIndent << "<uid>" << (boost::lexical_cast<std::string>(uid().value())) << "</uid>\n";
+		outputStream << currentIndent << "<uid>" << (boost::lexical_cast<std::string>(uid().uidValue())) << "</uid>\n";
 
 		SourceLocation::toXML( outputStream, indentLevel, options );
 

@@ -20,7 +20,7 @@ namespace CPPModel
 //	Classes for AST constants
 //
 
-	class ConstantValue : public virtual XMLSerializable
+	class ConstantValue : public virtual IXMLSerializable
 	{
 	public :
 

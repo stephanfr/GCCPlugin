@@ -18,11 +18,26 @@ fi
 
 cd temp
 
-/usr/gcc-4.8.0/bin/g++-4.8.0 -S -std=c++11 \
+if [ $# -eq 2 ]
+then
+
+    /usr/gcc-4.8.0/bin/g++-4.8.0 -S -std=c++11 \
 							     -fplugin=../../GCCInternalsUTFixture/Debug/libGCCInternalsUTFixture.so \
                                                              -fplugin-arg-libGCCInternalsUTFixture-outputFilename=../results/$TEST_DIRECTORY/$TEST_NAME.xml \
                                                              -o $TEST_DIRECTORY_$TEST_NAME.junk \
                                                              ../testCaseSourceCode/$TEST_DIRECTORY/$TEST_NAME.cpp
+
+elif [ $# -eq 3 ]
+then
+
+    /usr/gcc-4.8.0/bin/g++-4.8.0 -S -std=c++11 \
+							     -fplugin=../../GCCInternalsUTFixture/Debug/libGCCInternalsUTFixture.so \
+                                                             -fplugin-arg-libGCCInternalsUTFixture-outputFilename=../results/$TEST_DIRECTORY/$TEST_NAME.xml \
+                                                             -fplugin-arg-libGCCInternalsUTFixture-$3 \
+                                                             -o $TEST_DIRECTORY_$TEST_NAME.junk \
+                                                             ../testCaseSourceCode/$TEST_DIRECTORY/$TEST_NAME.cpp
+
+fi
 
 cd ..
 

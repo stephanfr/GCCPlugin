@@ -33,14 +33,16 @@ Contributors:
 #include "Constants.h"
 #include "Serialization.h"
 #include "ConstantValue.h"
+#include "CompilerSpecific.h"
 #include "NamedEntity.h"
 #include "Attribute.h"
 #include "UID.h"
 #include "SourceLocation.h"
-#include "Namespace.h"
 #include "Static.h"
 #include "Access.h"
 #include "SourceElement.h"
+#include "Namespace.h"
+#include "NamespaceScoped.h"
 #include "Types.h"
 
 #include "Union.h"
@@ -60,8 +62,8 @@ namespace CPPModel
 		outputStream << currentIndent << "<union>\n";
 
 		SourceElement::toXML( outputStream, indentLevel + 1, options );
-		Namespace::toXML( outputStream, indentLevel + 1, options );
-		Attributes::toXML( outputStream, indentLevel + 1, options );
+		NamespaceScoped::toXML( outputStream, indentLevel + 1, options );
+		attributes().toXML( outputStream, indentLevel + 1, options );
 
 		outputStream << currentIndentPlusOne << "<members>\n";
 		for( const UnionMember& itrMember : members() )
@@ -81,7 +83,6 @@ namespace CPPModel
 					   	   	   	   	  	SerializationOptions	options ) const
 	{
 		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		const std::string&		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
 
 		outputStream << currentIndent << "<member>\n";
 		NamedEntity::toXML( outputStream, indentLevel + 1, options );

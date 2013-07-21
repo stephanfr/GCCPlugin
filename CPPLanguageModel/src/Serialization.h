@@ -17,6 +17,25 @@ Contributors:
 namespace CPPModel
 {
 
+	enum class SerializationOptions : std::int64_t
+		{ NONE = 0,
+		  NO_ATTRIBUTES = 1,
+		  NO_BUILT_INS = 2,
+		  NO_ARTIFICIALS = 4
+		};
+
+
+
+
+	bool						MatchOptions( SerializationOptions			firstOption,
+							  	  	  	  	  SerializationOptions			secondOption );
+
+	SerializationOptions		AddOption( SerializationOptions				option,
+						   	   	   	   	   SerializationOptions				optionToAdd );
+
+
+
+
 	class XMLIndentTable
 	{
 	public :
@@ -49,33 +68,12 @@ namespace CPPModel
 
 
 
-
-	class XMLSerializable
+	class IXMLSerializable
 	{
 	public :
 
-
-		enum class SerializationOptions : std::int64_t { NONE = 0, NO_ATTRIBUTES = 1 };
-
-
-		virtual ~XMLSerializable()
+		virtual ~IXMLSerializable()
 		{}
-
-
-
-		static bool						matchOptions( SerializationOptions		firstOption,
-								  	  	  	  	  	  SerializationOptions		secondOption )
-		{
-			return( (std::int64_t)firstOption && (std::int64_t)secondOption );
-		}
-
-		static SerializationOptions		addOption( SerializationOptions			option,
-							   	   	   	   	   	   SerializationOptions			optionToAdd )
-		{
-			return( (SerializationOptions)((std::int64_t)option | (std::int64_t)optionToAdd) );
-		}
-
-
 
 		virtual std::ostream&	toXML( std::ostream&			outputStream,
 									   int						indentLevel,

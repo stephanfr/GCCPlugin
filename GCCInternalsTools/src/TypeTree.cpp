@@ -46,14 +46,16 @@ Contributors:
 #include "Constants.h"
 #include "Serialization.h"
 #include "ConstantValue.h"
+#include "CompilerSpecific.h"
 #include "NamedEntity.h"
 #include "Attribute.h"
 #include "UID.h"
 #include "SourceLocation.h"
-#include "Namespace.h"
 #include "Static.h"
 #include "Access.h"
 #include "SourceElement.h"
+#include "Namespace.h"
+#include "NamespaceScoped.h"
 #include "ASTEntry.h"
 #include "Types.h"
 #include "Union.h"
@@ -86,22 +88,31 @@ namespace GCCInternalsTools
 
 	const std::string			TypeTree::enclosingNamespace() const
 	{
-		std::string			fullNamespace = "";
-
 		//	Namespaces can be aliased in the AST, make sure we get the original
 
 		tree&			originalNamespace = ORIGINAL_NAMESPACE( CP_TYPE_CONTEXT( m_tree ) );
 
+		//	If this is the global namespace, return the scope resolution operator
+
+		if( originalNamespace == global_namespace )
+		{
+			return( CPPModel::SCOPE_RESOLUTION_OPERATOR );
+		}
+
+		//	If this is the standard library namespace, return that namespace now.
+
 		if( DECL_NAMESPACE_STD_P( originalNamespace ))
 		{
-			fullNamespace = "std::";
+			return( CPPModel::STD_NAMESPACE_LABEL );
 		}
-		else
+
+		//	We have to build out the full namespace context by context
+
+		std::string			fullNamespace = "";
+
+		for( tree& currentContext = originalNamespace; currentContext != global_namespace; currentContext = CP_TYPE_CONTEXT( currentContext ) )
 		{
-			for( tree& currentContext = originalNamespace; currentContext != global_namespace; currentContext = CP_TYPE_CONTEXT( currentContext ) )
-			{
-				fullNamespace += std::string( DeclTree( currentContext ).identifier() + NAMESPACE_SEPARATOR );
-			}
+			fullNamespace += DeclTree( currentContext ).identifier() + CPPModel::SCOPE_RESOLUTION_OPERATOR;
 		}
 
 		return( fullNamespace );
@@ -278,10 +289,14 @@ namespace GCCInternalsTools
 
 					CPPModel::ConstListPtr<CPPModel::Attribute>		attributes( new boost::ptr_list<CPPModel::Attribute>() );
 
+					const CPPModel::Namespace*		namespaceScope;
+
+					dictionary.GetNamespace( enclosingNamespace(), namespaceScope );
+
 					returnValue.reset( new CPPModel::UserDefinedType( currentType,
 																	  convert( TYPE_NAME( m_tree ))->identifier(),
 																	  uid(),
-																	  enclosingNamespace(),
+																	  *namespaceScope,
 																	  CPPModel::SourceLocation( "", 1, 1, 1 ),
 																	  attributes ));
 				}
@@ -317,7 +332,7 @@ namespace GCCInternalsTools
 						{
 							CPPModel::ConstListPtr<CPPModel::Attribute>	attributes( CPPModel::Attributes::deepCopy( unionEntry->attributes() ));
 
-							returnValue.reset( new CPPModel::UnionType( unionEntry->typeSpec(),unionEntry->name().c_str(), typeUID, unionEntry->enclosingNamespace().c_str(), unionEntry->sourceLocation(), attributes ));
+							returnValue.reset( new CPPModel::UnionType( unionEntry->typeSpec(),unionEntry->name().c_str(), typeUID, unionEntry->enclosingNamespace(), unionEntry->sourceLocation(), attributes ));
 						}
 					}
 				}
@@ -327,10 +342,14 @@ namespace GCCInternalsTools
 
 					CPPModel::ConstListPtr<CPPModel::Attribute>		attributes( new boost::ptr_list<CPPModel::Attribute>() );
 
+					const CPPModel::Namespace*		namespaceScope;
+
+					dictionary.GetNamespace( enclosingNamespace(), namespaceScope );
+
 					returnValue.reset( new CPPModel::UnionType( currentType,
 																convert( TYPE_NAME( m_tree ))->identifier(),
 																uid(),
-																enclosingNamespace(),
+																*namespaceScope,
 																CPPModel::SourceLocation( "", 1, 1, 1 ),
 																attributes ) );
 				}

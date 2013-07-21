@@ -17,7 +17,7 @@ Contributors:
 
 namespace CPPModel
 {
-	class Static : XMLSerializable
+	class Static : public IXMLSerializable
 	{
 	public :
 

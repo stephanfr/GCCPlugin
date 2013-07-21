@@ -123,7 +123,7 @@
 					<sourceEntries>
 						<entry excluding="gtest|test/GlobalVarTests.cpp|test/TestUTTest.cpp|Functions|testCaseSourceCode|test|contrib-old|GlobalVars|testCaseSourceCode-old|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
-						<entry excluding="FunctionTests.cpp|GlobalVarTests.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="test"/>
+						<entry excluding="NamespaceTests.cpp|FunctionTests.cpp|GlobalVarTests.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="test"/>
 						<entry excluding="GlobalVars/AttributesTestCase.cpp|GlobalVarTestCase1.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="testCaseSourceCode"/>
 					</sourceEntries>
 				</configuration>
@@ -223,7 +223,7 @@
 					<sourceEntries>
 						<entry excluding="Functions|test|test/GlobalVarTests.cpp|test/TestUTTest.cpp|gtest|testCaseSourceCode|contrib-old|GlobalVars|testCaseSourceCode-old|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
-						<entry excluding="FunctionTests.cpp|GlobalVarTests.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="test"/>
+						<entry excluding="NamespaceTests.cpp|FunctionTests.cpp|GlobalVarTests.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="test"/>
 						<entry excluding="Functions|GlobalVarTestCase1.cpp|GlobalVars" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="testCaseSourceCode"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="testCaseSourceCode/Functions"/>
 						<entry excluding="AttributesTestCase.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="testCaseSourceCode/GlobalVars"/>

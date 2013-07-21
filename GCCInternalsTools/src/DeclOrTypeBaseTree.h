@@ -49,6 +49,8 @@ namespace GCCInternalsTools
 
 		virtual const CPPModel::UID							uid() const = 0;
 
+		//	TODO Rename to NamespaceScopeFQName
+
 		virtual const std::string							enclosingNamespace() const = 0;
 
 		virtual CPPModel::TypeInfo::Specifier				typeSpecifier() const = 0;

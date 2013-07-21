@@ -17,7 +17,7 @@ Contributors:
 
 namespace CPPModel
 {
-	class SourceLocation : public XMLSerializable
+	class SourceLocation : public IXMLSerializable
 	{
 	public :
 

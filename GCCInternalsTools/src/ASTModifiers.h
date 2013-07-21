@@ -2,8 +2,9 @@
 
 namespace GCCInternalsTools
 {
+	Result		AddNamespace( CPPModel::ASTDictionary&						dictionary,
+							  const std::string&							namespaceToAdd );
 
-	bool		AddGlobalVar( CPPModel::ASTDictionary&						dictionary,
+	Result		AddGlobalVar( CPPModel::ASTDictionary&						dictionary,
 							  const CPPModel::GlobalVarDeclaration&			globalDecl );
-
 }

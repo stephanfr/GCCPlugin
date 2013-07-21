@@ -1,7 +1,39 @@
+<namespace>
+    <name>::</name>
+</namespace>
+<namespace>
+    <name>TestNamespace::</name>
+</namespace>
+<namespace>
+    <name>__cxxabiv1::</name>
+    <compiler_specific>
+        </built_in>
+    </compiler_specific>
+</namespace>
+<namespace>
+    <name>__gnu_cxx::</name>
+</namespace>
+<namespace>
+    <name>__gnu_debug::</name>
+</namespace>
+<namespace>
+    <name>std::</name>
+    <compiler_specific>
+        </built_in>
+    </compiler_specific>
+</namespace>
+<namespace>
+    <name>std::__debug::</name>
+</namespace>
+<namespace>
+    <name>std::__exception_ptr::</name>
+</namespace>
 <dictionary_entry>
     <name>FunctionReturningString</name>
     <uid>19349</uid>
-    <namespace>TestNamespace::</namespace>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <source-info>
         <file>../testCaseSourceCode/Functions/FunctionsWithParametersTestCase.cpp</file>
         <line>25</line>
@@ -12,7 +44,9 @@
 <dictionary_entry>
     <name>FunctionReturningInt</name>
     <uid>19344</uid>
-    <namespace>TestNamespace::</namespace>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <source-info>
         <file>../testCaseSourceCode/Functions/FunctionsWithParametersTestCase.cpp</file>
         <line>19</line>
@@ -23,7 +57,9 @@
 <dictionary_entry>
     <name>FunctionReturningVoid</name>
     <uid>19340</uid>
-    <namespace>TestNamespace::</namespace>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <source-info>
         <file>../testCaseSourceCode/Functions/FunctionsWithParametersTestCase.cpp</file>
         <line>17</line>
@@ -40,7 +76,9 @@
         <char-count>1</char-count>
         <location>4819151</location>
     </source-info>
-    <namespace>TestNamespace::</namespace>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <returnType>
         <type>
             <kind>derived</kind>
@@ -49,7 +87,6 @@
                 <type>
                     <kind>userDefined</kind>
                     <declaration>string</declaration>
-                    <namespace>std::</namespace>
                 </type>
             </declaration>
         </type>
@@ -64,7 +101,6 @@
                     <type>
                         <kind>userDefined</kind>
                         <declaration>string</declaration>
-                        <namespace>std::</namespace>
                     </type>
                 </declaration>
             </type>
@@ -94,7 +130,9 @@
         <char-count>1</char-count>
         <location>4818377</location>
     </source-info>
-    <namespace>TestNamespace::</namespace>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <returnType>
         <type>
             <kind>fundamental</kind>
@@ -127,7 +165,9 @@
         <char-count>1</char-count>
         <location>4818121</location>
     </source-info>
-    <namespace>TestNamespace::</namespace>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <returnType>
         <type>
             <kind>fundamental</kind>

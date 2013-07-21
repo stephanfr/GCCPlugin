@@ -34,14 +34,16 @@ Contributors:
 #include "Constants.h"
 #include "Serialization.h"
 #include "ConstantValue.h"
+#include "CompilerSpecific.h"
 #include "NamedEntity.h"
 #include "Attribute.h"
 #include "UID.h"
 #include "SourceLocation.h"
-#include "Namespace.h"
 #include "Static.h"
 #include "Access.h"
 #include "SourceElement.h"
+#include "Namespace.h"
+#include "NamespaceScoped.h"
 #include "Types.h"
 
 #include "Function.h"
@@ -59,7 +61,7 @@ namespace CPPModel
 
 		outputStream << currentIndent + "<parameter>\n";
 		NamedEntity::toXML( outputStream, indentLevel + 1, options );
-		type().toXML( outputStream, indentLevel + 1, addOption( options, SerializationOptions::NO_ATTRIBUTES ));
+		type().toXML( outputStream, indentLevel + 1, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
 		outputStream << currentIndent << "</parameter>\n";
 
 		return( outputStream );
@@ -107,11 +109,11 @@ namespace CPPModel
 		}
 
 		SourceElement::toXML( outputStream, indentLevel + 1, options );
-		Namespace::toXML( outputStream, indentLevel + 1, options );
+		NamespaceScoped::toXML( outputStream, indentLevel + 1, options );
 		outputStream << currentIndentPlusOne << "<returnType>\n";
-		returnType().toXML( outputStream, indentLevel + 2, addOption( options, SerializationOptions::NO_ATTRIBUTES ));
+		returnType().toXML( outputStream, indentLevel + 2, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
 		outputStream << currentIndentPlusOne << "</returnType>\n";
-		Attributes::toXML( outputStream, indentLevel + 1, options );
+		attributes().toXML( outputStream, indentLevel + 1, options );
 
 		m_parameters.toXML( outputStream, indentLevel + 1, options );
 

@@ -1,7 +1,27 @@
+<namespace>
+    <name>::</name>
+</namespace>
+<namespace>
+    <name>TestNamespace::</name>
+</namespace>
+<namespace>
+    <name>__cxxabiv1::</name>
+    <compiler_specific>
+        </built_in>
+    </compiler_specific>
+</namespace>
+<namespace>
+    <name>std::</name>
+    <compiler_specific>
+        </built_in>
+    </compiler_specific>
+</namespace>
 <dictionary_entry>
     <name>globaldoubleWithoutStaticKeyword</name>
     <uid>1961</uid>
-    <namespace>TestNamespace::</namespace>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <static>true</static>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/AttributesTestCase.cpp</file>
@@ -22,7 +42,9 @@
 <dictionary_entry>
     <name>globalInt</name>
     <uid>1960</uid>
-    <namespace>TestNamespace::</namespace>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <static>true</static>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/AttributesTestCase.cpp</file>
@@ -41,6 +63,9 @@
 </dictionary_entry>
 <global_var>
     <name>globaldoubleWithoutStaticKeyword</name>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <uid>1961</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/AttributesTestCase.cpp</file>
@@ -48,7 +73,6 @@
         <char-count>1</char-count>
         <location>1821</location>
     </source-info>
-    <namespace>TestNamespace::</namespace>
     <static>true</static>
     <type>
         <kind>fundamental</kind>
@@ -66,6 +90,9 @@
 </global_var>
 <global_var>
     <name>globalInt</name>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <uid>1960</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/AttributesTestCase.cpp</file>
@@ -73,7 +100,6 @@
         <char-count>1</char-count>
         <location>1568</location>
     </source-info>
-    <namespace>TestNamespace::</namespace>
     <static>true</static>
     <type>
         <kind>fundamental</kind>

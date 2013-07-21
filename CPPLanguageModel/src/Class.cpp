@@ -34,14 +34,16 @@ Contributors:
 #include "Constants.h"
 #include "Serialization.h"
 #include "ConstantValue.h"
+#include "CompilerSpecific.h"
 #include "NamedEntity.h"
 #include "Attribute.h"
 #include "UID.h"
 #include "SourceLocation.h"
-#include "Namespace.h"
 #include "Static.h"
 #include "Access.h"
 #include "SourceElement.h"
+#include "Namespace.h"
+#include "NamespaceScoped.h"
 #include "Types.h"
 
 #include "Function.h"
@@ -77,7 +79,7 @@ namespace CPPModel
 
 		outputStream << currentIndent << "<friend>\n";
 		outputStream << currentIndent << XMLIndentTable::GetIndent( 1 ) << "<type>CLASS</type>\n";
-		m_type->toXML( outputStream, indentLevel + 1, addOption( options, SerializationOptions::NO_ATTRIBUTES ) );
+		m_type->toXML( outputStream, indentLevel + 1, AddOption( options, SerializationOptions::NO_ATTRIBUTES ) );
 		outputStream << currentIndent << "</friend>\n";
 
 		return( outputStream );
@@ -92,7 +94,7 @@ namespace CPPModel
 
 		outputStream << currentIndent << "<friend>\n";
 		outputStream << currentIndent << XMLIndentTable::GetIndent( 1 ) << "<type>CLASS_MEMBER</type>\n";
-		m_type->toXML( outputStream, indentLevel + 1, addOption( options, SerializationOptions::NO_ATTRIBUTES ) );
+		m_type->toXML( outputStream, indentLevel + 1, AddOption( options, SerializationOptions::NO_ATTRIBUTES ) );
 		outputStream << currentIndent << "</friend>\n";
 
 		return( outputStream );
@@ -124,10 +126,10 @@ namespace CPPModel
 		outputStream << currentIndent << "<field>\n";
 		NamedEntity::toXML( outputStream, indentLevel + 1, options );
 		SourceLocation::toXML( outputStream, indentLevel + 1, options );
-		type().toXML( outputStream, indentLevel + 1, addOption( options, SerializationOptions::NO_ATTRIBUTES ) );
+		type().toXML( outputStream, indentLevel + 1, AddOption( options, SerializationOptions::NO_ATTRIBUTES ) );
 		Access::toXML( outputStream, indentLevel + 1, options );
 		Static::toXML( outputStream, indentLevel + 1, options );
-		Attributes::toXML( outputStream, indentLevel + 1, options );
+		attributes().toXML( outputStream, indentLevel + 1, options );
 		outputStream << currentIndent << "</field>\n";
 
 		return( outputStream );
@@ -146,7 +148,7 @@ namespace CPPModel
 		Access::toXML( outputStream, indentLevel + 1, options );
 		Static::toXML( outputStream, indentLevel + 1, options );
 		outputStream << currentIndentPlusOne << "<result>\n";
-		resultType().toXML( outputStream, indentLevel + 2, addOption( options, SerializationOptions::NO_ATTRIBUTES ) );
+		resultType().toXML( outputStream, indentLevel + 2, AddOption( options, SerializationOptions::NO_ATTRIBUTES ) );
 		outputStream << currentIndentPlusOne << "</result>\n";
 
 		outputStream << currentIndentPlusOne << "<parameters>\n";
@@ -156,7 +158,7 @@ namespace CPPModel
 		}
 		outputStream << currentIndentPlusOne << "</parameters>\n";
 
-		Attributes::toXML( outputStream, indentLevel + 1, options );
+		attributes().toXML( outputStream, indentLevel + 1, options );
 
 		outputStream << currentIndent << "</method>\n";
 
@@ -168,6 +170,11 @@ namespace CPPModel
 					   	   	   	   	   	   	int						indentLevel,
 					   	   	   	   	   	   	SerializationOptions	options ) const
 	{
+		if( MatchOptions( SerializationMask(), options ) )
+		{
+			return( outputStream );
+		}
+
 		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
 		std::string		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
 
@@ -182,9 +189,10 @@ namespace CPPModel
 		}
 
 		SourceElement::toXML( outputStream, indentLevel + 1, options );
-		Namespace::toXML( outputStream, indentLevel + 1, options );
+		NamespaceScoped::toXML( outputStream, indentLevel + 1, options );
+		CompilerSpecific::toXML( outputStream, indentLevel + 1, options );
 
-		Attributes::toXML( outputStream, indentLevel + 1, options );
+		attributes().toXML( outputStream, indentLevel + 1, options );
 
 		outputStream << currentIndentPlusOne << "<base-classes>\n";
 

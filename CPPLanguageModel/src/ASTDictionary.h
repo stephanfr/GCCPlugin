@@ -31,7 +31,7 @@ namespace CPPModel
 	class ASTDictionary;
 
 
-	class DictionaryEntry : public virtual XMLSerializable, public Attributes
+	class DictionaryEntry : public IXMLSerializable, public IAttributes, public ICompilerSpecific
 	{
 	public :
 
@@ -39,20 +39,23 @@ namespace CPPModel
 
 
 		DictionaryEntry( const ASTDictionary&			dictionary,
-				   	     const CPPModel::UID&			uid,
+				   	     const UID&						uid,
 				   	     const std::string&				name,
-				   	     const std::string&				enclosingNamespace,
+				   	     const Namespace&				enclosingNamespace,
 				   	     bool							isStatic,
 				   	     const SourceLocation&			sourceLocation,
+				   	     const CompilerSpecific&		compilerSpecific,
 				   	     ConstListPtr<Attribute>&		attributes )
-			: Attributes( attributes ),
-			  m_dictionary( dictionary ),
+			: m_dictionary( dictionary ),
 			  m_uid( uid ),
 			  m_name( name ),
+		  	  m_sourceLocation( sourceLocation ),
+		  	  m_compilerSpecific( compilerSpecific ),
+		  	  m_attributes( attributes ),
+		  	  m_static( isStatic ),
 			  m_enclosingNamespace( enclosingNamespace ),
-			  m_static( isStatic ),
-			  m_sourceLocation( sourceLocation ),
-			  m_fqName( std::string( enclosingNamespace ) + std::string( name ) )
+		  	  m_enclosingNamespaceFQName( enclosingNamespace.fqName() ),
+		  	  m_fqName( enclosingNamespace.fqName() + std::string( name ) )
 			{}
 
 
@@ -77,7 +80,7 @@ namespace CPPModel
 			return( m_name );
 		}
 
-		const std::string&				enclosingNamespace() const
+		const Namespace&				enclosingNamespace() const
 		{
 			return( m_enclosingNamespace );
 		}
@@ -95,6 +98,16 @@ namespace CPPModel
 		const SourceLocation&			sourceLocation() const
 		{
 			return( m_sourceLocation );
+		}
+
+		const CompilerSpecific&			compilerSpecific() const
+		{
+			return( m_compilerSpecific );
+		}
+
+		const Attributes&				attributes() const
+		{
+			return( m_attributes );
 		}
 
 		bool operator<( const DictionaryEntry&	entryToCompare ) const
@@ -115,13 +128,19 @@ namespace CPPModel
 		const CPPModel::UID				m_uid;
 
 		const std::string				m_name;
-		const std::string				m_enclosingNamespace;
 
 		const SourceLocation			m_sourceLocation;
 
-		const std::string				m_fqName;
+		const CompilerSpecific			m_compilerSpecific;
+
+		const Attributes				m_attributes;
 
 		const bool						m_static;
+
+		const Namespace&				m_enclosingNamespace;
+		const std::string				m_enclosingNamespaceFQName;
+
+		const std::string				m_fqName;
 	};
 
 
@@ -132,13 +151,14 @@ namespace CPPModel
 	public :
 
 		DictionaryClassEntry( const ASTDictionary&				dictionary,
-				   	    	  const CPPModel::UID&				uid,
+				   	    	  const UID&						uid,
 				   	    	  const std::string&				name,
-				   	    	  const std::string&				enclosingNamespace,
+				   	    	  const Namespace&					enclosingNamespace,
 				   	    	  const SourceLocation&				sourceLocation,
+						   	  const CompilerSpecific&			compilerSpecific,
 				   	    	  ConstListPtr<Attribute>&			attributeList,
 				   	    	  TypeInfo::Specifier				typeSpec )
-			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, false, sourceLocation, attributeList ),
+			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, false, sourceLocation, compilerSpecific, attributeList ),
 			  m_typeSpec( typeSpec )
 			{}
 
@@ -179,14 +199,15 @@ namespace CPPModel
 	public :
 
 		DictionaryUnionEntry( const ASTDictionary&			dictionary,
-				   	    	  const CPPModel::UID&			uid,
+				   	    	  const UID&					uid,
 				   	    	  const std::string&			name,
-				   	    	  const std::string&			enclosingNamespace,
+				   	    	  const Namespace&				enclosingNamespace,
 						   	  bool							isStatic,
 				   	    	  const SourceLocation&			sourceLocation,
+						   	  const CompilerSpecific&		compilerSpecific,
 				   	    	  ConstListPtr<Attribute>&		attributeList,
 				   	    	  TypeInfo::Specifier			typeSpec )
-			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, attributeList ),
+			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, compilerSpecific, attributeList ),
 			  m_typeSpec( typeSpec )
 			{}
 
@@ -224,15 +245,16 @@ namespace CPPModel
 	public :
 
 		DictionaryFunctionEntry( const ASTDictionary&			dictionary,
-				   	    		 const CPPModel::UID&			uid,
+				   	    		 const UID&						uid,
 				   	    		 const std::string&				name,
-				   	    		 const std::string&				enclosingNamespace,
+				   	    		 const Namespace&				enclosingNamespace,
 						   	     bool							isStatic,
 				   	    		 const SourceLocation&			sourceLocation,
+						   	     const CompilerSpecific&		compilerSpecific,
 				   	    		 ConstListPtr<Attribute>&		attributeList,
 				   	    		 TypeInfo::Specifier			returnTypeSpec,
 				   	    		 const bool						hiddenFriend )
-			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, attributeList ),
+			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, compilerSpecific, attributeList ),
 			  m_returnTypeSpec( returnTypeSpec ),
 			  m_hiddenFriend( hiddenFriend )
 			{}
@@ -276,14 +298,15 @@ namespace CPPModel
 	public :
 
 		DictionaryGlobalVarEntry( const ASTDictionary&			dictionary,
-				   	    		  const CPPModel::UID&			uid,
+				   	    		  const UID&					uid,
 				   	    		  const std::string&			name,
-				   	    		  const std::string&			enclosingNamespace,
+				   	    		  const Namespace&				enclosingNamespace,
 				   	    		  bool							isStatic,
 				   	    		  const SourceLocation&			sourceLocation,
+							   	  const CompilerSpecific&		compilerSpecific,
 				   	    		  ConstListPtr<Attribute>&		attributes,
 				   	    		  TypeInfo::Specifier			typeSpec )
-			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, attributes ),
+			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, compilerSpecific, attributes ),
 			  m_typeSpec( typeSpec )
 			{}
 
@@ -314,63 +337,6 @@ namespace CPPModel
 
 
 
-
-	class NamespaceEntry : public virtual XMLSerializable, public Attributes
-	{
-	public :
-
-		NamespaceEntry( const CPPModel::UID&			uid,
-				   	    const std::string&				name,
-				   	    const std::string&				enclosingNamespace,
-				   	    ConstListPtr<Attribute>&		attributes )
-			: Attributes( attributes ),
-			  m_uid( uid ),
-			  m_name( name ),
-			  m_enclosingNamespace( enclosingNamespace ),
-			  m_fqName( std::string( enclosingNamespace ) + std::string( name ) )
-			{}
-
-
-		virtual ~NamespaceEntry()
-		{}
-
-
-		const CPPModel::UID&			uid() const
-		{
-			return( m_uid );
-		}
-
-		const std::string&				name() const
-		{
-			return( m_name );
-		}
-
-		const std::string&				enclosingNamespace() const
-		{
-			return( m_enclosingNamespace );
-		}
-
-		const std::string&				fullyQualifiedName() const
-		{
-			return( m_fqName );
-		}
-
-		virtual std::ostream&	toXML( std::ostream&			outputStream,
-									   int						indentLevel,
-									   SerializationOptions		options ) const;
-
-	private :
-
-		const CPPModel::UID				m_uid;
-
-		const std::string				m_name;
-		const std::string				m_enclosingNamespace;
-
-		const std::string				m_fqName;
-	};
-
-
-
 	class ASTDictionary
 	{
 	public :
@@ -385,8 +351,8 @@ namespace CPPModel
 		};
 
 
-		typedef boost::ptr_map<const std::string, NamespaceEntry >						NamespaceMap;
-		typedef boost::ptr_map<const std::string, NamespaceEntry >::const_iterator		NamespaceMapConstIterator;
+		typedef boost::ptr_map<const std::string, Namespace >						NamespaceMap;
+		typedef boost::ptr_map<const std::string, Namespace >::const_iterator		NamespaceMapConstIterator;
 
 
 		//	The following typedef is for use in the code to keep the Eclipse IDE from complaining when iterators are de-referenced
@@ -400,11 +366,11 @@ namespace CPPModel
 
 	#define BMI boost::multi_index
 
-		typedef BMI::ordered_unique< BMI::tag<Indices::Identity>, BMI::identity<DictionaryEntry> >																	__Identity__;
-		typedef BMI::ordered_unique< BMI::tag<Indices::UID>, BMI::member<DictionaryEntry, const CPPModel::UID, &DictionaryEntry::m_uid> > 							__UID__;
-		typedef BMI::ordered_non_unique< BMI::tag<Indices::Namespace>, BMI::member<DictionaryEntry, const std::string, &DictionaryEntry::m_enclosingNamespace> >	__Namespace__;
-		typedef BMI::ordered_unique< BMI::tag<Indices::FQName>, BMI::member<DictionaryEntry, const std::string, &DictionaryEntry::m_fqName> >						__FQName__;
-		typedef BMI::ordered_non_unique< BMI::tag<Indices::Location>, BMI::member<DictionaryEntry, const SourceLocation, &DictionaryEntry::m_sourceLocation> >		__SourceLocation__;
+		typedef BMI::ordered_unique< BMI::tag<Indices::Identity>, BMI::identity<DictionaryEntry> >																		__Identity__;
+		typedef BMI::ordered_unique< BMI::tag<Indices::UID>, BMI::member<DictionaryEntry, const CPPModel::UID, &DictionaryEntry::m_uid> > 								__UID__;
+		typedef BMI::ordered_non_unique< BMI::tag<Indices::Namespace>, BMI::member<DictionaryEntry, const std::string, &DictionaryEntry::m_enclosingNamespaceFQName> >	__Namespace__;
+		typedef BMI::ordered_unique< BMI::tag<Indices::FQName>, BMI::member<DictionaryEntry, const std::string, &DictionaryEntry::m_fqName> >							__FQName__;
+		typedef BMI::ordered_non_unique< BMI::tag<Indices::Location>, BMI::member<DictionaryEntry, const SourceLocation, &DictionaryEntry::m_sourceLocation> >			__SourceLocation__;
 
 		typedef	BMI::multi_index_container< DictionaryEntryPtr, BMI::indexed_by< __Identity__, __UID__, __Namespace__, __FQName__, __SourceLocation__ > > DictionaryType;
 
@@ -434,7 +400,7 @@ namespace CPPModel
 
 		ASTDictionary()
 			: m_dictionary( new DictionaryType() ),
-			  m_namespaces( new boost::ptr_map<const std::string, NamespaceEntry>() )
+			  m_namespaces( new boost::ptr_map<const std::string, Namespace>() )
 		{}
 
 		virtual ~ASTDictionary()
@@ -478,17 +444,22 @@ namespace CPPModel
 		}
 
 
-		bool		AddNamespace( NamespaceEntry*	namespaceToAdd )
+		bool		AddNamespace( Namespace*	namespaceToAdd )
 		{
-			std::pair<boost::ptr_map<const std::string, NamespaceEntry >::const_iterator, bool>		insertResult = m_namespaces->insert( namespaceToAdd->fullyQualifiedName(), namespaceToAdd );
+			std::pair<boost::ptr_map<const std::string, Namespace>::const_iterator, bool>		insertResult = m_namespaces->insert( namespaceToAdd->fqName(), namespaceToAdd );
 
 			return( insertResult.second );
 		}
 
-		bool		GetNamespace( const std::string&			fullyQualifiedName,
-								  const NamespaceEntry*&		namespaceEntry )
+		bool		ContainsNamespace( const std::string&		fullyQualifiedName ) const
 		{
-			boost::ptr_map<const std::string, NamespaceEntry >::const_iterator		itrNamespace = m_namespaces->find( fullyQualifiedName );
+			return( m_namespaces->find( fullyQualifiedName ) != m_namespaces->end() );
+		}
+
+		bool		GetNamespace( const std::string&		fullyQualifiedName,
+								  const Namespace*&			namespaceEntry ) const
+		{
+			boost::ptr_map<const std::string, Namespace>::const_iterator		itrNamespace = m_namespaces->find( fullyQualifiedName );
 
 			if( itrNamespace != m_namespaces->end() )
 			{
@@ -512,9 +483,9 @@ namespace CPPModel
 
 	protected :
 
-		std::shared_ptr<DictionaryType>											m_dictionary;
+		std::shared_ptr<DictionaryType>										m_dictionary;
 
-		std::unique_ptr<boost::ptr_map<const std::string, NamespaceEntry >>		m_namespaces;
+		std::unique_ptr<boost::ptr_map<const std::string, Namespace>>		m_namespaces;
 	};
 
 }	//	namespace CPPModel

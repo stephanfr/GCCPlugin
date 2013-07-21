@@ -39,6 +39,11 @@ namespace GCCInternalsTools
 			return( *this );
 		}
 
+		CPPModel::CompilerSpecific		compilerSpecificAttr() const
+		{
+			return( CPPModel::CompilerSpecific( isBuiltIn(), isArtificial(), false ) );
+		}
+
 		bool		isArtificial() const
 		{
 			return( DECL_ARTIFICIAL( m_tree ) );

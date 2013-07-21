@@ -22,7 +22,7 @@ Contributors:
 namespace CPPModel
 {
 
-	class Access : public XMLSerializable
+	class Access : public IXMLSerializable
 	{
 	public :
 

@@ -26,23 +26,29 @@
 #include <boost/multi_index/ordered_index.hpp>
 #include <boost/multi_index/member.hpp>
 
-#include <boost/lexical_cast.hpp>
 #include <boost/ptr_container/ptr_list.hpp>
+#include <boost/ptr_container/ptr_map.hpp>
 
+#include <boost/lexical_cast.hpp>
+
+#include <boost/tokenizer.hpp>
 
 #include "ListAliases.h"
 
 #include "Constants.h"
 #include "Serialization.h"
 #include "ConstantValue.h"
+#include "CompilerSpecific.h"
 #include "NamedEntity.h"
 #include "Attribute.h"
 #include "UID.h"
 #include "SourceLocation.h"
-#include "Namespace.h"
 #include "Static.h"
 #include "Access.h"
 #include "SourceElement.h"
+#include "Namespace.h"
+#include "NamespaceScoped.h"
+#include "ASTEntry.h"
 #include "Types.h"
 #include "Union.h"
 #include "Function.h"
@@ -84,7 +90,9 @@
 int	plugin_is_GPL_compatible;
 
 
-std::string			outputFilename = "UnitTestResults.xml";
+std::string						outputFilename = "UnitTestResults.xml";
+
+std::list<std::string>			namespacesToScan;
 
 
 
@@ -146,48 +154,58 @@ static void GateCallback( void*		eventData,
 
 	astDict->Build();
 
-	for( CPPModel::ASTDictionary::NamespaceIndexConstIterator namespaceIndex = astDict->NamespaceIdx().lower_bound( "TestNamespace::" ); namespaceIndex != astDict->NamespaceIdx().upper_bound( "TestNamespace::" ); namespaceIndex++ )
+	for( CPPModel::ASTDictionary::NamespaceMapConstIterator itrNamespace = astDict->namespaces().begin(); itrNamespace != astDict->namespaces().end(); itrNamespace++ )
 	{
-		(*namespaceIndex)->toXML( resultsFile, 0, CPPModel::XMLSerializable::SerializationOptions::NONE );
+		itrNamespace->second->toXML( resultsFile, 0, CPPModel::SerializationOptions::NONE );
 	}
 
-	CPPModel::ParseOptions		parseOptions;
-
-	for( CPPModel::ASTDictionary::NamespaceIndexConstIterator namespaceIndex = astDict->NamespaceIdx().lower_bound( "TestNamespace::" ); namespaceIndex != astDict->NamespaceIdx().upper_bound( "TestNamespace::" ); namespaceIndex++ )
+	for( std::string currentNamespace : namespacesToScan )
 	{
-		if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::CLASS )
+
+		for( CPPModel::ASTDictionary::NamespaceIndexConstIterator namespaceIndex = astDict->NamespaceIdx().lower_bound( currentNamespace ); namespaceIndex != astDict->NamespaceIdx().upper_bound( currentNamespace ); namespaceIndex++ )
 		{
-			std::unique_ptr<const CPPModel::ClassDefinition>		classDef;
-
-			((CPPModel::DictionaryClassEntry*)&(**namespaceIndex))->GetClassDefinition( parseOptions, classDef );
-
-			classDef->toXML( resultsFile, 0, CPPModel::XMLSerializable::SerializationOptions::NONE );
+			(*namespaceIndex)->toXML( resultsFile, 0, CPPModel::SerializationOptions::NONE );
 		}
-		else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::UNION )
+
+		CPPModel::ParseOptions		parseOptions;
+
+		for( CPPModel::ASTDictionary::NamespaceIndexConstIterator namespaceIndex = astDict->NamespaceIdx().lower_bound( currentNamespace ); namespaceIndex != astDict->NamespaceIdx().upper_bound( currentNamespace ); namespaceIndex++ )
 		{
-			std::unique_ptr<const CPPModel::UnionDefinition>		unionDef;
+			if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::CLASS )
+			{
+				std::unique_ptr<const CPPModel::ClassDefinition>		classDef;
 
-			((CPPModel::DictionaryUnionEntry*)&(**namespaceIndex))->GetUnionDefinition( parseOptions, unionDef );
+				((CPPModel::DictionaryClassEntry*)&(**namespaceIndex))->GetClassDefinition( parseOptions, classDef );
 
-			unionDef->toXML( resultsFile, 0, CPPModel::XMLSerializable::SerializationOptions::NONE );
-		}
-		else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::FUNCTION )
-		{
-			std::unique_ptr<const CPPModel::FunctionDefinition>		functionDef;
+				classDef->toXML( resultsFile, 0, CPPModel::SerializationOptions::NONE );
+			}
+			else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::UNION )
+			{
+				std::unique_ptr<const CPPModel::UnionDefinition>		unionDef;
 
-			((CPPModel::DictionaryFunctionEntry*)&(**namespaceIndex))->GetFunctionDefinition( parseOptions, functionDef );
+				((CPPModel::DictionaryUnionEntry*)&(**namespaceIndex))->GetUnionDefinition( parseOptions, unionDef );
 
-			functionDef->toXML( resultsFile, 0, CPPModel::XMLSerializable::SerializationOptions::NONE );
-		}
-		else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::GLOBAL_VAR )
-		{
-			std::unique_ptr<const CPPModel::GlobalVarDefinition>		globalVarDef;
+				unionDef->toXML( resultsFile, 0, CPPModel::SerializationOptions::NONE );
+			}
+			else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::FUNCTION )
+			{
+				std::unique_ptr<const CPPModel::FunctionDefinition>		functionDef;
 
-			((CPPModel::DictionaryGlobalVarEntry*)&(**namespaceIndex))->GetGlobalVarDefinition( parseOptions, globalVarDef );
+				((CPPModel::DictionaryFunctionEntry*)&(**namespaceIndex))->GetFunctionDefinition( parseOptions, functionDef );
 
-			globalVarDef->toXML( resultsFile, 0, CPPModel::XMLSerializable::SerializationOptions::NONE );
+				functionDef->toXML( resultsFile, 0, CPPModel::SerializationOptions::NONE );
+			}
+			else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::GLOBAL_VAR )
+			{
+				std::unique_ptr<const CPPModel::GlobalVarEntry>		globalVarDef;
+
+				((CPPModel::DictionaryGlobalVarEntry*)&(**namespaceIndex))->GetGlobalVarEntry( parseOptions, globalVarDef );
+
+				globalVarDef->toXML( resultsFile, 0, CPPModel::SerializationOptions::NONE );
+			}
 		}
 	}
+
 
 	resultsFile.close();
 }
@@ -200,6 +218,8 @@ int plugin_init( plugin_name_args*		info,
 {
 	std::cerr << "Starting Plugin: "<< info->base_name << std::endl;
 
+	namespacesToScan.push_back( std::string( "TestNamespace::" ));
+
 	if( info->argc > 0 )
 	{
 		for( int i = 0; i < info->argc; i++ )
@@ -207,7 +227,21 @@ int plugin_init( plugin_name_args*		info,
 			if( strcmp( info->argv[i].key, "outputFilename" ) == 0 )
 			{
 				outputFilename = info->argv[i].value;
-				break;
+			}
+			else if( strcmp( info->argv[i].key, "namespaces" ) == 0 )
+			{
+				namespacesToScan.clear();
+
+				std::string		allNamespaces = info->argv[i].value;
+
+				typedef boost::tokenizer< boost::escaped_list_separator<char> >		Tokenizer;
+
+				Tokenizer 	parser( allNamespaces );
+
+				for( Tokenizer::iterator itrNamespace = parser.begin(); itrNamespace != parser.end(); itrNamespace++ )
+				{
+					namespacesToScan.push_back( *itrNamespace );
+				}
 			}
 		}
 	}

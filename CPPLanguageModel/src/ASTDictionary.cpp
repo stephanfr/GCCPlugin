@@ -35,14 +35,16 @@ Contributors:
 #include "Constants.h"
 #include "Serialization.h"
 #include "ConstantValue.h"
+#include "CompilerSpecific.h"
 #include "NamedEntity.h"
 #include "Attribute.h"
 #include "UID.h"
 #include "SourceLocation.h"
-#include "Namespace.h"
 #include "Static.h"
 #include "Access.h"
 #include "SourceElement.h"
+#include "Namespace.h"
+#include "NamespaceScoped.h"
 #include "ASTEntry.h"
 #include "Types.h"
 #include "Function.h"
@@ -68,8 +70,9 @@ namespace CPPModel
 		outputStream << currentIndent << "<dictionary_entry>\n";
 
 		outputStream << currentIndentPlusOne << "<name>" << name() << "</name>\n";
-		outputStream << currentIndentPlusOne << "<uid>" << (boost::lexical_cast<std::string>(uid().value())) << "</uid>\n";
-		outputStream << currentIndentPlusOne << "<namespace>" << enclosingNamespace() << "</namespace>\n";
+		outputStream << currentIndentPlusOne << "<uid>" << (boost::lexical_cast<std::string>(uid().uidValue())) << "</uid>\n";
+
+		enclosingNamespace().toXML( outputStream, indentLevel +1, options );
 
 		//	Be careful below, classes cannot be static and are fixed false in the constructor for their
 		//		dictionary entry.  If you punch out the 'static' flag all the time then it will
@@ -82,31 +85,9 @@ namespace CPPModel
 
 		sourceLocation().toXML( outputStream, indentLevel + 1, options );
 
-		Attributes::toXML( outputStream, indentLevel + 1, options );
+		attributes().toXML( outputStream, indentLevel + 1, options );
 
 		outputStream << currentIndent << "</dictionary_entry>\n";
-
-		return( outputStream );
-	}
-
-
-	std::ostream&	NamespaceEntry::toXML( std::ostream&			outputStream,
-											int						indentLevel,
-											SerializationOptions	options ) const
-	{
-		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		const std::string&		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
-
-
-		outputStream << currentIndent << "<namespace_entry>\n";
-
-		outputStream << currentIndentPlusOne << "<name>" << name() << "</name>\n";
-		outputStream << currentIndentPlusOne << "<uid>" << (boost::lexical_cast<std::string>(uid().value())) << "</uid>\n";
-		outputStream << currentIndentPlusOne << "<namespace>" << enclosingNamespace() << "</namespace>\n";
-
-		Attributes::toXML( outputStream, indentLevel + 1, options );
-
-		outputStream << currentIndent << "</namespace_entry>\n";
 
 		return( outputStream );
 	}

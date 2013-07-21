@@ -19,7 +19,7 @@ namespace CPPModel
 {
 
 
-	class GlobalVarDeclaration : public NamedEntity, public Namespace, public Static, public Attributes
+	class GlobalVarDeclaration : public NamedEntity, public NamespaceScoped, public Static, public IAttributes
 	{
 	public :
 
@@ -28,14 +28,14 @@ namespace CPPModel
 		GlobalVarDeclaration( const GlobalVarDeclaration& ) = delete;
 
 		GlobalVarDeclaration( const std::string&				name,
-							  const std::string&				enclosingNamespace,
+							  const Namespace&					namespaceScope,
 							  bool								isStatic,
 							  ConstListPtr<Attribute>			attributes,
 							  std::unique_ptr<const Type>		varType )
 			: NamedEntity( name ),
-			  Namespace( enclosingNamespace ),
+			  NamespaceScoped( namespaceScope ),
 			  Static( isStatic ),
-			  Attributes( attributes ),
+			  m_attributes( attributes ),
 			  m_varType( std::move( varType ) )
 		{}
 
@@ -45,6 +45,10 @@ namespace CPPModel
 			return( *m_varType );
 		}
 
+		const Attributes&				attributes() const
+		{
+			return( m_attributes );
+		}
 
 		std::ostream&	toXML( std::ostream&			outputStream,
 							   int						indentLevel,
@@ -52,7 +56,9 @@ namespace CPPModel
 
 	private :
 
-		const std::unique_ptr<const Type>				m_varType;
+		const Attributes							m_attributes;
+
+		const std::unique_ptr<const Type>			m_varType;
 
 	};
 
@@ -68,12 +74,12 @@ namespace CPPModel
 
 		GlobalVarEntry( const std::string&				name,
 						const UID&						uid,
-						const std::string&				enclosingNamespace,
+						const Namespace&				namespaceScope,
 						const SourceLocation&			sourceLocation,
 						bool							isStatic,
 						ConstListPtr<Attribute>			attributes,
 						std::unique_ptr<const Type>		varType )
-			: GlobalVarDeclaration( name, enclosingNamespace, isStatic, std::move( attributes ), std::move( varType ) ),
+			: GlobalVarDeclaration( name, namespaceScope, isStatic, std::move( attributes ), std::move( varType ) ),
 			  ASTEntry( uid, sourceLocation )
 		{}
 

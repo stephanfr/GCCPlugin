@@ -8,8 +8,11 @@
 
 #include "gtest/gtest.h"
 
+
+#include "NamespaceTests.cpp"
 #include "GlobalVarTests.cpp"
 #include "FunctionTests.cpp"
+
 
 
 int main( int argc, char** argv)

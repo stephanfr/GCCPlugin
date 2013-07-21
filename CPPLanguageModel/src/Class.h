@@ -55,7 +55,7 @@ namespace CPPModel
 
 
 
-	class FriendIdentifier : public XMLSerializable
+	class FriendIdentifier : public IXMLSerializable
 	{
 	public :
 
@@ -201,7 +201,7 @@ namespace CPPModel
 
 
 
-	class FieldDeclaration : public SourceElement, public Static, public Access, public Attributes
+	class FieldDeclaration : public SourceElement, public Static, public Access, public IAttributes
 	{
 	public :
 
@@ -219,7 +219,7 @@ namespace CPPModel
 					: SourceElement( name, uid, sourceLocation ),
 					  Static( isStatic ),
 					  Access( accessSpec ),
-					  Attributes( attributes ),
+					  m_attributes( attributes ),
 					  m_type( std::move( type ))
 		{}
 
@@ -232,11 +232,18 @@ namespace CPPModel
 			return( *m_type );
 		}
 
+		const Attributes&				attributes() const
+		{
+			return( m_attributes );
+		}
+
 		std::ostream&	toXML( std::ostream&			outputStream,
 							   int						indentLevel,
 							   SerializationOptions		options ) const;
 
 	private :
+
+		const Attributes							m_attributes;
 
 		const std::unique_ptr<const Type>			m_type;
 	};
@@ -244,7 +251,7 @@ namespace CPPModel
 
 
 
-	class MethodDeclaration : public SourceElement, public Static, public Access, public Attributes
+	class MethodDeclaration : public SourceElement, public Static, public Access, public IAttributes
 	{
 	public :
 
@@ -263,7 +270,7 @@ namespace CPPModel
 					: SourceElement( name, uid, sourceLocation ),
 					  Static( isStatic ),
 					  Access( accessSpec ),
-					  Attributes( attributeList ),
+					  m_attributes( attributeList ),
 					  m_resultType( std::move( resultType )),
 					  m_parameterList( std::move( parameterList ))
 		{}
@@ -280,12 +287,18 @@ namespace CPPModel
 			return( *m_parameterList );
 		}
 
+		const Attributes&				attributes() const
+		{
+			return( m_attributes );
+		}
 
 		std::ostream&	toXML( std::ostream&			outputStream,
 							   int						indentLevel,
 							   SerializationOptions		options ) const;
 
 	private :
+
+		const Attributes							m_attributes;
 
 		const std::unique_ptr<const Type>			m_resultType;
 		const ConstListPtr<FunctionParameter>		m_parameterList;
@@ -294,7 +307,7 @@ namespace CPPModel
 
 
 
-	class ClassDefinition : public SourceElement, public Namespace, public Attributes
+	class ClassDefinition : public SourceElement, public CompilerSpecific, public NamespaceScoped, public IAttributes
 	{
 	public :
 
@@ -304,7 +317,8 @@ namespace CPPModel
 
 		ClassDefinition( const std::string&						name,
 						 const UID&								uid,
-						 const std::string&						enclosingNamespace,
+						 const Namespace&						namespaceScope,
+						 const CompilerSpecific&				compilerSpecificAttr,
 						 bool									isStruct,
 						 ConstListPtr<Attribute>&				attributes,
 						 ConstListPtr<BaseClassIdentifier>&		baseClassList,
@@ -313,8 +327,9 @@ namespace CPPModel
 						 ConstListPtr<MethodDeclaration>&		methodList,
 						 const SourceLocation&					sourceLocation )
 			: SourceElement( name, uid, sourceLocation ),
-			  Namespace( enclosingNamespace ),
-			  Attributes( attributes ),
+			  CompilerSpecific( compilerSpecificAttr ),
+			  NamespaceScoped( namespaceScope ),
+			  m_attributes( attributes ),
 			  m_isStruct( isStruct ),
 			  m_baseClassList( std::move( baseClassList )),
 			  m_friendClassList( std::move( friendClassList )),
@@ -349,11 +364,18 @@ namespace CPPModel
 			return( *m_methodList );
 		}
 
+		const Attributes&				attributes() const
+		{
+			return( m_attributes );
+		}
+
 		std::ostream&	toXML( std::ostream&			outputStream,
 							   int						indentLevel,
 							   SerializationOptions		options ) const;
 
 	private :
+
+		const Attributes								m_attributes;
 
 		const bool										m_isStruct;
 

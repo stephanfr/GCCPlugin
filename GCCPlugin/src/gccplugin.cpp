@@ -49,10 +49,11 @@ Contributors:
 #include "Attribute.h"
 #include "UID.h"
 #include "SourceLocation.h"
-#include "Namespace.h"
 #include "Static.h"
 #include "Access.h"
 #include "SourceElement.h"
+#include "Namespace.h"
+#include "NamespaceScoped.h"
 #include "ASTEntry.h"
 #include "Types.h"
 #include "Union.h"
@@ -68,7 +69,7 @@ Contributors:
 #include "DeclTree.h"
 #include "TreeList.h"
 
-
+#include "Result.h"
 #include "GCCInternalsTools.h"
 #include "ASTModifiers.h"
 
@@ -121,21 +122,22 @@ static void RegisterAttributes( void*		eventData,
 }
 
 
-void DumpAST( std::shared_ptr<GCCInternalsTools::ASTDictionaryImpl>&	astDict )
+void DumpAST( std::shared_ptr<GCCInternalsTools::ASTDictionaryImpl>&	astDict,
+			  const std::string											sourceCodeNamespace )
 {
 	for( CPPModel::ASTDictionary::NamespaceMapConstIterator itrNamespace = astDict->namespaces().begin(); itrNamespace != astDict->namespaces().end(); itrNamespace++ )
 	{
 		itrNamespace->second->toXML( std::cerr, 0, CPPModel::XMLSerializable::SerializationOptions::NONE );
 	}
 
-	for( CPPModel::ASTDictionary::NamespaceIndexConstIterator namespaceIndex = astDict->NamespaceIdx().lower_bound( "TestNamespace::" ); namespaceIndex != astDict->NamespaceIdx().upper_bound( "TestNamespace::" ); namespaceIndex++ )
+	for( CPPModel::ASTDictionary::NamespaceIndexConstIterator namespaceIndex = astDict->NamespaceIdx().lower_bound( sourceCodeNamespace ); namespaceIndex != astDict->NamespaceIdx().upper_bound( sourceCodeNamespace ); namespaceIndex++ )
 	{
 		(*namespaceIndex)->toXML( std::cerr, 0, CPPModel::XMLSerializable::SerializationOptions::NONE );
 	}
 
 	CPPModel::ParseOptions		parseOptions;
 
-	for( CPPModel::ASTDictionary::NamespaceIndexConstIterator namespaceIndex = astDict->NamespaceIdx().lower_bound( "TestNamespace::" ); namespaceIndex != astDict->NamespaceIdx().upper_bound( "TestNamespace::" ); namespaceIndex++ )
+	for( CPPModel::ASTDictionary::NamespaceIndexConstIterator namespaceIndex = astDict->NamespaceIdx().lower_bound( sourceCodeNamespace ); namespaceIndex != astDict->NamespaceIdx().upper_bound( sourceCodeNamespace ); namespaceIndex++ )
 	{
 		if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::CLASS )
 		{
@@ -189,15 +191,22 @@ static void GateCallback( void*		eventData,
 
 	astDict->Build();
 
+	GCCInternalsTools::AddNamespace( *astDict, "TestCreatedNamespace::NestedNamespace::SecondNestedNamespace::" );
+	GCCInternalsTools::AddNamespace( *astDict, "TestCreatedNamespace::" );
+
+	const CPPModel::Namespace		*testNamespace;
+
+	astDict->GetNamespace( "TestCreatedNamespace::", testNamespace );
+
 	CPPModel::GlobalVarDeclaration		globalVarDec( "testVar",
-													  "TestNamespace",
+													  *testNamespace,
 													  true,
 													  CPPModel::Attributes::emptyList(),
 													  std::unique_ptr<CPPModel::Type>( new CPPModel::FundamentalType( CPPModel::TypeInfo::Specifier::INT ) ) );
 
 	GCCInternalsTools::AddGlobalVar( *astDict, globalVarDec );
 
-	DumpAST( astDict );
+	DumpAST( astDict, "TestCreatedNamespace::" );
 }
 
 

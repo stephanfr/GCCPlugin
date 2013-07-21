@@ -17,8 +17,6 @@ Contributors:
 
 namespace GCCInternalsTools
 {
-	const std::string		NAMESPACE_SEPARATOR = "::";
-
 
 	class TypeTree : public DeclOrTypeBaseTree
 	{

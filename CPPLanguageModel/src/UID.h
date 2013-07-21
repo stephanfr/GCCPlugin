@@ -16,7 +16,7 @@ Contributors:
 namespace CPPModel
 {
 
-	class UID
+	class UID : public IXMLSerializable
 	{
 	public :
 
@@ -40,12 +40,17 @@ namespace CPPModel
 		{}
 
 
-		long			value() const
+		const UID&		uid() const
+		{
+			return( *this );
+		}
+
+		long			uidValue() const
 		{
 			return( m_uid );
 		}
 
-		UIDType			type() const
+		UIDType			uidType() const
 		{
 			return( m_type );
 		}
@@ -65,6 +70,18 @@ namespace CPPModel
 		{
 			return( m_uid < entryToCompare.m_uid );
 		}
+
+
+		std::ostream&		toXML( std::ostream&			outputStream,
+							   	   int						indentLevel,
+							   	   SerializationOptions		options ) const
+		{
+			outputStream << XMLIndentTable::GetIndent( indentLevel ) << "<uid>" << m_uid << "</uid>\n";
+
+			return( outputStream );
+		}
+
+
 
 	private :
 

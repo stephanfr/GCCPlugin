@@ -67,7 +67,7 @@ namespace CPPModel
 	{
 		//	If we have been passed the NO_ATTRIBUTES option or there are now attributes, then return now
 
-		if( matchOptions( options, SerializationOptions::NO_ATTRIBUTES ) || m_attributes->empty() )
+		if( MatchOptions( options, SerializationOptions::NO_ATTRIBUTES ) || m_attributes->empty() )
 		{
 			return( outputStream );
 		}

@@ -1,58 +1,91 @@
+<namespace>
+    <name>::</name>
+</namespace>
+<namespace>
+    <name>LocalNamespace::</name>
+</namespace>
+<namespace>
+    <name>TestNamespace::</name>
+</namespace>
+<namespace>
+    <name>__cxxabiv1::</name>
+    <compiler_specific>
+        </built_in>
+    </compiler_specific>
+</namespace>
+<namespace>
+    <name>std::</name>
+    <compiler_specific>
+        </built_in>
+    </compiler_specific>
+</namespace>
 <dictionary_entry>
     <name>globalClassWithoutStaticKeyword</name>
     <uid>2006</uid>
-    <namespace>TestNamespace::</namespace>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <static>true</static>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/LocallyUserDefinedClassTestCase.cpp</file>
-        <line>44</line>
+        <line>40</line>
         <char-count>1</char-count>
-        <location>5554</location>
+        <location>5042</location>
     </source-info>
 </dictionary_entry>
 <dictionary_entry>
     <name>globalClass</name>
     <uid>1996</uid>
-    <namespace>TestNamespace::</namespace>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <static>true</static>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/LocallyUserDefinedClassTestCase.cpp</file>
-        <line>42</line>
+        <line>38</line>
         <char-count>1</char-count>
-        <location>5303</location>
+        <location>4791</location>
     </source-info>
 </dictionary_entry>
 <global_var>
     <name>globalClassWithoutStaticKeyword</name>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <uid>2006</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/LocallyUserDefinedClassTestCase.cpp</file>
-        <line>44</line>
+        <line>40</line>
         <char-count>1</char-count>
-        <location>5554</location>
+        <location>5042</location>
     </source-info>
-    <namespace>TestNamespace::</namespace>
     <static>true</static>
     <type>
         <kind>userDefined</kind>
         <declaration>LocalClass</declaration>
-        <namespace>LocalNamespace::</namespace>
+        <namespace>
+            <name>LocalNamespace::</name>
+        </namespace>
     </type>
 </global_var>
 <global_var>
     <name>globalClass</name>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <uid>1996</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/LocallyUserDefinedClassTestCase.cpp</file>
-        <line>42</line>
+        <line>38</line>
         <char-count>1</char-count>
-        <location>5303</location>
+        <location>4791</location>
     </source-info>
-    <namespace>TestNamespace::</namespace>
     <static>true</static>
     <type>
         <kind>userDefined</kind>
         <declaration>LocalClass</declaration>
-        <namespace>LocalNamespace::</namespace>
+        <namespace>
+            <name>LocalNamespace::</name>
+        </namespace>
     </type>
 </global_var>

@@ -53,12 +53,13 @@ namespace GCCInternalsTools
 		DictionaryClassEntryImpl( const CPPModel::ASTDictionary&				dictionary,
 			 	 	   	     	  const CPPModel::UID&							uid,
 			 	 	   	     	  const std::string&							name,
-			 	 	   	     	  const std::string&							enclosingNamespace,
+			 	 	   	     	  const CPPModel::Namespace&					enclosingNamespace,
 			 	 	   	     	  const CPPModel::SourceLocation&				sourceLocation,
+			 	 	   	     	  const CPPModel::CompilerSpecific&				compilerSpecific,
 			 	 	   	     	  CPPModel::ConstListPtr<CPPModel::Attribute>	attributeList,
 			 	 	   	     	  CPPModel::TypeInfo::Specifier					typeSpec,
 			 	 	   	     	  const tree&									treeNode )
-				: CPPModel::DictionaryClassEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, sourceLocation, attributeList, typeSpec ),
+				: CPPModel::DictionaryClassEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, sourceLocation, compilerSpecific, attributeList, typeSpec ),
 				  DictionaryTreeMixin( treeNode )
 			{}
 
@@ -77,12 +78,13 @@ namespace GCCInternalsTools
 		DictionaryUnionEntryImpl( const CPPModel::ASTDictionary&				dictionary,
 			 	 	   	     	  const CPPModel::UID&							uid,
 			 	 	   	     	  const std::string&							name,
-			 	 	   	     	  const std::string&							enclosingNamespace,
+			 	 	   	     	  const CPPModel::Namespace&					enclosingNamespace,
 			 	 	   	     	  const CPPModel::SourceLocation&				sourceLocation,
+			 	 	   	     	  const CPPModel::CompilerSpecific&				compilerSpecific,
 			 	 	   	     	  CPPModel::ConstListPtr<CPPModel::Attribute>	attributes,
 			 	 	   	     	  CPPModel::TypeInfo::Specifier					typeSpec,
 			 	 	   	     	  const tree&									treeNode )
-				: CPPModel::DictionaryUnionEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, false, sourceLocation, attributes, typeSpec ),
+				: CPPModel::DictionaryUnionEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, false, sourceLocation, compilerSpecific, attributes, typeSpec ),
 				  DictionaryTreeMixin( treeNode )
 			{}
 
@@ -101,13 +103,14 @@ namespace GCCInternalsTools
 		DictionaryFunctionEntryImpl( const CPPModel::ASTDictionary&					dictionary,
 			 	 	   	     	     const CPPModel::UID&							uid,
 			 	 	   	     	     const std::string&								name,
-			 	 	   	     	     const std::string&								enclosingNamespace,
+			 	 	   	     	     const CPPModel::Namespace&						enclosingNamespace,
 			 	 	   	     	     const CPPModel::SourceLocation&				sourceLocation,
+				 	 	   	     	  const CPPModel::CompilerSpecific&				compilerSpecific,
 			 	 	   	     	     CPPModel::ConstListPtr<CPPModel::Attribute>	attributes,
 			 	 	   	     	     CPPModel::TypeInfo::Specifier					returnTypeSpec,
 			 	 	   	     	     const bool										hiddenFriend,
 			 	 	   	     	     const tree&									treeNode )
-				: CPPModel::DictionaryFunctionEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, false, sourceLocation, attributes, returnTypeSpec, hiddenFriend ),
+				: CPPModel::DictionaryFunctionEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, false, sourceLocation, compilerSpecific, attributes, returnTypeSpec, hiddenFriend ),
 				  DictionaryTreeMixin( treeNode )
 			{}
 
@@ -125,13 +128,14 @@ namespace GCCInternalsTools
 		DictionaryGlobalVarEntryImpl( const CPPModel::ASTDictionary&				dictionary,
 			 	 	   	     	      const CPPModel::UID&							uid,
 			 	 	   	     	      const std::string&							name,
-			 	 	   	     	      const std::string&							enclosingNamespace,
+			 	 	   	     	      const CPPModel::Namespace&					enclosingNamespace,
 			 	 	   	     	      bool											isStatic,
 			 	 	   	     	      const CPPModel::SourceLocation&				sourceLocation,
+				 	 	   	     	  const CPPModel::CompilerSpecific&				compilerSpecific,
 			 	 	   	     	      CPPModel::ConstListPtr<CPPModel::Attribute>	attributes,
 			 	 	   	     	      CPPModel::TypeInfo::Specifier					typeSpec,
 			 	 	   	     	      const tree&									treeNode )
-				: CPPModel::DictionaryGlobalVarEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, attributes, typeSpec ),
+				: CPPModel::DictionaryGlobalVarEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, compilerSpecific, attributes, typeSpec ),
 				  DictionaryTreeMixin( treeNode )
 			{}
 
@@ -142,17 +146,29 @@ namespace GCCInternalsTools
 	};
 
 
-	class NamespaceEntryImpl : public CPPModel::NamespaceEntry, public DictionaryTreeMixin
+	class NestedNamespaceImpl : public CPPModel::NestedNamespace, public DictionaryTreeMixin
 	{
 	public :
 
-		NamespaceEntryImpl( const CPPModel::UID&							uid,
-				   	    	const std::string&								name,
-				   	    	const std::string&								enclosingNamespace,
-				   	    	CPPModel::ConstListPtr<CPPModel::Attribute>&	attributes,
-	 	 	   	     	    const tree&										treeNode )
-			: CPPModel::NamespaceEntry( uid, name, enclosingNamespace, attributes ),
+		NestedNamespaceImpl( const CPPModel::UID&								uid,
+				   	   	     const std::string&									name,
+				   	   	     const CPPModel::Namespace&							enclosingNamespace,
+				   	   	     const CPPModel::SourceLocation&					sourceLocation,
+				   	   	     const CPPModel::CompilerSpecific&					compilerSpecificAttr,
+				   	   	     CPPModel::ConstListPtr<CPPModel::Attribute>&		attributes,
+				   	   	     const tree&										treeNode )
+			: CPPModel::NestedNamespace( name, uid, sourceLocation, compilerSpecificAttr, attributes, enclosingNamespace ),
 			  DictionaryTreeMixin( treeNode )
+			{}
+	};
+
+
+	class GlobalNamespaceImpl : public CPPModel::GlobalNamespace, public DictionaryTreeMixin
+	{
+	public :
+
+		GlobalNamespaceImpl()
+			: DictionaryTreeMixin( global_namespace )
 			{}
 	};
 
@@ -220,7 +236,7 @@ namespace GCCInternalsTools
 		{}
 
 
-		void		Build();
+		virtual void		Build();
 
 
 	private :

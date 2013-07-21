@@ -76,7 +76,7 @@ namespace CPPModel
 	};
 
 
-	class Attributes : virtual public XMLSerializable
+	class Attributes : public IXMLSerializable
 	{
 	public :
 
@@ -95,6 +95,11 @@ namespace CPPModel
 		const ListRef<Attribute>			attributes() const
 		{
 			return( *(m_attributes.get()) );
+		}
+
+		static ConstListPtr<Attribute>		deepCopy( const Attributes&			attributesToCopy )
+		{
+			return( deepCopy( attributesToCopy.attributes() ) );
 		}
 
 		static ConstListPtr<Attribute>		deepCopy( const ListRef<Attribute>	listToCopy )
@@ -129,6 +134,16 @@ namespace CPPModel
 	};
 
 
+
+	class IAttributes
+	{
+	public :
+
+		virtual ~IAttributes()
+		{};
+
+		virtual const Attributes&			attributes() const = 0;
+	};
 }
 
 

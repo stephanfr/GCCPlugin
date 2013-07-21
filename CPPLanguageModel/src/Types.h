@@ -18,7 +18,7 @@ Contributors:
 namespace CPPModel
 {
 
-	class Type : virtual public XMLSerializable, public Attributes
+	class Type : public IXMLSerializable, public IAttributes
 	{
 	public :
 
@@ -30,14 +30,14 @@ namespace CPPModel
 		Type( const Type& ) = delete;
 
 		Type( TypeInfo::Specifier		typeSpec )
-			: Attributes(),
-			  m_typeSpecifier( typeSpec )
+			: m_typeSpecifier( typeSpec ),
+			  m_attributes()
 		{}
 
 		Type( TypeInfo::Specifier		typeSpec,
 			  ConstListPtr<Attribute>&	attributes )
-			: Attributes( attributes ),
-			  m_typeSpecifier( typeSpec )
+			: m_typeSpecifier( typeSpec ),
+			  m_attributes( attributes )
 		{}
 
 
@@ -51,12 +51,24 @@ namespace CPPModel
 			return( m_typeSpecifier );
 		}
 
+		const Attributes&				attributes() const
+		{
+			return( m_attributes );
+		}
+
 		virtual Kind					kind() const = 0;
+
+
+		virtual std::ostream&	toXML( std::ostream&			outputStream,
+							   	   	   int						indentLevel,
+							   	   	   SerializationOptions		options ) const = 0;
 
 
 	private :
 
 		const TypeInfo::Specifier		m_typeSpecifier;
+
+		const Attributes				m_attributes;
 	};
 
 
@@ -116,7 +128,7 @@ namespace CPPModel
 
 
 
-	class UserDefinedType : public Type, public SourceElement, public Namespace
+	class UserDefinedType : public Type, public SourceElement, public NamespaceScoped
 	{
 	public :
 
@@ -127,14 +139,14 @@ namespace CPPModel
 		UserDefinedType( TypeInfo::Specifier			typeSpec,
 						 const std::string&				name,
 						 const UID&						uid,
-						 const std::string&				enclosingNamespace,
+						 const Namespace&				namespaceScope,
 						 const SourceLocation&			sourceLocation,
 						 ConstListPtr<Attribute>&		attributes )
 			: Type( typeSpec, attributes ),
 			  SourceElement( name, uid, sourceLocation ),
-			  Namespace( enclosingNamespace )
+			  NamespaceScoped( namespaceScope )
 		{
-			assert( uid.type() == UID::UIDType::TYPE );
+			assert( uid.uidType() == UID::UIDType::TYPE );
 		}
 
 
@@ -197,7 +209,7 @@ namespace CPPModel
 
 
 
-	class UnionType : public Type, public SourceElement, public Namespace
+	class UnionType : public Type, public SourceElement, public NamespaceScoped
 	{
 	public :
 
@@ -208,14 +220,14 @@ namespace CPPModel
 		UnionType( TypeInfo::Specifier			typeSpec,
 				   const std::string&			name,
 				   const UID&					uid,
-				   const std::string&			enclosingNamespace,
+				   const Namespace&				namespaceScope,
 				   const SourceLocation&		sourceLocation,
 				   ConstListPtr<Attribute>&		attributes )
 			: Type( typeSpec, attributes ),
 			  SourceElement( name, uid, sourceLocation ),
-			  Namespace( enclosingNamespace )
+			  NamespaceScoped( namespaceScope )
 		{
-			assert( uid.type() == UID::UIDType::TYPE );
+			assert( uid.uidType() == UID::UIDType::TYPE );
 		}
 
 

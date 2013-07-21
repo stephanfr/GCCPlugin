@@ -56,7 +56,7 @@ namespace CPPModel
 
 
 
-	class UnionDefinition : public SourceElement, public Namespace, public Attributes
+	class UnionDefinition : public SourceElement, public NamespaceScoped, public IAttributes
 	{
 	public :
 
@@ -66,16 +66,16 @@ namespace CPPModel
 
 		UnionDefinition( const std::string&				name,
 					     const UID&						uid,
-					     const std::string&				enclosingNamespace,
+					     const Namespace&				namespaceScope,
 					     const SourceLocation&			sourceLocation,
 						 ConstListPtr<Attribute>		attributes,
 					     ConstListPtr<UnionMember>		memberList )
 			: SourceElement( name, uid, sourceLocation ),
-			  Namespace( enclosingNamespace ),
-			  Attributes( attributes ),
+			  NamespaceScoped( namespaceScope ),
+			  m_attributes( attributes ),
 			  m_memberList( std::move( memberList ))
 		{
-			assert( uid.type() == UID::UIDType::DECLARATION );
+			assert( uid.uidType() == UID::UIDType::DECLARATION );
 		}
 
 		virtual ~UnionDefinition()
@@ -88,11 +88,19 @@ namespace CPPModel
 		}
 
 
+		const Attributes&				attributes() const
+		{
+			return( m_attributes );
+		}
+
+
 		std::ostream&	toXML( std::ostream&			outputStream,
 							   int						indentLevel,
 							   SerializationOptions		options ) const;
 
 	private :
+
+		const Attributes					m_attributes;
 
 		const ConstListPtr<UnionMember>		m_memberList;
 	};

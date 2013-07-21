@@ -11,6 +11,12 @@
 #include <string>
 
 
+namespace TestJunkNamespace
+{
+
+}
+
+
 namespace TestNamespace
 {
 

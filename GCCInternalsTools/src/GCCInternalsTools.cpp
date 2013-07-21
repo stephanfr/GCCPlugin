@@ -46,14 +46,16 @@ Contributors:
 #include "Constants.h"
 #include "Serialization.h"
 #include "ConstantValue.h"
+#include "CompilerSpecific.h"
 #include "NamedEntity.h"
 #include "Attribute.h"
 #include "UID.h"
 #include "SourceLocation.h"
-#include "Namespace.h"
 #include "Static.h"
 #include "Access.h"
 #include "SourceElement.h"
+#include "Namespace.h"
+#include "NamespaceScoped.h"
 #include "ASTEntry.h"
 #include "Types.h"
 #include "Union.h"
@@ -485,6 +487,7 @@ namespace GCCInternalsTools
 		classDef.reset( new CPPModel::ClassDefinition( name(),
 													   uid(),
 													   enclosingNamespace(),
+													   compilerSpecific(),
 													   !CLASSTYPE_DECLARED_CLASS( getTree() ),
 													   attr,
 													   baseClasses,
@@ -565,13 +568,14 @@ namespace GCCInternalsTools
 	{
 		DeclTree		namespaceTree( namespaceNode );
 
-		CPPModel::ConstListPtr<CPPModel::Attribute>			noAttributes( CPPModel::Attributes::emptyList() );
+//		CPPModel::ConstListPtr<CPPModel::Attribute>			noAttributes( CPPModel::Attributes::emptyList() );
 
-		AddNamespace( new NamespaceEntryImpl( namespaceTree.uid(),
-											  namespaceTree.identifier(),
-											  namespaceTree.enclosingNamespace(),
-											  noAttributes,
-											  namespaceNode ) );
+//		if( namespaceNode )
+//		AddNamespace( new NestedNamespaceImpl( namespaceTree.uid(),
+//											   namespaceTree.identifier(),
+//											   namespaceTree.enclosingNamespace(),
+//											   noAttributes,
+//											   namespaceNode ) );
 
 		cp_binding_level*		currentLevel = NAMESPACE_LEVEL( namespaceNode );
 
@@ -647,11 +651,16 @@ namespace GCCInternalsTools
 		{
 			if( dictionary.UIDIdx().find( typeDeclared.uid() ) == dictionary.UIDIdx().end() )
 			{
+				const CPPModel::Namespace*		namespaceScope;
+
+				dictionary.GetNamespace( mainTypeDecl.enclosingNamespace(), namespaceScope );
+
 				dictionary.Insert( new DictionaryClassEntryImpl( dictionary,
 																 mainTypeDecl.uid(),
 																 className,
-																 mainTypeDecl.enclosingNamespace(),
+																 *namespaceScope,
 																 sourceLocation,
+																 DeclTree( classTree ).compilerSpecificAttr(),
 																 GetAttributes( PurposeValueList( TYPE_ATTRIBUTES( (const tree&)mainTypeDecl ) )),
 																 typeSpec,
 																 mainTypeDecl ));
@@ -693,11 +702,16 @@ namespace GCCInternalsTools
 		{
 			if( dictionary.UIDIdx().find( unionUID ) == dictionary.UIDIdx().end() )
 			{
+				const CPPModel::Namespace*		namespaceScope;
+
+				dictionary.GetNamespace( unionTree.enclosingNamespace(), namespaceScope );
+
 				dictionary.Insert(  new DictionaryUnionEntryImpl( dictionary,
 																  unionUID,
 																  unionTree.identifier(),
-																  unionTree.enclosingNamespace(),
+																  *namespaceScope,
 																  unionTree.sourceLocation(),
+																  unionTree.compilerSpecificAttr(),
 																  unionTree.treeType().attributes(),
 																  typeSpec,
 																  unionNode ));
@@ -744,11 +758,16 @@ namespace GCCInternalsTools
 		{
 			if( dictionary.UIDIdx().find( functionUID ) == dictionary.UIDIdx().end() )
 			{
+				const CPPModel::Namespace*		namespaceScope;
+
+				dictionary.GetNamespace( functionTree.enclosingNamespace(), namespaceScope );
+
 				dictionary.Insert(  new DictionaryFunctionEntryImpl( dictionary,
 																	 functionUID,
 																	 functionTree.identifier(),
-																	 functionTree.enclosingNamespace(),
+																	 *namespaceScope,
 																	 functionTree.sourceLocation(),
+																	 functionTree.compilerSpecificAttr(),
 																	 functionTree.attributes(),
 																	 typeSpec,
 																	 DECL_HIDDEN_FRIEND_P( functionNode ),
@@ -789,12 +808,17 @@ namespace GCCInternalsTools
 		{
 			//	Build and insert the dictionary entry
 
+			const CPPModel::Namespace*		namespaceScope;
+
+			dictionary.GetNamespace( globalVarTree.enclosingNamespace(), namespaceScope );
+
 			dictionary.Insert( new DictionaryGlobalVarEntryImpl( dictionary,
 																 globalVarUID,
 																 globalVarTree.identifier(),
-																 globalVarTree.enclosingNamespace(),
+																 *namespaceScope,
 																 TREE_STATIC( globalVarNode ) != 0,
 																 globalVarTree.sourceLocation(),
+																 globalVarTree.compilerSpecificAttr(),
 																 globalVarTree.attributes(),
 																 globalVarTree.typeSpecifier(),
 																 globalVarNode ));
@@ -808,6 +832,52 @@ namespace GCCInternalsTools
 
 	void	ASTDictionaryImpl::Build()
 	{
+		//	Start by building out the namespace map
+
+		std::function<void (const tree&, CPPModel::Namespace&)> 		recurseOnNamespace = [&]( const tree&				namespaceNode,
+																		  	  	  	  	  	  	  CPPModel::Namespace&		parentNamespace )
+		{
+			DeclTree		namespaceTree( namespaceNode );
+
+			CPPModel::ConstListPtr<CPPModel::Attribute>			noAttributes( CPPModel::Attributes::emptyList() );
+
+			CPPModel::Namespace*	currentNamespace = new NestedNamespaceImpl( namespaceTree.uid(),
+																				namespaceTree.identifier(),
+																				parentNamespace,
+																				namespaceTree.sourceLocation(),
+																				namespaceTree.compilerSpecificAttr(),
+																				noAttributes,
+																				namespaceNode );
+
+			AddNamespace( currentNamespace );
+
+			NamespaceList	nestedNamespaces = NAMESPACE_LEVEL( namespaceNode )->namespaces;
+
+			for( NamespaceList::iterator itrNested = nestedNamespaces.begin(); itrNested != nestedNamespaces.end(); ++itrNested )
+			{
+				if( DECL_IS_BUILTIN( (tree&)itrNested ))
+				{
+					continue;
+				}
+
+				recurseOnNamespace( (const tree&)itrNested, *currentNamespace );
+			}
+		};
+
+
+		CPPModel::Namespace*	globalNamespace = new GlobalNamespaceImpl();
+
+		AddNamespace( globalNamespace );
+
+
+		NamespaceList	nestedNamespaces = NAMESPACE_LEVEL( global_namespace )->namespaces;
+
+		for( NamespaceList::iterator itrNested = nestedNamespaces.begin(); itrNested != nestedNamespaces.end(); ++itrNested )
+		{
+			recurseOnNamespace( (const tree&)itrNested, *globalNamespace );
+		}
+
+
 		{
 			ClassDecoder		classDecoder;
 

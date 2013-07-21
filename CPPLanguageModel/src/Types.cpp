@@ -22,13 +22,16 @@ Contributors:
 
 #include "Constants.h"
 #include "Serialization.h"
-#include "Namespace.h"
 #include "ConstantValue.h"
+#include "CompilerSpecific.h"
 #include "NamedEntity.h"
 #include "Attribute.h"
 #include "UID.h"
 #include "SourceLocation.h"
 #include "SourceElement.h"
+#include "Namespace.h"
+#include "NamespaceScoped.h"
+
 #include "Types.h"
 
 
@@ -48,7 +51,7 @@ namespace CPPModel
 		outputStream << currentIndentPlusOne << "<kind>unrecognized</kind>\n";
 		outputStream << currentIndent << "</type>\n";
 
-		Attributes::toXML( outputStream, indentLevel, options );
+		attributes().toXML( outputStream, indentLevel, options );
 
 		return( outputStream );
 	}
@@ -66,7 +69,7 @@ namespace CPPModel
 		outputStream << currentIndentPlusOne << "<declaration>" << CPPTypes[(int)type()].label.c_str() << "</declaration>\n";
 		outputStream << currentIndent << "</type>\n";
 
-		Attributes::toXML( outputStream, indentLevel, options );
+		attributes().toXML( outputStream, indentLevel, options );
 
 		return( outputStream );
 	}
@@ -82,10 +85,10 @@ namespace CPPModel
 		outputStream << currentIndent << "<type>\n";
 		outputStream << currentIndentPlusOne << "<kind>userDefined</kind>\n";
 		outputStream << currentIndentPlusOne << "<declaration>" << name().c_str() << "</declaration>\n";
-		Namespace::toXML( outputStream, indentLevel + 1, options );
+		NamespaceScoped::toXML( outputStream, indentLevel + 1, options );
 		outputStream << currentIndent << "</type>\n";
 
-		Attributes::toXML( outputStream, indentLevel, options );
+		attributes().toXML( outputStream, indentLevel, options );
 
 		return( outputStream );
 	}
@@ -116,7 +119,7 @@ namespace CPPModel
 
 		outputStream << currentIndent << "</type>\n";
 
-		Attributes::toXML( outputStream, indentLevel, options );
+		attributes().toXML( outputStream, indentLevel, options );
 
 
 		return( outputStream );
@@ -134,7 +137,7 @@ namespace CPPModel
 		outputStream << currentIndent << "<type>\n";
 		outputStream << currentIndentPlusOne << "<kind>union</kind>\n";
 		outputStream << currentIndentPlusOne << "<declaration>" << name().c_str() << "</declaration>\n";
-		Namespace::toXML( outputStream, indentLevel, options );
+		NamespaceScoped::toXML( outputStream, indentLevel, options );
 		outputStream << currentIndent << "</type>\n";
 
 		return( outputStream );

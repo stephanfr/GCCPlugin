@@ -19,7 +19,7 @@ namespace CPPModel
 {
 
 
-	class SourceElement : public NamedEntity, public SourceLocation
+	class SourceElement : public NamedEntity, public UID, public SourceLocation
 	{
 	public :
 
@@ -30,33 +30,24 @@ namespace CPPModel
 					   const UID&				uid,
 					   const SourceLocation&	sourceLocation )
 			: NamedEntity( name ),
-			  SourceLocation( sourceLocation ),
-			  m_uid( uid )
+			  UID( uid ),
+			  SourceLocation( sourceLocation )
 		{}
 
 		SourceElement( const SourceElement&		elementToCopy )
 			: NamedEntity( elementToCopy.name() ),
-			  SourceLocation( elementToCopy.fileName().c_str(), elementToCopy.lineNumber(), elementToCopy.characterCount(), elementToCopy.location() ),
-			  m_uid( elementToCopy.m_uid )
+			  UID( elementToCopy.uid() ),
+			  SourceLocation( elementToCopy.fileName().c_str(), elementToCopy.lineNumber(), elementToCopy.characterCount(), elementToCopy.location() )
 		{}
 
 
 		virtual ~SourceElement() {};
 
 
-		const UID&				uid() const
-		{
-			return( m_uid );
-		}
-
-
 		std::ostream&			toXML( std::ostream&			outputStream,
 							   	   	   int						indentLevel,
 							   	   	   SerializationOptions		options ) const;
 
-	private :
-
-		const UID				m_uid;
 	};
 
 }

@@ -1,109 +1,148 @@
+<namespace>
+    <name>::</name>
+</namespace>
+<namespace>
+    <name>LocalNamespace::</name>
+</namespace>
+<namespace>
+    <name>TestNamespace::</name>
+</namespace>
+<namespace>
+    <name>__cxxabiv1::</name>
+    <compiler_specific>
+        </built_in>
+    </compiler_specific>
+</namespace>
+<namespace>
+    <name>std::</name>
+    <compiler_specific>
+        </built_in>
+    </compiler_specific>
+</namespace>
 <dictionary_entry>
     <name>refGlobalInt</name>
     <uid>2003</uid>
-    <namespace>TestNamespace::</namespace>
-    <static>true</static>
-    <source-info>
-        <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
-        <line>55</line>
-        <char-count>1</char-count>
-        <location>6945</location>
-    </source-info>
-</dictionary_entry>
-<dictionary_entry>
-    <name>globalInt</name>
-    <uid>2002</uid>
-    <namespace>TestNamespace::</namespace>
-    <static>true</static>
-    <source-info>
-        <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
-        <line>54</line>
-        <char-count>1</char-count>
-        <location>6822</location>
-    </source-info>
-</dictionary_entry>
-<dictionary_entry>
-    <name>hdlGlobalFloatWithoutStaticKeyword</name>
-    <uid>2001</uid>
-    <namespace>TestNamespace::</namespace>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <static>true</static>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>52</line>
         <char-count>1</char-count>
-        <location>6564</location>
+        <location>6561</location>
+    </source-info>
+</dictionary_entry>
+<dictionary_entry>
+    <name>globalInt</name>
+    <uid>2002</uid>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
+    <static>true</static>
+    <source-info>
+        <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
+        <line>51</line>
+        <char-count>1</char-count>
+        <location>6438</location>
+    </source-info>
+</dictionary_entry>
+<dictionary_entry>
+    <name>hdlGlobalFloatWithoutStaticKeyword</name>
+    <uid>2001</uid>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
+    <static>true</static>
+    <source-info>
+        <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
+        <line>49</line>
+        <char-count>1</char-count>
+        <location>6180</location>
     </source-info>
 </dictionary_entry>
 <dictionary_entry>
     <name>hdlGlobalFloat</name>
     <uid>2000</uid>
-    <namespace>TestNamespace::</namespace>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <static>true</static>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
-        <line>50</line>
+        <line>47</line>
         <char-count>1</char-count>
-        <location>6313</location>
+        <location>5929</location>
     </source-info>
 </dictionary_entry>
 <dictionary_entry>
     <name>ptrGlobalLongWithoutStaticKeyword</name>
     <uid>1999</uid>
-    <namespace>TestNamespace::</namespace>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <static>true</static>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
-        <line>48</line>
+        <line>45</line>
         <char-count>1</char-count>
-        <location>6050</location>
+        <location>5666</location>
     </source-info>
 </dictionary_entry>
 <dictionary_entry>
     <name>ptrGlobalLong</name>
     <uid>1998</uid>
-    <namespace>TestNamespace::</namespace>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <static>true</static>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
-        <line>46</line>
+        <line>43</line>
         <char-count>1</char-count>
-        <location>5799</location>
+        <location>5415</location>
     </source-info>
 </dictionary_entry>
 <dictionary_entry>
     <name>ptrGlobalClassWithoutStaticKeyword</name>
     <uid>1997</uid>
-    <namespace>TestNamespace::</namespace>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <static>true</static>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
-        <line>44</line>
+        <line>41</line>
         <char-count>1</char-count>
-        <location>5555</location>
+        <location>5171</location>
     </source-info>
 </dictionary_entry>
 <dictionary_entry>
     <name>ptrGlobalClass</name>
     <uid>1996</uid>
-    <namespace>TestNamespace::</namespace>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <static>true</static>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
-        <line>42</line>
+        <line>39</line>
         <char-count>1</char-count>
-        <location>5304</location>
+        <location>4920</location>
     </source-info>
 </dictionary_entry>
 <global_var>
     <name>refGlobalInt</name>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <uid>2003</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
-        <line>55</line>
+        <line>52</line>
         <char-count>1</char-count>
-        <location>6945</location>
+        <location>6561</location>
     </source-info>
-    <namespace>TestNamespace::</namespace>
     <static>true</static>
     <type>
         <kind>derived</kind>
@@ -118,14 +157,16 @@
 </global_var>
 <global_var>
     <name>globalInt</name>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <uid>2002</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
-        <line>54</line>
+        <line>51</line>
         <char-count>1</char-count>
-        <location>6822</location>
+        <location>6438</location>
     </source-info>
-    <namespace>TestNamespace::</namespace>
     <static>true</static>
     <type>
         <kind>fundamental</kind>
@@ -134,14 +175,16 @@
 </global_var>
 <global_var>
     <name>hdlGlobalFloatWithoutStaticKeyword</name>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <uid>2001</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
-        <line>52</line>
+        <line>49</line>
         <char-count>1</char-count>
-        <location>6564</location>
+        <location>6180</location>
     </source-info>
-    <namespace>TestNamespace::</namespace>
     <static>true</static>
     <type>
         <kind>derived</kind>
@@ -157,14 +200,16 @@
 </global_var>
 <global_var>
     <name>hdlGlobalFloat</name>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <uid>2000</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
-        <line>50</line>
+        <line>47</line>
         <char-count>1</char-count>
-        <location>6313</location>
+        <location>5929</location>
     </source-info>
-    <namespace>TestNamespace::</namespace>
     <static>true</static>
     <type>
         <kind>derived</kind>
@@ -180,14 +225,16 @@
 </global_var>
 <global_var>
     <name>ptrGlobalLongWithoutStaticKeyword</name>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <uid>1999</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
-        <line>48</line>
+        <line>45</line>
         <char-count>1</char-count>
-        <location>6050</location>
+        <location>5666</location>
     </source-info>
-    <namespace>TestNamespace::</namespace>
     <static>true</static>
     <type>
         <kind>derived</kind>
@@ -202,14 +249,16 @@
 </global_var>
 <global_var>
     <name>ptrGlobalLong</name>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <uid>1998</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
-        <line>46</line>
+        <line>43</line>
         <char-count>1</char-count>
-        <location>5799</location>
+        <location>5415</location>
     </source-info>
-    <namespace>TestNamespace::</namespace>
     <static>true</static>
     <type>
         <kind>derived</kind>
@@ -224,14 +273,16 @@
 </global_var>
 <global_var>
     <name>ptrGlobalClassWithoutStaticKeyword</name>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <uid>1997</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
-        <line>44</line>
+        <line>41</line>
         <char-count>1</char-count>
-        <location>5555</location>
+        <location>5171</location>
     </source-info>
-    <namespace>TestNamespace::</namespace>
     <static>true</static>
     <type>
         <kind>derived</kind>
@@ -240,21 +291,25 @@
             <type>
                 <kind>userDefined</kind>
                 <declaration>LocalClass</declaration>
-                <namespace>LocalNamespace::</namespace>
+                <namespace>
+                    <name>LocalNamespace::</name>
+                </namespace>
             </type>
         </declaration>
     </type>
 </global_var>
 <global_var>
     <name>ptrGlobalClass</name>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <uid>1996</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
-        <line>42</line>
+        <line>39</line>
         <char-count>1</char-count>
-        <location>5304</location>
+        <location>4920</location>
     </source-info>
-    <namespace>TestNamespace::</namespace>
     <static>true</static>
     <type>
         <kind>derived</kind>
@@ -263,7 +318,9 @@
             <type>
                 <kind>userDefined</kind>
                 <declaration>LocalClass</declaration>
-                <namespace>LocalNamespace::</namespace>
+                <namespace>
+                    <name>LocalNamespace::</name>
+                </namespace>
             </type>
         </declaration>
     </type>

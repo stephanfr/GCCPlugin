@@ -6,9 +6,6 @@
  */
 
 
-//	Without the symbol defined below, this example will not compile with gcc 4.8.0
-//		I expect that might change in the future.
-
 
 namespace LocalNamespace
 {

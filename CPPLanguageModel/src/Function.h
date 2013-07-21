@@ -54,7 +54,7 @@ namespace CPPModel
 
 
 
-	class FunctionParameters : public XMLSerializable
+	class FunctionParameters : public IXMLSerializable
 	{
 	public :
 
@@ -89,7 +89,7 @@ namespace CPPModel
 
 
 
-	class FunctionDefinition : public SourceElement, public Namespace, public Attributes
+	class FunctionDefinition : public SourceElement, public NamespaceScoped, public IAttributes
 	{
 	public :
 
@@ -99,15 +99,15 @@ namespace CPPModel
 
 		FunctionDefinition( const std::string&					name,
 						 	const UID&							uid,
-						 	const std::string&					enclosingNamespace,
+						 	const Namespace&					namespaceScope,
 						 	const SourceLocation&				sourceLocation,
 						 	const bool							hiddenFriend,
 							ConstListPtr<Attribute>				attributes,
 							std::unique_ptr<const Type>			returnType,
 						 	ConstListPtr<FunctionParameter>		parameters )
 			: SourceElement( name, uid, sourceLocation ),
-			  Namespace( enclosingNamespace ),
-			  Attributes( attributes ),
+			  NamespaceScoped( namespaceScope ),
+			  m_attributes( attributes ),
 			  m_hiddenFriend( hiddenFriend ),
 			  m_returnType( std::move( returnType ) ),
 			  m_parameters( parameters )
@@ -119,10 +119,14 @@ namespace CPPModel
 			return( m_hiddenFriend );
 		}
 
-
 		const Type&			returnType() const
 		{
 			return( *m_returnType );
+		}
+
+		const Attributes&				attributes() const
+		{
+			return( m_attributes );
 		}
 
 
@@ -131,6 +135,8 @@ namespace CPPModel
 							   SerializationOptions		options ) const;
 
 	private :
+
+		const Attributes						m_attributes;
 
 		const bool								m_hiddenFriend;
 

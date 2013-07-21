@@ -19,7 +19,7 @@ Contributors:
 namespace CPPModel
 {
 
-	class NamedEntity : public virtual XMLSerializable
+	class NamedEntity : public IXMLSerializable
 	{
 	public :
 

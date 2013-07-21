@@ -1,0 +1,71 @@
+<namespace>
+    <name>::</name>
+</namespace>
+<namespace>
+    <name>NestedNamespaceBase::</name>
+</namespace>
+<namespace>
+    <name>NestedNamespaceBase::FirstNestedNamespace::</name>
+</namespace>
+<namespace>
+    <name>NestedNamespaceBase::FirstNestedNamespace::SecondNestedNamespace::</name>
+</namespace>
+<namespace>
+    <name>NestedNamespaceBase::FirstNestedNamespace::SecondNestedNamespace::ThirdNestedNamespace::</name>
+</namespace>
+<namespace>
+    <name>NestedNamespaceBase::FirstNestedNamespace::SecondNestedNamespace::ThirdNestedNamespace::FourthNestedNamespace::</name>
+</namespace>
+<namespace>
+    <name>NestedNamespaceBase::FirstNestedNamespace::SecondNestedNamespace::ThirdNestedNamespace::FourthNestedNamespacePeer::</name>
+</namespace>
+<namespace>
+    <name>NestedNamespaceBase::FirstNestedNamespace::SecondNestedNamespacePeer::</name>
+</namespace>
+<namespace>
+    <name>SimpleNamespace::</name>
+</namespace>
+<namespace>
+    <name>__cxxabiv1::</name>
+    <compiler_specific>
+        </built_in>
+    </compiler_specific>
+</namespace>
+<namespace>
+    <name>std::</name>
+    <compiler_specific>
+        </built_in>
+    </compiler_specific>
+</namespace>
+<dictionary_entry>
+    <name>globalInt</name>
+    <uid>1960</uid>
+    <namespace>
+        <name>SimpleNamespace::</name>
+    </namespace>
+    <static>true</static>
+    <source-info>
+        <file>../testCaseSourceCode/Namespaces/NamespaceBasicTestCase.cpp</file>
+        <line>18</line>
+        <char-count>1</char-count>
+        <location>2208</location>
+    </source-info>
+</dictionary_entry>
+<global_var>
+    <name>globalInt</name>
+    <namespace>
+        <name>SimpleNamespace::</name>
+    </namespace>
+    <uid>1960</uid>
+    <source-info>
+        <file>../testCaseSourceCode/Namespaces/NamespaceBasicTestCase.cpp</file>
+        <line>18</line>
+        <char-count>1</char-count>
+        <location>2208</location>
+    </source-info>
+    <static>true</static>
+    <type>
+        <kind>fundamental</kind>
+        <declaration>int</declaration>
+    </type>
+</global_var>
