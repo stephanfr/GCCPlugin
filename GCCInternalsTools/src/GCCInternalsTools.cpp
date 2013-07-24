@@ -40,12 +40,14 @@ Contributors:
 #include "cp/cp-tree.h"
 #include "diagnostic.h"
 #include "real.h"
+#include "toplev.h"
 
 #include "ListAliases.h"
 
 #include "Constants.h"
 #include "Serialization.h"
 #include "ConstantValue.h"
+#include "Result.h"
 #include "CompilerSpecific.h"
 #include "NamedEntity.h"
 #include "Attribute.h"
@@ -904,5 +906,143 @@ namespace GCCInternalsTools
 	}
 
 
+	//	Function to split a fully qualified namespace into an ordered list of individual scopes
+
+	std::list<std::string>		ParseFQNamespace( const std::string& 		fqNamespace )
+	{
+		std::list<std::string>		individualNamespaces;
+
+		std::string					workingNamespace = fqNamespace;
+
+		for( size_t itrScopeOperator = workingNamespace.find( CPPModel::SCOPE_RESOLUTION_OPERATOR ); ( itrScopeOperator != 0 ) && ( itrScopeOperator != std::string::npos); itrScopeOperator = workingNamespace.find( CPPModel::SCOPE_RESOLUTION_OPERATOR ))
+		{
+			individualNamespaces.push_back( workingNamespace.substr( 0, itrScopeOperator ) );
+
+			workingNamespace.erase( 0, itrScopeOperator + CPPModel::SCOPE_RESOLUTION_OPERATOR.size() );
+		}
+
+		return( individualNamespaces );
+	}
+
+
+
+	CPPModel::Result	ASTDictionaryImpl::CreateNamespace( const std::string&				namespaceToAdd )
+	{
+		//	Return an error now if the namespace already exists
+
+		if( ContainsNamespace( namespaceToAdd ) )
+		{
+			return( CPPModel::Result::Failed( CPPModel::ResultCode::NAMESPACE_ALREADY_EXISTS, "Namespace Already Exists"  ) );
+		}
+
+		//	If this is a nested namespace, get the individual nested elements
+
+		const std::list<std::string>		individualNamespaces( ParseFQNamespace( namespaceToAdd ) );
+
+		//	Create an empty string that we will use to re-build the nested namespace.
+		//		Initialize the parent namespace to the global namespace.
+
+		std::string							currentFQNamespace = "";
+
+  		const CPPModel::Namespace*			parentNamespace;
+
+  		GetNamespace( "::", parentNamespace );
+
+		//	Iterate over each namespace nesting level
+
+  		for( std::list<std::string>::const_iterator itrIndividualNamespace = individualNamespaces.begin(); itrIndividualNamespace != individualNamespaces.end(); itrIndividualNamespace++ )
+		{
+			//	Rebuild the fully qualified name and just loop again if the current fq namespace already exists.  Update the parent namespace accordingly.
+
+  			currentFQNamespace += *itrIndividualNamespace;
+			currentFQNamespace += CPPModel::SCOPE_RESOLUTION_OPERATOR;
+
+			if( ContainsNamespace( currentFQNamespace ) )
+			{
+				GetNamespace( currentFQNamespace, parentNamespace );
+
+				continue;
+			}
+
+			//	Pretty simple in GCC to create a new namespace.
+			//		Create an identifier (it is not fully qualified), push the namespace then pop it.
+
+			tree 	newNamespaceID = get_identifier( itrIndividualNamespace->c_str() );
+
+			push_namespace( newNamespaceID );
+
+			pop_namespace();
+
+			//	Lookup the new namespace node.
+
+			tree namespaceNode = lookup_name_prefer_type( newNamespaceID, 1 );
+
+			//	Build the namespace object for the CPP model and add it to the dictionary
+
+			DeclTree	namespaceTree( namespaceNode );
+
+			CPPModel::ConstListPtr<CPPModel::Attribute>			noAttributes( CPPModel::Attributes::emptyList() );
+
+			CPPModel::Namespace*	newNamespace = new NestedNamespaceImpl( namespaceTree.uid(),
+																			namespaceTree.identifier(),
+																			*parentNamespace,
+																			namespaceTree.sourceLocation(),
+																			namespaceTree.compilerSpecificAttr(),
+																			noAttributes,
+																			namespaceNode );
+
+			AddNamespace( newNamespace );
+
+			//	Update the parent namespace
+
+			parentNamespace = newNamespace;
+		}
+
+		//	If we are down here, all went well so return SUCCESS
+
+  		return( CPPModel::Result::Success() );
+	}
+
+
+
+	CPPModel::Result	ASTDictionaryImpl::CreateGlobalVar( const CPPModel::GlobalVarDeclaration&			globalDecl )
+	{
+		//	TODO add proper error reporting
+
+		//	Lookup the namespace
+
+		const CPPModel::Namespace*			namespaceEntry = &globalDecl.namespaceScope();
+		//	TODO	Finish building out this function
+
+		tree __glob_id = get_identifier( globalDecl.name().c_str() );
+		tree __glob_decl = build_decl(UNKNOWN_LOCATION, VAR_DECL, __glob_id, unsigned_type_node);
+
+		/* allocate static storage for this variable */
+		TREE_STATIC(__glob_decl) = true;
+
+		/* static: internal linkage */
+		TREE_PUBLIC(__glob_decl) = false;
+
+		/* the context of this declaration: namespace scope */
+
+		DECL_CONTEXT(__glob_decl) = (dynamic_cast<const GCCInternalsTools::DictionaryTreeMixin*>(namespaceEntry))->getTree();
+
+		/* this declaration is used in its scope */
+		TREE_USED(__glob_decl) = true;
+
+		/* initialization to 0 */
+		tree __glob_init_val = build_int_cstu(unsigned_type_node, 1);
+		DECL_INITIAL(__glob_decl) = __glob_init_val;
+
+		layout_decl(__glob_decl, false);
+		rest_of_decl_compilation(__glob_decl, 1, 0);
+
+		GCCInternalsTools::GlobalVarDecoder().Decode( __glob_decl, *this );
+
+
+		//	If we are down here, all went well so return SUCCESS
+
+  		return( CPPModel::Result::Success() );
+	}
 
 }

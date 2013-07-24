@@ -6,6 +6,7 @@
 		<project>CPPLanguageModel</project>
 		<project>GCCInternalsTools</project>
 		<project>GCCInternalsUTFixture</project>
+		<project>TestExtensions</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

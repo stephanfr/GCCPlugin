@@ -36,6 +36,7 @@ Contributors:
 #include "Serialization.h"
 #include "ConstantValue.h"
 #include "CompilerSpecific.h"
+#include "Result.h"
 #include "NamedEntity.h"
 #include "Attribute.h"
 #include "UID.h"

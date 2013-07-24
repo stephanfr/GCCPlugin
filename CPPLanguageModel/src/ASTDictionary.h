@@ -407,7 +407,14 @@ namespace CPPModel
 		{}
 
 
+
+
 		virtual void		Build() = 0;
+
+		virtual Result		CreateNamespace( const std::string&							namespaceToAdd ) = 0;
+
+		virtual Result		CreateGlobalVar( const CPPModel::GlobalVarDeclaration&		globalDecl ) = 0;
+
 
 
 		const ASTDictionary::IdentityIndex&			IdentityIdx() const

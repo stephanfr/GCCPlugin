@@ -15,7 +15,6 @@
 
 namespace SimpleNamespace
 {
-	static int		globalInt;
 }
 
 

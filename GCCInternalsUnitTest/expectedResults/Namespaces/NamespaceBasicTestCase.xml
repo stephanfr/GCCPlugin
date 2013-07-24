@@ -26,6 +26,15 @@
     <name>SimpleNamespace::</name>
 </namespace>
 <namespace>
+    <name>TestCreatedNamespace::</name>
+</namespace>
+<namespace>
+    <name>TestCreatedNamespace::NestedNamespace::</name>
+</namespace>
+<namespace>
+    <name>TestCreatedNamespace::NestedNamespace::SecondNestedNamespace::</name>
+</namespace>
+<namespace>
     <name>__cxxabiv1::</name>
     <compiler_specific>
         </built_in>
@@ -37,35 +46,3 @@
         </built_in>
     </compiler_specific>
 </namespace>
-<dictionary_entry>
-    <name>globalInt</name>
-    <uid>1960</uid>
-    <namespace>
-        <name>SimpleNamespace::</name>
-    </namespace>
-    <static>true</static>
-    <source-info>
-        <file>../testCaseSourceCode/Namespaces/NamespaceBasicTestCase.cpp</file>
-        <line>18</line>
-        <char-count>1</char-count>
-        <location>2208</location>
-    </source-info>
-</dictionary_entry>
-<global_var>
-    <name>globalInt</name>
-    <namespace>
-        <name>SimpleNamespace::</name>
-    </namespace>
-    <uid>1960</uid>
-    <source-info>
-        <file>../testCaseSourceCode/Namespaces/NamespaceBasicTestCase.cpp</file>
-        <line>18</line>
-        <char-count>1</char-count>
-        <location>2208</location>
-    </source-info>
-    <static>true</static>
-    <type>
-        <kind>fundamental</kind>
-        <declaration>int</declaration>
-    </type>
-</global_var>

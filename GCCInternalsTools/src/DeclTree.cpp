@@ -47,6 +47,7 @@ Contributors:
 #include "Constants.h"
 #include "Serialization.h"
 #include "ConstantValue.h"
+#include "Result.h"
 #include "CompilerSpecific.h"
 #include "NamedEntity.h"
 #include "Attribute.h"

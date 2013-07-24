@@ -20,6 +20,7 @@
 #include <utility>
 #include <string.h>
 #include <fstream>
+#include <dlfcn.h>
 
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/identity.hpp>
@@ -38,6 +39,7 @@
 #include "Constants.h"
 #include "Serialization.h"
 #include "ConstantValue.h"
+#include "Result.h"
 #include "CompilerSpecific.h"
 #include "NamedEntity.h"
 #include "Attribute.h"
@@ -94,7 +96,24 @@ std::string						outputFilename = "UnitTestResults.xml";
 
 std::list<std::string>			namespacesToScan;
 
+void*							testExtensionHandle = NULL;
 
+typedef							 bool (*EntryPointPtr)(CPPModel::ASTDictionary *);
+
+typedef struct EntryPointRecord
+{
+	EntryPointRecord( std::string		epName,
+					  EntryPointPtr		epPtr )
+		: name( epName ),
+		  entryPoint( epPtr )
+	{};
+
+	std::string		name;
+	EntryPointPtr	entryPoint;
+}
+EntryPointRecord;
+
+std::list<EntryPointRecord>		entryPointsToCall;
 
 
 
@@ -153,6 +172,16 @@ static void GateCallback( void*		eventData,
 	std::shared_ptr<GCCInternalsTools::ASTDictionaryImpl>	astDict( new GCCInternalsTools::ASTDictionaryImpl() );
 
 	astDict->Build();
+
+	for( EntryPointRecord currentEntryPoint : entryPointsToCall )
+	{
+		if( !(*currentEntryPoint.entryPoint)( astDict.get() ) )
+		{
+			std::cerr << "Error calling entry point: " << currentEntryPoint.name << std::endl;
+			exit( 3 );
+		}
+	}
+
 
 	for( CPPModel::ASTDictionary::NamespaceMapConstIterator itrNamespace = astDict->namespaces().begin(); itrNamespace != astDict->namespaces().end(); itrNamespace++ )
 	{
@@ -241,6 +270,42 @@ int plugin_init( plugin_name_args*		info,
 				for( Tokenizer::iterator itrNamespace = parser.begin(); itrNamespace != parser.end(); itrNamespace++ )
 				{
 					namespacesToScan.push_back( *itrNamespace );
+				}
+			}
+			else if( strcmp( info->argv[i].key, "testExtension" ) == 0 )
+			{
+				std::string			extensionsInfo = info->argv[i].value;
+
+				std::string			soName = extensionsInfo.substr( 0, extensionsInfo.find( ":" ) );
+
+				std::string			allEntryPoints = extensionsInfo.substr( extensionsInfo.find( ":" ) + 1 );
+
+				typedef boost::tokenizer< boost::escaped_list_separator<char> >		Tokenizer;
+
+				Tokenizer 	parser( allEntryPoints );
+
+				testExtensionHandle = dlopen( soName.c_str(), RTLD_LAZY );
+
+				if( !testExtensionHandle )
+				{
+					std::cerr << "Unable to load extension library: " << info->argv[i].value << std::endl;
+					exit( 1 );
+				}
+
+				for( Tokenizer::iterator itrEntryPoint = parser.begin(); itrEntryPoint != parser.end(); itrEntryPoint++ )
+				{
+					EntryPointPtr		entryPoint;
+					char *dlsymError;
+
+					dlerror();
+					entryPoint = (EntryPointPtr)dlsym( testExtensionHandle, (*itrEntryPoint).c_str() );
+					if ((dlsymError = dlerror()) != NULL)
+					{
+					   fprintf(stderr, "%s\n", dlsymError );
+					   exit( 2 );
+					}
+
+					entryPointsToCall.push_back( EntryPointRecord( *itrEntryPoint, entryPoint ));
 				}
 			}
 		}
