@@ -15,6 +15,32 @@ Contributors:
 #define ASTDICTIONARY_H_
 
 
+#include <boost/ptr_container/ptr_map.hpp>
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/identity.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/member.hpp>
+
+#include "ListAliases.h"
+
+#include "Serialization.h"
+#include "CompilerSpecific.h"
+#include "Result.h"
+#include "Attribute.h"
+#include "UID.h"
+#include "SourceLocation.h"
+#include "Namespace.h"
+#include "Types.h"
+
+#include "GlobalVar.h"
+#include "Function.h"
+#include "Template.h"
+#include "Union.h"
+#include "Class.h"
+
+#include "Result.h"
+
+
 
 namespace CPPModel
 {
@@ -64,6 +90,7 @@ namespace CPPModel
 
 
 		virtual const EntryKind			entryKind() const = 0;
+
 
 		const ASTDictionary&			Dictionary() const
 		{
@@ -157,7 +184,7 @@ namespace CPPModel
 				   	    	  const SourceLocation&				sourceLocation,
 						   	  const CompilerSpecific&			compilerSpecific,
 				   	    	  ConstListPtr<Attribute>&			attributeList,
-				   	    	  TypeInfo::Specifier				typeSpec )
+				   	    	  TypeSpecifier						typeSpec )
 			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, false, sourceLocation, compilerSpecific, attributeList ),
 			  m_typeSpec( typeSpec )
 			{}
@@ -173,22 +200,36 @@ namespace CPPModel
 		}
 
 
-		const TypeInfo::Specifier				typeSpec() const
+		const TypeSpecifier						typeSpec() const
 		{
 			return( m_typeSpec );
 		}
 
-		const bool								isStatic() const = delete;
+
+		const ClassOrStructType					type() const
+		{
+			ConstListPtr<Attribute>		attributesCopy( Attributes::deepCopy( attributes().attributes() ) );
+
+			return( ClassOrStructType( TypeSpecifier::CLASS,
+									   name(),
+									   uid(),
+									   enclosingNamespace(),
+									   sourceLocation(),
+									   attributesCopy ) );
+		}
 
 
-		virtual bool		GetClassDefinition( const CPPModel::ParseOptions&							options,
-												std::unique_ptr<const CPPModel::ClassDefinition>&		classDef ) const = 0;
+		const bool				isStatic() const = delete;
+
+
+		virtual bool			GetClassDefinition( const CPPModel::ParseOptions&							options,
+													std::unique_ptr<const CPPModel::ClassDefinition>&		classDef ) const = 0;
 
 
 
 	private :
 
-		const TypeInfo::Specifier			m_typeSpec;
+		const TypeSpecifier			m_typeSpec;
 	};
 
 
@@ -206,7 +247,7 @@ namespace CPPModel
 				   	    	  const SourceLocation&			sourceLocation,
 						   	  const CompilerSpecific&		compilerSpecific,
 				   	    	  ConstListPtr<Attribute>&		attributeList,
-				   	    	  TypeInfo::Specifier			typeSpec )
+				   	    	  TypeSpecifier					typeSpec )
 			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, compilerSpecific, attributeList ),
 			  m_typeSpec( typeSpec )
 			{}
@@ -222,19 +263,32 @@ namespace CPPModel
 		}
 
 
-		const CPPModel::TypeInfo::Specifier		typeSpec() const
+		const CPPModel::TypeSpecifier			typeSpec() const
 		{
 			return( m_typeSpec );
 		}
 
 
-		virtual bool		GetUnionDefinition( const CPPModel::ParseOptions&							options,
-												std::unique_ptr<const CPPModel::UnionDefinition>&		unionDef ) const = 0;
+		const UnionType		type() const
+		{
+			ConstListPtr<Attribute>		attributesCopy( Attributes::deepCopy( attributes().attributes() ) );
+
+			return( UnionType( TypeSpecifier::CLASS,
+							   name(),
+							   uid(),
+							   enclosingNamespace(),
+							   sourceLocation(),
+							   attributesCopy ) );
+		}
+
+
+		virtual bool			GetUnionDefinition( const CPPModel::ParseOptions&							options,
+													std::unique_ptr<const CPPModel::UnionDefinition>&		unionDef ) const = 0;
 
 
 	private :
 
-		const TypeInfo::Specifier			m_typeSpec;
+		const TypeSpecifier			m_typeSpec;
 	};
 
 
@@ -252,7 +306,7 @@ namespace CPPModel
 				   	    		 const SourceLocation&			sourceLocation,
 						   	     const CompilerSpecific&		compilerSpecific,
 				   	    		 ConstListPtr<Attribute>&		attributeList,
-				   	    		 TypeInfo::Specifier			returnTypeSpec,
+				   	    		 TypeSpecifier					returnTypeSpec,
 				   	    		 const bool						hiddenFriend )
 			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, compilerSpecific, attributeList ),
 			  m_returnTypeSpec( returnTypeSpec ),
@@ -275,7 +329,7 @@ namespace CPPModel
 		}
 
 
-		const CPPModel::TypeInfo::Specifier		returnTypeSpec() const
+		const CPPModel::TypeSpecifier			returnTypeSpec() const
 		{
 			return( m_returnTypeSpec );
 		}
@@ -286,9 +340,9 @@ namespace CPPModel
 
 	private :
 
-		const TypeInfo::Specifier			m_returnTypeSpec;
+		const TypeSpecifier			m_returnTypeSpec;
 
-		const bool							m_hiddenFriend;
+		const bool					m_hiddenFriend;
 	};
 
 
@@ -305,7 +359,7 @@ namespace CPPModel
 				   	    		  const SourceLocation&			sourceLocation,
 							   	  const CompilerSpecific&		compilerSpecific,
 				   	    		  ConstListPtr<Attribute>&		attributes,
-				   	    		  TypeInfo::Specifier			typeSpec )
+				   	    		  TypeSpecifier					typeSpec )
 			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, compilerSpecific, attributes ),
 			  m_typeSpec( typeSpec )
 			{}
@@ -315,13 +369,13 @@ namespace CPPModel
 		{}
 
 
-		const DictionaryEntry::EntryKind		entryKind() const
+		const DictionaryEntry::EntryKind	entryKind() const
 		{
 			return( DictionaryEntry::EntryKind::GLOBAL_VAR );
 		}
 
 
-		const CPPModel::TypeInfo::Specifier		typeSpec() const
+		const CPPModel::TypeSpecifier		typeSpec() const
 		{
 			return( m_typeSpec );
 		}
@@ -332,7 +386,7 @@ namespace CPPModel
 
 	private :
 
-		const TypeInfo::Specifier			m_typeSpec;
+		const TypeSpecifier			m_typeSpec;
 	};
 
 

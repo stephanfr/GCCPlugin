@@ -15,11 +15,17 @@ Contributors:
 #define FUNCTION_H_
 
 
+#include <memory>
+
+#include "CompilerSpecific.h"
+#include "NamedEntity.h"
+#include "Types.h"
+
 
 namespace CPPModel
 {
 
-	class FunctionParameter : public NamedEntity
+	class FunctionParameter : public NamedEntity, public CompilerSpecific
 	{
 	public :
 
@@ -28,8 +34,10 @@ namespace CPPModel
 		FunctionParameter( const FunctionParameter& ) = delete;
 
 		FunctionParameter( const std::string				name,
-						   std::unique_ptr<const Type>		type )
+						   std::unique_ptr<const Type>		type,
+						   CompilerSpecific					compilerSpecific )
 			: NamedEntity( name ),
+			  CompilerSpecific( compilerSpecific ),
 			  m_type( std::move( type ) )
 		{}
 

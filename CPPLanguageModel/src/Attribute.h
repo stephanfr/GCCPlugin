@@ -15,6 +15,10 @@ Contributors:
 #define ATTRIBUTE_H_
 
 
+#include "ListAliases.h"
+
+#include "ConstantValue.h"
+#include "NamedEntity.h"
 
 
 namespace CPPModel
@@ -81,7 +85,6 @@ namespace CPPModel
 	public :
 
 		Attributes( Attributes& ) = delete;
-		Attributes( const Attributes& ) = delete;
 
 		Attributes( ConstListPtr<Attribute>&	attributes )
 			: m_attributes( std::move( attributes ))
@@ -90,6 +93,11 @@ namespace CPPModel
 		Attributes()
 			: m_attributes( ConstListPtr<Attribute>( new boost::ptr_list<Attribute>() ))
 		{}
+
+		Attributes( const Attributes&		attributesToCopy )
+			: m_attributes( deepCopy( attributesToCopy ) )
+		{}
+
 
 
 		const ListRef<Attribute>			attributes() const
@@ -126,7 +134,6 @@ namespace CPPModel
 		{
 			return( ConstListPtr<Attribute>( new boost::ptr_list<Attribute>() ) );
 		}
-
 
 	private :
 

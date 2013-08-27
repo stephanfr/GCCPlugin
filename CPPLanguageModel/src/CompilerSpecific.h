@@ -8,6 +8,11 @@
 #ifndef COMPILERSPECIFIC_H_
 #define COMPILERSPECIFIC_H_
 
+
+#include "Serialization.h"
+
+
+
 namespace CPPModel
 {
 
@@ -18,17 +23,14 @@ namespace CPPModel
 		CompilerSpecific() = delete;
 
 		CompilerSpecific( bool		builtIn,
-						  bool		artificial,
-						  bool		compilerGeneratedFunctionParam )
+						  bool		artificial )
 			: m_builtIn( builtIn ),
-			  m_artificial( artificial ),
-			  m_compilerGeneratedFunctionParam( compilerGeneratedFunctionParam )
+			  m_artificial( artificial )
 		{}
 
 		CompilerSpecific( const CompilerSpecific&	attributesToCopy )
 			: m_builtIn( attributesToCopy.m_builtIn ),
-			  m_artificial( attributesToCopy.m_artificial ),
-			  m_compilerGeneratedFunctionParam( attributesToCopy.m_compilerGeneratedFunctionParam )
+			  m_artificial( attributesToCopy.m_artificial )
 		{}
 
 		virtual ~CompilerSpecific()
@@ -44,11 +46,6 @@ namespace CPPModel
 		bool			isArtificial() const
 		{
 			return( m_artificial );
-		}
-
-		bool			isCompilerGeneratedFunctionParam() const
-		{
-			return( m_compilerGeneratedFunctionParam );
 		}
 
 
@@ -74,7 +71,6 @@ namespace CPPModel
 
 		bool			m_builtIn;
 		bool			m_artificial;
-		bool			m_compilerGeneratedFunctionParam;
 	};
 
 

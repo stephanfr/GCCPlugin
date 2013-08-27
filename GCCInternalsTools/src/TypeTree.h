@@ -15,6 +15,10 @@ Contributors:
 #define TYPETREE_H_
 
 
+#include "DeclOrTypeBaseTree.h"
+
+
+
 namespace GCCInternalsTools
 {
 
@@ -40,7 +44,7 @@ namespace GCCInternalsTools
 
 		const std::string									identifier() const
 		{
-			const tree&		typeName = TYPE_NAME( m_tree );
+			const tree&		typeName = TYPE_IDENTIFIER( m_tree );
 
 			if( typeName == 0 )
 			{
@@ -54,7 +58,12 @@ namespace GCCInternalsTools
 
 		const CPPModel::UID									uid() const
 		{
-			return( CPPModel::UID( TYPE_UID( TYPE_MAIN_VARIANT( m_tree ) ), CPPModel::UID::UIDType::TYPE ) );
+			return( CPPModel::UID( TYPE_UID( m_tree ), CPPModel::UID::UIDType::TYPE ) );
+		}
+
+		const CPPModel::CompilerSpecific			compilerSpecificFlags() const
+		{
+			return( CPPModel::CompilerSpecific( false, TYPE_ARTIFICIAL( m_tree ) ) );
 		}
 
 
@@ -62,7 +71,7 @@ namespace GCCInternalsTools
 
 		std::unique_ptr<const CPPModel::Type>				type( const CPPModel::ASTDictionary&		dictionary ) const;
 
-		CPPModel::TypeInfo::Specifier						typeSpecifier() const;
+		CPPModel::TypeSpecifier								typeSpecifier() const;
 
 		CPPModel::ConstListPtr<CPPModel::Attribute>			attributes();
 	};

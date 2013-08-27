@@ -58,13 +58,18 @@ namespace CPPModel
 			return( m_resultCode == ResultCode::SUCCESS );
 		}
 
-		static Result		Success()
+		const bool				isFailure() const
+		{
+			return( !isSuccess() );
+		}
+
+		static Result			Success()
 		{
 			return( Result( ResultCode::SUCCESS, "Success" ) );
 		}
 
-		static Result		Failed( ResultCode			failureCode,
-									const char*			message )
+		static Result			Failed( ResultCode			failureCode,
+										const char*			message )
 		{
 			return( Result( failureCode, message ) );
 		}

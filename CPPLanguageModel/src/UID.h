@@ -13,6 +13,10 @@ Contributors:
 #define UID_H_
 
 
+#include "Serialization.h"
+
+
+
 namespace CPPModel
 {
 
@@ -55,31 +59,35 @@ namespace CPPModel
 			return( m_type );
 		}
 
+		//	The numeric identifier of UID is unique only within TYPEs or DECLs, so we have
+		//		to check the UID type in comparisons.
+		//
+		//	For example:  UID( 1234, TYPE) and UID( 1234, DECLARATION) can both exist
 
 		bool operator==( const UID&	entryToCompare ) const
 		{
-			return( m_uid == entryToCompare.m_uid );
+			return(( m_uid == entryToCompare.m_uid ) && ( m_type == entryToCompare.m_type ));
 		}
 
 		bool operator!=( const UID&	entryToCompare ) const
 		{
-			return( m_uid != entryToCompare.m_uid );
+			return( !( *this == entryToCompare ));
 		}
 
 		bool operator<( const UID&	entryToCompare ) const
 		{
+			if( m_type != entryToCompare.m_type )
+			{
+				return( m_type < entryToCompare.m_type );
+			}
+
 			return( m_uid < entryToCompare.m_uid );
 		}
 
 
 		std::ostream&		toXML( std::ostream&			outputStream,
 							   	   int						indentLevel,
-							   	   SerializationOptions		options ) const
-		{
-			outputStream << XMLIndentTable::GetIndent( indentLevel ) << "<uid>" << m_uid << "</uid>\n";
-
-			return( outputStream );
-		}
+							   	   SerializationOptions		options ) const;
 
 
 

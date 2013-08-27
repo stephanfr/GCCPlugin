@@ -21,4 +21,17 @@ void ForkGCCTestCase( const char*	testDirectoryName,
 					  const char*	option1,
 					  const char*	option2 );
 
+void ForkGCCTestCase( const char*	testDirectoryName,
+					  const char*	testCaseName,
+					  const char*	option1,
+					  const char*	option2,
+					  const char*	option3 );
+
+void ForkGCCTestCase( const char*	testDirectoryName,
+					  const char*	testCaseName,
+					  const char*	option1,
+					  const char*	option2,
+					  const char*	option3,
+					  const char*	option4 );
+
 #endif /* HELPERFUNCTIONS_H_ */

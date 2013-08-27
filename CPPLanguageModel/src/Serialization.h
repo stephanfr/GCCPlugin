@@ -13,6 +13,10 @@ Contributors:
 #define SERIALIZATION_H_
 
 
+#include <string>
+#include <iosfwd>
+
+
 
 namespace CPPModel
 {

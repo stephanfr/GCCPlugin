@@ -15,13 +15,19 @@
 
 namespace
 {
-  TEST(TestNamespaces, BasicTests)
-  {
-	  ForkGCCTestCase( "Namespaces",
-			  	  	   "NamespaceBasicTestCase",
-			  	  	   "namespaces=SimpleNamespace::,NestedNamespaceBase::",
-			  	  	   "testExtension=libTestExtensions.so:AddNamespaceTest" );
-  }
+	TEST(TestNamespaces, BasicTests)
+	{
+		ForkGCCTestCase( "Namespaces",
+					     "NamespaceBasicTestCase",
+					     "namespaces=SimpleNamespace::,NestedNamespaceBase::",
+					     "list-all-namespaces" );
+
+		ForkGCCTestCase( "Namespaces",
+					     "CreateNamespaceTest",
+					     "namespaces=NestedNamespaceBase::",
+					     "test-extension=libTestExtensions.so:AddNamespaceTest",
+					     "list-all-namespaces" );
+	}
 }
 
 

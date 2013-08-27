@@ -1,0 +1,24 @@
+<namespace>
+    <name>::</name>
+</namespace>
+<namespace>
+    <name>TestCreatedNamespace::</name>
+</namespace>
+<namespace>
+    <name>TestCreatedNamespace::NestedNamespace::</name>
+</namespace>
+<namespace>
+    <name>TestCreatedNamespace::NestedNamespace::SecondNestedNamespace::</name>
+</namespace>
+<namespace>
+    <name>__cxxabiv1::</name>
+    <compiler_specific>
+        </built_in>
+    </compiler_specific>
+</namespace>
+<namespace>
+    <name>std::</name>
+    <compiler_specific>
+        </built_in>
+    </compiler_specific>
+</namespace>

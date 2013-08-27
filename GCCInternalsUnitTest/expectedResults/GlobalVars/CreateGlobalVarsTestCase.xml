@@ -1,0 +1,52 @@
+<dictionary_entry>
+    <name>testVar</name>
+    <uid>21168</uid>
+    <namespace>
+        <name>TestCreatedNamespace::</name>
+    </namespace>
+    <static>true</static>
+    <source-info>
+        <unknown>true</unknown>
+    </source-info>
+</dictionary_entry>
+<dictionary_entry>
+    <name>testStringVar</name>
+    <uid>21169</uid>
+    <namespace>
+        <name>TestCreatedNamespace::</name>
+    </namespace>
+    <static>true</static>
+    <source-info>
+        <unknown>true</unknown>
+    </source-info>
+</dictionary_entry>
+<global_var>
+    <name>testVar</name>
+    <namespace>
+        <name>TestCreatedNamespace::</name>
+    </namespace>
+    <uid>21168</uid>
+    <source-info>
+        <unknown>true</unknown>
+    </source-info>
+    <static>true</static>
+    <type>
+        <kind>fundamental</kind>
+        <declaration>int</declaration>
+    </type>
+</global_var>
+<global_var>
+    <name>testStringVar</name>
+    <namespace>
+        <name>TestCreatedNamespace::</name>
+    </namespace>
+    <uid>21169</uid>
+    <source-info>
+        <unknown>true</unknown>
+    </source-info>
+    <static>true</static>
+    <type>
+        <kind>class-or-struct</kind>
+        <declaration>std::string</declaration>
+    </type>
+</global_var>

@@ -13,6 +13,10 @@ Contributors:
 #define CONSTANTVALUE_H_
 
 
+#include "Serialization.h"
+
+
+
 namespace CPPModel
 {
 

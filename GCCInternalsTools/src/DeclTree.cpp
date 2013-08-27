@@ -12,67 +12,17 @@ Contributors:
 
 
 
-#include <cassert>
 
-#include <algorithm>
-#include <cstdlib>
-#include <gmp.h>
-#include <map>
-#include <memory>
-#include <ostream>
-#include <stdlib.h>
-#include <string>
-#include <utility>
-
-#include <boost/multi_index_container.hpp>
-#include <boost/multi_index/identity.hpp>
-#include <boost/multi_index/ordered_index.hpp>
-#include <boost/multi_index/member.hpp>
-
-#include <boost/lexical_cast.hpp>
-#include <boost/ptr_container/ptr_list.hpp>
-#include <boost/ptr_container/ptr_map.hpp>
-
-#include "config.h"
-
-#include "gcc-plugin.h"
-
-#include "tree.h"
-#include "cp/cp-tree.h"
-#include "diagnostic.h"
-#include "real.h"
-
-#include "ListAliases.h"
-
-#include "Constants.h"
-#include "Serialization.h"
-#include "ConstantValue.h"
-#include "Result.h"
-#include "CompilerSpecific.h"
-#include "NamedEntity.h"
-#include "Attribute.h"
-#include "UID.h"
-#include "SourceLocation.h"
-#include "Static.h"
-#include "Access.h"
-#include "SourceElement.h"
-#include "Namespace.h"
-#include "NamespaceScoped.h"
-#include "ASTEntry.h"
-#include "Types.h"
-#include "Union.h"
-#include "Function.h"
-#include "GlobalVar.h"
-#include "Class.h"
 #include "ASTDictionary.h"
 
-#include "ConstantTree.h"
-#include "IdentifierTree.h"
-#include "DeclOrTypeBaseTree.h"
-#include "TypeTree.h"
+#include "config.h"
+#include "gcc-plugin.h"
+#include "tree.h"
+#include "cp/cp-tree.h"
+
 #include "DeclTree.h"
-#include "TreeList.h"
 #include "AttributeParser.h"
+
 
 
 
@@ -86,39 +36,46 @@ namespace GCCInternalsTools
 	}
 
 
-	const std::string				DeclTree::enclosingNamespace() const
+	const std::string									DeclTree::enclosingNamespace() const
 	{
-		std::string			declNamespace = "";
+		std::string			declScope = "";
 
 		//	Functions have to be handled distinctly from Types
 
-		if( !isAFunctionDeclaration() )
+		if( TREE_CODE( m_tree ) == RECORD_TYPE )
 		{
 			//	Types first, they are pretty straightforward.  Use CP_DECL_CONTEXT.
 
+			tree&			declType = TREE_TYPE( m_tree );
+
 			//	Namespaces can be aliased in the AST, make sure we get the original
 
-			tree&			originalNamespace = ORIGINAL_NAMESPACE( CP_DECL_CONTEXT( m_tree ) );
+			tree&			startingScope = CP_DECL_CONTEXT( declType );
 
 			//	If this is the global namespace, return the scope resolution operator
 
-			if( originalNamespace == global_namespace )
+			if( startingScope == global_namespace )
 			{
 				return( CPPModel::SCOPE_RESOLUTION_OPERATOR );
 			}
 
 			//	If this is the standard library namespace, then return that constant now
 
-			if( DECL_NAMESPACE_STD_P( originalNamespace ))
+			if( DECL_NAMESPACE_STD_P( startingScope ))
 			{
 				return( CPPModel::STD_NAMESPACE_LABEL );
 			}
 
 			//	We have to build the namespace context by context
 
-			for( tree& currentContext = originalNamespace; currentContext != global_namespace; currentContext = CP_DECL_CONTEXT( currentContext ) )
+			for( tree& currentScope = startingScope; currentScope != global_namespace; currentScope = CP_DECL_CONTEXT( currentScope ) )
 			{
-				declNamespace += DeclTree( currentContext ).identifier() + CPPModel::SCOPE_RESOLUTION_OPERATOR;
+				if( TREE_CODE( currentScope ) == RECORD_TYPE )
+				{
+					currentScope = TYPE_NAME( currentScope );
+				}
+
+				declScope = DeclTree( currentScope ).identifier() + CPPModel::SCOPE_RESOLUTION_OPERATOR + declScope;
 			}
 		}
 		else
@@ -151,20 +108,20 @@ namespace GCCInternalsTools
 
 			if( TREE_CODE( originalNamespace ) == NAMESPACE_DECL )
 			{
-				for( tree& currentContext = originalNamespace; TREE_CODE( currentContext ) == NAMESPACE_DECL; currentContext = DECL_CONTEXT( currentContext ) )
+				for( tree& currentContext = originalNamespace; ( currentContext != NULL ) && ( TREE_CODE( currentContext ) == NAMESPACE_DECL ); currentContext = DECL_CONTEXT( currentContext ) )
 				{
-					declNamespace += DeclTree( currentContext ).identifier() + CPPModel::SCOPE_RESOLUTION_OPERATOR;
+					declScope = DeclTree( currentContext ).identifier() + CPPModel::SCOPE_RESOLUTION_OPERATOR + declScope;
 				}
 			}
 			else
 			{
-				declNamespace = CPPModel::SCOPE_RESOLUTION_OPERATOR;
+				declScope = CPPModel::SCOPE_RESOLUTION_OPERATOR;
 			}
 		}
 
 		//	Return the namespace
 
-		return( declNamespace );
+		return( declScope );
 	}
 
 }

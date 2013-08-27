@@ -15,6 +15,15 @@ Contributors:
 #define GCCINTERNALSTOOLS_H
 
 
+#include "ASTDictionary.h"
+
+#include "config.h"
+#include "gcc-plugin.h"
+#include "tree.h"
+#include "cp/cp-tree.h"
+#include "diagnostic.h"
+#include "real.h"
+#include "toplev.h"
 
 
 
@@ -57,16 +66,15 @@ namespace GCCInternalsTools
 			 	 	   	     	  const CPPModel::SourceLocation&				sourceLocation,
 			 	 	   	     	  const CPPModel::CompilerSpecific&				compilerSpecific,
 			 	 	   	     	  CPPModel::ConstListPtr<CPPModel::Attribute>	attributeList,
-			 	 	   	     	  CPPModel::TypeInfo::Specifier					typeSpec,
+			 	 	   	     	  CPPModel::TypeSpecifier						typeSpec,
 			 	 	   	     	  const tree&									treeNode )
 				: CPPModel::DictionaryClassEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, sourceLocation, compilerSpecific, attributeList, typeSpec ),
 				  DictionaryTreeMixin( treeNode )
 			{}
 
 
-		bool		GetClassDefinition( const CPPModel::ParseOptions&							options,
-										std::unique_ptr<const CPPModel::ClassDefinition>&		classDef ) const;
-
+		bool							GetClassDefinition( const CPPModel::ParseOptions&							options,
+															std::unique_ptr<const CPPModel::ClassDefinition>&		classDef ) const;
 	};
 
 
@@ -82,15 +90,15 @@ namespace GCCInternalsTools
 			 	 	   	     	  const CPPModel::SourceLocation&				sourceLocation,
 			 	 	   	     	  const CPPModel::CompilerSpecific&				compilerSpecific,
 			 	 	   	     	  CPPModel::ConstListPtr<CPPModel::Attribute>	attributes,
-			 	 	   	     	  CPPModel::TypeInfo::Specifier					typeSpec,
+			 	 	   	     	  CPPModel::TypeSpecifier						typeSpec,
 			 	 	   	     	  const tree&									treeNode )
 				: CPPModel::DictionaryUnionEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, false, sourceLocation, compilerSpecific, attributes, typeSpec ),
 				  DictionaryTreeMixin( treeNode )
 			{}
 
 
-			bool		GetUnionDefinition( const CPPModel::ParseOptions&							options,
-											std::unique_ptr<const CPPModel::UnionDefinition>&		unionDef ) const;
+		bool		GetUnionDefinition( const CPPModel::ParseOptions&							options,
+										std::unique_ptr<const CPPModel::UnionDefinition>&		unionDef ) const;
 	};
 
 
@@ -107,7 +115,7 @@ namespace GCCInternalsTools
 			 	 	   	     	     const CPPModel::SourceLocation&				sourceLocation,
 				 	 	   	     	  const CPPModel::CompilerSpecific&				compilerSpecific,
 			 	 	   	     	     CPPModel::ConstListPtr<CPPModel::Attribute>	attributes,
-			 	 	   	     	     CPPModel::TypeInfo::Specifier					returnTypeSpec,
+			 	 	   	     	     CPPModel::TypeSpecifier						returnTypeSpec,
 			 	 	   	     	     const bool										hiddenFriend,
 			 	 	   	     	     const tree&									treeNode )
 				: CPPModel::DictionaryFunctionEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, false, sourceLocation, compilerSpecific, attributes, returnTypeSpec, hiddenFriend ),
@@ -133,7 +141,7 @@ namespace GCCInternalsTools
 			 	 	   	     	      const CPPModel::SourceLocation&				sourceLocation,
 				 	 	   	     	  const CPPModel::CompilerSpecific&				compilerSpecific,
 			 	 	   	     	      CPPModel::ConstListPtr<CPPModel::Attribute>	attributes,
-			 	 	   	     	      CPPModel::TypeInfo::Specifier					typeSpec,
+			 	 	   	     	      CPPModel::TypeSpecifier						typeSpec,
 			 	 	   	     	      const tree&									treeNode )
 				: CPPModel::DictionaryGlobalVarEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, compilerSpecific, attributes, typeSpec ),
 				  DictionaryTreeMixin( treeNode )

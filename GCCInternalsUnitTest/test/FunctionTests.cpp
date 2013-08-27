@@ -16,8 +16,8 @@ namespace
 {
   TEST(TestFunctions, BasicTests)
   {
-	  ForkGCCTestCase( "Functions", "SimpleFunctionTestCase" );
-	  ForkGCCTestCase( "Functions", "FunctionsWithParametersTestCase" );
+	  ForkGCCTestCase( "Functions", "SimpleFunctionTestCase", "namespaces=TestNamespace::" );
+	  ForkGCCTestCase( "Functions", "FunctionsWithParametersTestCase", "namespaces=TestNamespace::" );
   }
 }
 

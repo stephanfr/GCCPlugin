@@ -15,6 +15,13 @@ Contributors:
 #define NAMESPACE_H_
 
 
+#include "ListAliases.h"
+
+#include "CompilerSpecific.h"
+#include "UID.h"
+#include "SourceElement.h"
+#include "Attribute.h"
+
 
 
 namespace CPPModel
@@ -87,7 +94,7 @@ namespace CPPModel
 		GlobalNamespace( const GlobalNamespace& ) = delete;
 
 		GlobalNamespace()
-			: Namespace( SCOPE_RESOLUTION_OPERATOR, UID( (long)0, UID::UIDType::DECLARATION ), SourceLocation( NULL, 0, 0, 0 ), CompilerSpecific( false, false, false ) )
+			: Namespace( SCOPE_RESOLUTION_OPERATOR, UID( (long)0, UID::UIDType::DECLARATION ), SourceLocation( NULL, 0, 0, 0 ), CompilerSpecific( false, false ) )
 		{}
 
 		~GlobalNamespace()
@@ -169,6 +176,35 @@ namespace CPPModel
 		const std::string			m_fqName;
 	};
 
+
+	class NamespaceScoped : public virtual IXMLSerializable
+	{
+	public :
+
+		NamespaceScoped( const Namespace&		namespaceScope )
+			: m_namespaceScope( namespaceScope )
+		{}
+
+
+		const Namespace&		namespaceScope() const
+		{
+			return( m_namespaceScope );
+		}
+
+		std::ostream&	toXML( std::ostream&			outputStream,
+							   int						indentLevel,
+							   SerializationOptions		options ) const
+		{
+			m_namespaceScope.toXML( outputStream, indentLevel, options );
+
+			return( outputStream );
+		}
+
+
+	private :
+
+		const Namespace&		m_namespaceScope;
+	};
 
 
 }

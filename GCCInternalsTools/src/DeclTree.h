@@ -15,6 +15,9 @@ Contributors:
 #define DECLTREE_H_
 
 
+#include "TypeTree.h"
+
+
 
 namespace GCCInternalsTools
 {
@@ -39,9 +42,9 @@ namespace GCCInternalsTools
 			return( *this );
 		}
 
-		CPPModel::CompilerSpecific		compilerSpecificAttr() const
+		const CPPModel::CompilerSpecific			compilerSpecificFlags() const
 		{
-			return( CPPModel::CompilerSpecific( isBuiltIn(), isArtificial(), false ) );
+			return( CPPModel::CompilerSpecific( isBuiltIn(), isArtificial() ) );
 		}
 
 		bool		isArtificial() const
@@ -117,7 +120,7 @@ namespace GCCInternalsTools
 		const std::string								enclosingNamespace() const;
 
 
-		CPPModel::TypeInfo::Specifier					typeSpecifier() const
+		CPPModel::TypeSpecifier							typeSpecifier() const
 		{
 			return( TypeTree( TREE_TYPE( m_tree )).typeSpecifier() );
 		}

@@ -16,11 +16,25 @@ Contributors:
 #define ACCESS_H_
 
 
+#include "Serialization.h"
 
 
 
 namespace CPPModel
 {
+
+	enum class AccessSpecifier
+	{
+		PUBLIC,
+		PROTECTED,
+		PRIVATE
+	};
+
+
+
+	const char*		toString( AccessSpecifier	accessSpec );
+
+
 
 	class Access : public IXMLSerializable
 	{
@@ -39,12 +53,7 @@ namespace CPPModel
 
 		std::ostream&		toXML( std::ostream&			outputStream,
 							   	   int						indentLevel,
-							   	   SerializationOptions		options ) const
-		{
-			outputStream << XMLIndentTable::GetIndent( indentLevel ) << "<access>" << toString( m_accessSpec ) << "</access>\n";
-
-			return( outputStream );
-		}
+							   	   SerializationOptions		options ) const;
 
 
 	private :

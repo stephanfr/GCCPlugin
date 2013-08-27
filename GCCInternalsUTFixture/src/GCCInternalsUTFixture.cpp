@@ -7,82 +7,17 @@
 //============================================================================
 
 
-#include <cassert>
 
-#include <algorithm>
-#include <cstdlib>
-#include <gmp.h>
-#include <map>
-#include <memory>
-#include <iostream>
-#include <stdlib.h>
-#include <string>
-#include <utility>
-#include <string.h>
-#include <fstream>
-#include <dlfcn.h>
-
-#include <boost/multi_index_container.hpp>
-#include <boost/multi_index/identity.hpp>
-#include <boost/multi_index/ordered_index.hpp>
-#include <boost/multi_index/member.hpp>
-
-#include <boost/ptr_container/ptr_list.hpp>
-#include <boost/ptr_container/ptr_map.hpp>
-
-#include <boost/lexical_cast.hpp>
-
-#include <boost/tokenizer.hpp>
-
-#include "ListAliases.h"
-
-#include "Constants.h"
-#include "Serialization.h"
-#include "ConstantValue.h"
-#include "Result.h"
-#include "CompilerSpecific.h"
-#include "NamedEntity.h"
-#include "Attribute.h"
-#include "UID.h"
-#include "SourceLocation.h"
-#include "Static.h"
-#include "Access.h"
-#include "SourceElement.h"
-#include "Namespace.h"
-#include "NamespaceScoped.h"
-#include "ASTEntry.h"
-#include "Types.h"
-#include "Union.h"
-#include "Function.h"
-#include "GlobalVar.h"
-#include "Class.h"
-#include "ASTDictionary.h"
-
-#include "config.h"
-
-#include "gcc-plugin.h"
-
-#include "tree.h"
-#include "cp/cp-tree.h"
-#include "diagnostic.h"
-#include "real.h"
+#include "GCCInternalsTools.h"
 
 #include "plugin.h"
 #include "tree-pass.h"
 
-#include "ConstantTree.h"
-#include "IdentifierTree.h"
-#include "DeclOrTypeBaseTree.h"
-#include "TypeTree.h"
-#include "DeclTree.h"
-#include "TreeList.h"
-
-#include "GCCInternalsTools.h"
-
 
 #include <iostream>
+#include <fstream>
 
-
+#include <boost/tokenizer.hpp>
 
 
 
@@ -93,6 +28,8 @@ int	plugin_is_GPL_compatible;
 
 
 std::string						outputFilename = "UnitTestResults.xml";
+
+bool							listAllNamespaces = false;
 
 std::list<std::string>			namespacesToScan;
 
@@ -183,15 +120,19 @@ static void GateCallback( void*		eventData,
 	}
 
 
-	for( CPPModel::ASTDictionary::NamespaceMapConstIterator itrNamespace = astDict->namespaces().begin(); itrNamespace != astDict->namespaces().end(); itrNamespace++ )
+	if( listAllNamespaces )
 	{
-		itrNamespace->second->toXML( resultsFile, 0, CPPModel::SerializationOptions::NONE );
+		for( CPPModel::ASTDictionary::NamespaceMapConstIterator itrNamespace = astDict->namespaces().begin(); itrNamespace != astDict->namespaces().end(); itrNamespace++ )
+		{
+			itrNamespace->second->toXML( resultsFile, 0, CPPModel::SerializationOptions::NONE );
+		}
 	}
+
 
 	for( std::string currentNamespace : namespacesToScan )
 	{
 
-		for( CPPModel::ASTDictionary::NamespaceIndexConstIterator namespaceIndex = astDict->NamespaceIdx().lower_bound( currentNamespace ); namespaceIndex != astDict->NamespaceIdx().upper_bound( currentNamespace ); namespaceIndex++ )
+		for( CPPModel::ASTDictionary::NamespaceIndexConstIterator namespaceIndex = (*astDict).NamespaceIdx().lower_bound( currentNamespace ); namespaceIndex != astDict->NamespaceIdx().upper_bound( currentNamespace ); namespaceIndex++ )
 		{
 			(*namespaceIndex)->toXML( resultsFile, 0, CPPModel::SerializationOptions::NONE );
 		}
@@ -220,9 +161,10 @@ static void GateCallback( void*		eventData,
 			{
 				std::unique_ptr<const CPPModel::FunctionDefinition>		functionDef;
 
-				((CPPModel::DictionaryFunctionEntry*)&(**namespaceIndex))->GetFunctionDefinition( parseOptions, functionDef );
-
-				functionDef->toXML( resultsFile, 0, CPPModel::SerializationOptions::NONE );
+				if( ((CPPModel::DictionaryFunctionEntry*)&(**namespaceIndex))->GetFunctionDefinition( parseOptions, functionDef ))
+				{
+					functionDef->toXML( resultsFile, 0, CPPModel::SerializationOptions::NONE );
+				}
 			}
 			else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::GLOBAL_VAR )
 			{
@@ -235,7 +177,7 @@ static void GateCallback( void*		eventData,
 		}
 	}
 
-
+	resultsFile.flush();
 	resultsFile.close();
 }
 
@@ -247,15 +189,17 @@ int plugin_init( plugin_name_args*		info,
 {
 	std::cerr << "Starting Plugin: "<< info->base_name << std::endl;
 
-	namespacesToScan.push_back( std::string( "TestNamespace::" ));
-
 	if( info->argc > 0 )
 	{
 		for( int i = 0; i < info->argc; i++ )
 		{
-			if( strcmp( info->argv[i].key, "outputFilename" ) == 0 )
+			if( strcmp( info->argv[i].key, "output-filename" ) == 0 )
 			{
 				outputFilename = info->argv[i].value;
+			}
+			else if( strcmp( info->argv[i].key, "list-all-namespaces" ) == 0 )
+			{
+				listAllNamespaces = true;
 			}
 			else if( strcmp( info->argv[i].key, "namespaces" ) == 0 )
 			{
@@ -272,7 +216,7 @@ int plugin_init( plugin_name_args*		info,
 					namespacesToScan.push_back( *itrNamespace );
 				}
 			}
-			else if( strcmp( info->argv[i].key, "testExtension" ) == 0 )
+			else if( strcmp( info->argv[i].key, "test-extension" ) == 0 )
 			{
 				std::string			extensionsInfo = info->argv[i].value;
 

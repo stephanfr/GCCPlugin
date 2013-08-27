@@ -14,6 +14,9 @@ Contributors:
 
 
 
+#include "Serialization.h"
+
+
 
 namespace CPPModel
 {
@@ -40,12 +43,7 @@ namespace CPPModel
 
 		std::ostream&	toXML( std::ostream&			outputStream,
 							   int						indentLevel,
-							   SerializationOptions		options ) const
-		{
-			outputStream << XMLIndentTable::GetIndent( indentLevel ) << "<static>" << ( m_isStatic ? "true" : "false" ) << "</static>\n";
-
-			return( outputStream );
-		}
+							   SerializationOptions		options ) const;
 
 
 	private :

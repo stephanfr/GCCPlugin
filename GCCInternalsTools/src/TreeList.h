@@ -15,6 +15,10 @@ Contributors:
 #define TREELIST_H_
 
 
+#include "DeclTree.h"
+
+
+
 namespace GCCInternalsTools
 {
 
@@ -214,7 +218,7 @@ namespace GCCInternalsTools
 	typedef TreeList<DeclTree, 0>							FieldList;
 
 	typedef TreeList<DeclTree, FUNCTION_DECL>				FunctionList;
-	typedef TreeList<DeclTree, FUNCTION_DECL>				MethodList;
+	typedef TreeList<DeclTree, 0>							MethodList;
 	typedef TreeList<DeclTree, PARM_DECL>					ParameterList;
 
 	typedef TreeList<DeclTree, 0>							UnionMemberList;

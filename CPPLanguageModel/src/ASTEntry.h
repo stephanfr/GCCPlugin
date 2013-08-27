@@ -15,6 +15,12 @@ Contributors:
 #define ASTENTRY_H_
 
 
+#include "Serialization.h"
+#include "UID.h"
+#include "SourceLocation.h"
+
+
+
 namespace CPPModel
 {
 
@@ -33,7 +39,7 @@ namespace CPPModel
 		{}
 
 		ASTEntry( const ASTEntry&		elementToCopy )
-			: SourceLocation( elementToCopy.fileName().c_str(), elementToCopy.lineNumber(), elementToCopy.characterCount(), elementToCopy.location() ),
+			: SourceLocation( elementToCopy.sourceLocation() ),
 			  m_uid( elementToCopy.m_uid )
 		{}
 

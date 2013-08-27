@@ -15,6 +15,8 @@ Contributors:
 #define NAMEDENTITY_H_
 
 
+#include "Serialization.h"
+
 
 namespace CPPModel
 {

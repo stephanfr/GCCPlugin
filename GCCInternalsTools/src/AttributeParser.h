@@ -15,8 +15,15 @@ Contributors:
 #define ATTRIBUTES_H_
 
 
+#include "TreeList.h"
+
+
 namespace GCCInternalsTools
 {
+	//	Forward Declarations for this namespace
+
+	class IdentifierTree;
+
 
 	std::unique_ptr<const CPPModel::Attribute>			GetAttribute( const IdentifierTree&			identifier,
 	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  const PurposeValueList&		arguments );

@@ -13,31 +13,113 @@ Contributors:
 #define TYPES_H_
 
 
+#include "Serialization.h"
+#include "Attribute.h"
+#include "Namespace.h"
 
 
 namespace CPPModel
 {
 
+
+	enum class TypeSpecifier
+	{
+		UNRECOGNIZED = 0,
+		VOID,
+		ENUM,
+		CHAR,
+		UNSIGNED_CHAR,
+		SHORT_INT,
+		UNSIGNED_SHORT_INT,
+		INT,
+		UNSIGNED_INT,
+		LONG_INT,
+		UNSIGNED_LONG_INT,
+		FLOAT,
+		DOUBLE,
+		LNG_DOUBLE,
+		BOOLEAN,
+		FUNCTION,
+		METHOD,
+		CLASS,
+		POINTER,
+		REFERENCE,
+		ARRAY,
+		UNION,
+		NULL_POINTER,		//	NULL_POINTER is the last GCC specific type - any after this are not present in GCC AST
+		NO_RETURN
+	};
+
+	struct TypeInfo
+	{
+		enum class Classification { FUNDAMENTAL, CLASS, DERIVED, FUNCTION, UNION, UNRECOGNIZED };
+
+		const TypeSpecifier		specifier;
+		const Classification	classification;
+		const std::string		label;
+	};
+
+	static const TypeInfo		CPPTypes[(int)TypeSpecifier::NO_RETURN + 1] =		//	Make sure the size of the array matches the size of the enum above
+	{
+			{ TypeSpecifier::UNRECOGNIZED, TypeInfo::Classification::UNRECOGNIZED, "unrecognized" },
+			{ TypeSpecifier::VOID, TypeInfo::Classification::FUNDAMENTAL, "void" },
+			{ TypeSpecifier::ENUM, TypeInfo::Classification::FUNDAMENTAL, "enum" },
+			{ TypeSpecifier::CHAR, TypeInfo::Classification::FUNDAMENTAL, "char" },
+			{ TypeSpecifier::UNSIGNED_CHAR, TypeInfo::Classification::FUNDAMENTAL, "unsigned char" },
+			{ TypeSpecifier::SHORT_INT, TypeInfo::Classification::FUNDAMENTAL, "short int" },
+			{ TypeSpecifier::UNSIGNED_SHORT_INT, TypeInfo::Classification::FUNDAMENTAL, "unsigned short int" },
+			{ TypeSpecifier::INT, TypeInfo::Classification::FUNDAMENTAL, "int" },
+			{ TypeSpecifier::UNSIGNED_INT, TypeInfo::Classification::FUNDAMENTAL, "unsigned int" },
+			{ TypeSpecifier::LONG_INT, TypeInfo::Classification::FUNDAMENTAL, "long int" },
+			{ TypeSpecifier::UNSIGNED_LONG_INT, TypeInfo::Classification::FUNDAMENTAL, "unsigned long int" },
+			{ TypeSpecifier::FLOAT, TypeInfo::Classification::FUNDAMENTAL, "float" },
+			{ TypeSpecifier::DOUBLE, TypeInfo::Classification::FUNDAMENTAL, "double" },
+			{ TypeSpecifier::LNG_DOUBLE, TypeInfo::Classification::FUNDAMENTAL, "long double" },
+			{ TypeSpecifier::BOOLEAN, TypeInfo::Classification::FUNDAMENTAL, "boolean" },
+			{ TypeSpecifier::FUNCTION, TypeInfo::Classification::FUNCTION, "function" },
+			{ TypeSpecifier::METHOD, TypeInfo::Classification::FUNCTION, "method" },
+			{ TypeSpecifier::CLASS, TypeInfo::Classification::CLASS, "class" },
+			{ TypeSpecifier::POINTER, TypeInfo::Classification::DERIVED, "pointer" },
+			{ TypeSpecifier::REFERENCE, TypeInfo::Classification::DERIVED, "reference" },
+			{ TypeSpecifier::ARRAY, TypeInfo::Classification::DERIVED, "array" },
+			{ TypeSpecifier::UNION, TypeInfo::Classification::UNION, "union" },
+			{ TypeSpecifier::NULL_POINTER, TypeInfo::Classification::FUNDAMENTAL, "null pointer" },
+			{ TypeSpecifier::NO_RETURN, TypeInfo::Classification::FUNDAMENTAL, "no return" }
+	};
+
+
+
+
 	class Type : public IXMLSerializable, public IAttributes
 	{
 	public :
 
-		enum class Kind { FUNDAMENTAL, USER_DEFINED, DERIVED, UNION, UNRECOGNIZED };
+		enum class Kind { FUNDAMENTAL, CLASS_OR_STRUCT, DERIVED, UNION, UNRECOGNIZED };
 
 
 		Type() = delete;
 		Type( Type& ) = delete;
-		Type( const Type& ) = delete;
 
-		Type( TypeInfo::Specifier		typeSpec )
+		Type( TypeSpecifier				typeSpec )
 			: m_typeSpecifier( typeSpec ),
 			  m_attributes()
 		{}
 
-		Type( TypeInfo::Specifier		typeSpec,
+		Type( TypeSpecifier				typeSpec,
 			  ConstListPtr<Attribute>&	attributes )
 			: m_typeSpecifier( typeSpec ),
 			  m_attributes( attributes )
+		{}
+
+		Type( TypeSpecifier				typeSpec,
+			  const Attributes&			attributes )
+			: m_typeSpecifier( typeSpec ),
+			  m_attributes( attributes )
+		{}
+
+		Type( const Type&				typeToCopy )
+			: m_typeSpecifier( typeToCopy.m_typeSpecifier ),
+			  m_attributes( typeToCopy.m_attributes )
 		{}
 
 
@@ -46,7 +128,7 @@ namespace CPPModel
 
 
 
-		TypeInfo::Specifier				type() const
+		TypeSpecifier					typeSpec() const
 		{
 			return( m_typeSpecifier );
 		}
@@ -66,7 +148,7 @@ namespace CPPModel
 
 	private :
 
-		const TypeInfo::Specifier		m_typeSpecifier;
+		const TypeSpecifier		m_typeSpecifier;
 
 		const Attributes				m_attributes;
 	};
@@ -80,7 +162,7 @@ namespace CPPModel
 		UnrecognizedType( const UnrecognizedType& ) = delete;
 
 		UnrecognizedType()
-			: Type( TypeInfo::Specifier::UNRECOGNIZED )
+			: Type( TypeSpecifier::UNRECOGNIZED )
 		{}
 
 		virtual ~UnrecognizedType()
@@ -105,11 +187,15 @@ namespace CPPModel
 
 		FundamentalType() = delete;
 		FundamentalType( FundamentalType& ) = delete;
-		FundamentalType( const FundamentalType& ) = delete;
 
-		FundamentalType( TypeInfo::Specifier		typeSpec )
+		FundamentalType( TypeSpecifier		typeSpec )
 			: Type( typeSpec )
 		{}
+
+		FundamentalType( const FundamentalType&		typeToCopy )
+			: Type( typeToCopy.typeSpec() )
+		{}
+
 
 		virtual ~FundamentalType()
 		{}
@@ -128,20 +214,19 @@ namespace CPPModel
 
 
 
-	class UserDefinedType : public Type, public SourceElement, public NamespaceScoped
+	class ClassOrStructType : public Type, public SourceElement, public NamespaceScoped
 	{
 	public :
 
-		UserDefinedType() = delete;
-		UserDefinedType( UserDefinedType& ) = delete;
-		UserDefinedType( const UserDefinedType& ) = delete;
+		ClassOrStructType() = delete;
+		ClassOrStructType( ClassOrStructType& ) = delete;
 
-		UserDefinedType( TypeInfo::Specifier			typeSpec,
-						 const std::string&				name,
-						 const UID&						uid,
-						 const Namespace&				namespaceScope,
-						 const SourceLocation&			sourceLocation,
-						 ConstListPtr<Attribute>&		attributes )
+		ClassOrStructType( TypeSpecifier				typeSpec,
+						   const std::string&			name,
+						   const UID&					uid,
+						   const Namespace&				namespaceScope,
+						   const SourceLocation&		sourceLocation,
+						   ConstListPtr<Attribute>&		attributes )
 			: Type( typeSpec, attributes ),
 			  SourceElement( name, uid, sourceLocation ),
 			  NamespaceScoped( namespaceScope )
@@ -149,14 +234,26 @@ namespace CPPModel
 			assert( uid.uidType() == UID::UIDType::TYPE );
 		}
 
+		ClassOrStructType( const ClassOrStructType& 	typeToCopy )
+			: Type( typeToCopy.typeSpec(), typeToCopy.attributes() ),
+			  SourceElement( typeToCopy.sourceElement() ),
+			  NamespaceScoped( typeToCopy.namespaceScope() )
+		{}
 
-		virtual ~UserDefinedType()
+
+
+		virtual ~ClassOrStructType()
 		{}
 
 
 		Kind									kind() const
 		{
-			return( Kind::USER_DEFINED );
+			return( Kind::CLASS_OR_STRUCT );
+		}
+
+		const std::string						fqName() const
+		{
+			return( std::string( namespaceScope().fqName() + name() ) );
 		}
 
 
@@ -176,12 +273,13 @@ namespace CPPModel
 		DerivedType( DerivedType& ) = delete;
 		DerivedType( const DerivedType& ) = delete;
 
-		DerivedType( TypeInfo::Specifier			typeSpec,
+		DerivedType( TypeSpecifier					typeSpec,
 					 ConstListPtr<Attribute>&		attributes,
 					 std::unique_ptr<const Type>	baseType )
 			: Type( typeSpec, attributes ),
 			  m_baseType( std::move( baseType ))
 		{}
+
 
 
 		virtual ~DerivedType()
@@ -215,9 +313,8 @@ namespace CPPModel
 
 		UnionType() = delete;
 		UnionType( UnionType& ) = delete;
-		UnionType( const UnionType& ) = delete;
 
-		UnionType( TypeInfo::Specifier			typeSpec,
+		UnionType( TypeSpecifier				typeSpec,
 				   const std::string&			name,
 				   const UID&					uid,
 				   const Namespace&				namespaceScope,
@@ -229,6 +326,12 @@ namespace CPPModel
 		{
 			assert( uid.uidType() == UID::UIDType::TYPE );
 		}
+
+		UnionType( const UnionType& 	typeToCopy )
+			: Type( typeToCopy.typeSpec(), typeToCopy.attributes() ),
+			  SourceElement( typeToCopy.sourceElement() ),
+			  NamespaceScoped( typeToCopy.namespaceScope() )
+		{}
 
 
 		virtual ~UnionType()

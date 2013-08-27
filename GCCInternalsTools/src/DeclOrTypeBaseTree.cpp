@@ -11,48 +11,13 @@ Contributors:
 -------------------------------------------------------------------------------*/
 
 
-#include <cassert>
 
-#include <memory>
-#include <map>
-
-#include <boost/multi_index_container.hpp>
-#include <boost/multi_index/identity.hpp>
-#include <boost/multi_index/ordered_index.hpp>
-#include <boost/multi_index/member.hpp>
-
-#include <boost/ptr_container/ptr_list.hpp>
-#include <boost/ptr_container/ptr_map.hpp>
+#include "ASTDictionary.h"
 
 #include "config.h"
-
 #include "gcc-plugin.h"
-
 #include "tree.h"
-
-#include "ListAliases.h"
-
-#include "Constants.h"
-#include "Serialization.h"
-#include "ConstantValue.h"
-#include "Result.h"
-#include "CompilerSpecific.h"
-#include "NamedEntity.h"
-#include "Attribute.h"
-#include "UID.h"
-#include "SourceLocation.h"
-#include "Static.h"
-#include "Access.h"
-#include "SourceElement.h"
-#include "Namespace.h"
-#include "NamespaceScoped.h"
-#include "ASTEntry.h"
-#include "Types.h"
-#include "Union.h"
-#include "Function.h"
-#include "GlobalVar.h"
-#include "Class.h"
-#include "ASTDictionary.h"
+#include "cp/cp-tree.h"
 
 #include "DeclOrTypeBaseTree.h"
 

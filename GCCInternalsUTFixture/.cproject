@@ -136,13 +136,25 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="GCCInternalsUTFixture.cdt.managedbuild.target.gnu.so.1762431558" name="Shared Library" projectType="cdt.managedbuild.target.gnu.so"/>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="refreshScope"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.so.release.1854620242;cdt.managedbuild.config.gnu.so.release.1854620242.;cdt.managedbuild.tool.gnu.cpp.compiler.so.release.2006418249;cdt.managedbuild.tool.gnu.cpp.compiler.input.148205640">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.so.debug.1722753939;cdt.managedbuild.config.gnu.so.debug.1722753939.;cdt.managedbuild.tool.gnu.cpp.compiler.so.debug.1911043426;cdt.managedbuild.tool.gnu.cpp.compiler.input.387918666">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-std=c++0x -E -P -v -dD &quot;${plugin_state_location}/specs.cpp&quot;" command="/usr/gcc-4.8.0/bin/g++-4.8.0" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.so.release.1854620242;cdt.managedbuild.config.gnu.so.release.1854620242.;cdt.managedbuild.tool.gnu.c.compiler.so.release.980576098;cdt.managedbuild.tool.gnu.c.compiler.input.131761066">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
@@ -151,6 +163,4 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope"/>
 </cproject>

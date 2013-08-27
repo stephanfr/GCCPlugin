@@ -15,6 +15,9 @@ Contributors:
 #define LISTALIASES_H_
 
 
+#include <boost/ptr_container/ptr_list.hpp>
+#include <boost/ptr_container/ptr_map.hpp>
+
 
 namespace CPPModel
 {

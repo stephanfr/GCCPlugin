@@ -15,6 +15,14 @@ Contributors:
 #define UNION_H_
 
 
+#include "Access.h"
+#include "Attribute.h"
+#include "SourceElement.h"
+#include "Namespace.h"
+#include "Types.h"
+
+
+
 namespace CPPModel
 {
 

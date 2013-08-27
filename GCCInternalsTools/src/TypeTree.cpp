@@ -11,68 +11,20 @@ Contributors:
 -------------------------------------------------------------------------------*/
 
 
-#include <cassert>
-
-#include <algorithm>
-#include <cstdlib>
-#include <gmp.h>
-#include <map>
-#include <memory>
-#include <ostream>
-#include <stdlib.h>
-#include <string>
-#include <utility>
-
-#include <boost/multi_index_container.hpp>
-#include <boost/multi_index/identity.hpp>
-#include <boost/multi_index/ordered_index.hpp>
-#include <boost/multi_index/member.hpp>
-
-#include <boost/lexical_cast.hpp>
-#include <boost/ptr_container/ptr_list.hpp>
-#include <boost/ptr_container/ptr_map.hpp>
+#include "ASTDictionary.h"
 
 #include "config.h"
-
 #include "gcc-plugin.h"
-
 #include "tree.h"
 #include "cp/cp-tree.h"
-#include "diagnostic.h"
-#include "real.h"
-
-#include "ListAliases.h"
-
-#include "Constants.h"
-#include "Serialization.h"
-#include "ConstantValue.h"
-#include "Result.h"
-#include "CompilerSpecific.h"
-#include "NamedEntity.h"
-#include "Attribute.h"
-#include "UID.h"
-#include "SourceLocation.h"
-#include "Static.h"
-#include "Access.h"
-#include "SourceElement.h"
-#include "Namespace.h"
-#include "NamespaceScoped.h"
-#include "ASTEntry.h"
-#include "Types.h"
-#include "Union.h"
-#include "Function.h"
-#include "GlobalVar.h"
-#include "Class.h"
-#include "ASTDictionary.h"
 
 #include "ConstantTree.h"
 #include "IdentifierTree.h"
 #include "DeclOrTypeBaseTree.h"
 
 #include "TypeTree.h"
-#include "DeclTree.h"
 
-#include "TreeList.h"
+#include "DeclTree.h"
 #include "AttributeParser.h"
 
 
@@ -89,55 +41,61 @@ namespace GCCInternalsTools
 
 	const std::string			TypeTree::enclosingNamespace() const
 	{
-		//	Namespaces can be aliased in the AST, make sure we get the original
+		//	For types, we have to start with the CP_TYPE_CONTEXT, and then move over to the CP_DECL_CONTEXT
+		//		as we iterate over the nested contexts.  Also, namespaces can be aliased, make sure we have the original.
 
-		tree&			originalNamespace = ORIGINAL_NAMESPACE( CP_TYPE_CONTEXT( m_tree ) );
+		tree&			startingScope = ORIGINAL_NAMESPACE( CP_TYPE_CONTEXT( m_tree ));
 
 		//	If this is the global namespace, return the scope resolution operator
 
-		if( originalNamespace == global_namespace )
+		if( startingScope == global_namespace )
 		{
 			return( CPPModel::SCOPE_RESOLUTION_OPERATOR );
 		}
 
-		//	If this is the standard library namespace, return that namespace now.
-
-		if( DECL_NAMESPACE_STD_P( originalNamespace ))
-		{
-			return( CPPModel::STD_NAMESPACE_LABEL );
-		}
-
 		//	We have to build out the full namespace context by context
 
-		std::string			fullNamespace = "";
+		std::string			fullScope = "";
 
-		for( tree& currentContext = originalNamespace; currentContext != global_namespace; currentContext = CP_TYPE_CONTEXT( currentContext ) )
+		for( tree& currentScope = startingScope; currentScope != global_namespace; currentScope = ORIGINAL_NAMESPACE( CP_DECL_CONTEXT( currentScope ) ))
 		{
-			fullNamespace += DeclTree( currentContext ).identifier() + CPPModel::SCOPE_RESOLUTION_OPERATOR;
+			//	We might be inside of a class or struct.  If so, that is the current scope level name.
+
+			if( TREE_CODE( currentScope ) == RECORD_TYPE )
+			{
+				fullScope = DeclTree( TYPE_NAME( currentScope ) ).identifier() + CPPModel::SCOPE_RESOLUTION_OPERATOR + fullScope;
+			}
+			else
+			{
+				fullScope = DeclTree( currentScope ).identifier() + CPPModel::SCOPE_RESOLUTION_OPERATOR + fullScope;
+			}
+
 		}
 
-		return( fullNamespace );
+		//	Return the full scope
+
+		return( fullScope );
 	}
 
 
-	CPPModel::TypeInfo::Specifier			TypeTree::typeSpecifier() const
+	CPPModel::TypeSpecifier			TypeTree::typeSpecifier() const
 	{
-		CPPModel::TypeInfo::Specifier		returnValue = CPPModel::TypeInfo::Specifier::UNRECOGNIZED;
+		CPPModel::TypeSpecifier		returnValue = CPPModel::TypeSpecifier::UNRECOGNIZED;
 
 		//	If this is a TYPE, then use the m_tree value as-is.  If it is a DECL, then we need the TREE_TYPE.
 
 		switch( TREE_CODE( m_tree ))
 		{
 			case VOID_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::VOID;
+				returnValue = CPPModel::TypeSpecifier::VOID;
 				break;
 
 			case ENUMERAL_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::ENUM;
+				returnValue = CPPModel::TypeSpecifier::ENUM;
 				break;
 
 			case BOOLEAN_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::BOOLEAN;
+				returnValue = CPPModel::TypeSpecifier::BOOLEAN;
 				break;
 
 			case INTEGER_TYPE :
@@ -152,19 +110,19 @@ namespace GCCInternalsTools
 					switch( dynamic_cast<const CPPModel::IntegerConstant*>( typeLengthInBits.get() )->value() )
 					{
 						case 8 :
-							returnValue = isUnsigned ? CPPModel::TypeInfo::Specifier::UNSIGNED_CHAR : CPPModel::TypeInfo::Specifier::CHAR;
+							returnValue = isUnsigned ? CPPModel::TypeSpecifier::UNSIGNED_CHAR : CPPModel::TypeSpecifier::CHAR;
 							break;
 
 						case 16 :
-							returnValue = isUnsigned ? CPPModel::TypeInfo::Specifier::UNSIGNED_SHORT_INT : CPPModel::TypeInfo::Specifier::SHORT_INT;
+							returnValue = isUnsigned ? CPPModel::TypeSpecifier::UNSIGNED_SHORT_INT : CPPModel::TypeSpecifier::SHORT_INT;
 							break;
 
 						case 32 :
-							returnValue = isUnsigned ? CPPModel::TypeInfo::Specifier::UNSIGNED_INT : CPPModel::TypeInfo::Specifier::INT;
+							returnValue = isUnsigned ? CPPModel::TypeSpecifier::UNSIGNED_INT : CPPModel::TypeSpecifier::INT;
 							break;
 
 						case 64 :
-							returnValue = isUnsigned ? CPPModel::TypeInfo::Specifier::UNSIGNED_LONG_INT : CPPModel::TypeInfo::Specifier::LONG_INT;
+							returnValue = isUnsigned ? CPPModel::TypeSpecifier::UNSIGNED_LONG_INT : CPPModel::TypeSpecifier::LONG_INT;
 							break;
 					}
 				}
@@ -179,59 +137,59 @@ namespace GCCInternalsTools
 					switch( dynamic_cast<const CPPModel::IntegerConstant*>( typeLengthInBits.get() )->value() )
 					{
 						case 32 :
-							returnValue = CPPModel::TypeInfo::Specifier::FLOAT;
+							returnValue = CPPModel::TypeSpecifier::FLOAT;
 							break;
 
 						case 64 :
-							returnValue = CPPModel::TypeInfo::Specifier::DOUBLE;
+							returnValue = CPPModel::TypeSpecifier::DOUBLE;
 							break;
 
 						case 128 :
-							returnValue = CPPModel::TypeInfo::Specifier::LNG_DOUBLE;
+							returnValue = CPPModel::TypeSpecifier::LNG_DOUBLE;
 							break;
 					}
 				}
 				break;
 
 			case POINTER_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::POINTER;
+				returnValue = CPPModel::TypeSpecifier::POINTER;
 				break;
 
 			case REFERENCE_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::REFERENCE;
+				returnValue = CPPModel::TypeSpecifier::REFERENCE;
 				break;
 
 			case NULLPTR_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::NULL_POINTER;
+				returnValue = CPPModel::TypeSpecifier::NULL_POINTER;
 				break;
 
 			case ARRAY_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::ARRAY;
+				returnValue = CPPModel::TypeSpecifier::ARRAY;
 				break;
 
 			case RECORD_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::CLASS;
+				returnValue = CPPModel::TypeSpecifier::CLASS;
 				break;
 
 			case UNION_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::UNION;
+				returnValue = CPPModel::TypeSpecifier::UNION;
 				break;
 
 			case QUAL_UNION_TYPE :
 				//	We should not see this type in a C/C++ program.  QUAL_UNION_TYPE is associated with Ada only.
-				returnValue = CPPModel::TypeInfo::Specifier::UNRECOGNIZED;
+				returnValue = CPPModel::TypeSpecifier::UNRECOGNIZED;
 				break;
 
 			case FUNCTION_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::FUNCTION;
+				returnValue = CPPModel::TypeSpecifier::FUNCTION;
 				break;
 
 			case METHOD_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::METHOD;
+				returnValue = CPPModel::TypeSpecifier::METHOD;
 				break;
 
 			default :
-				returnValue = CPPModel::TypeInfo::Specifier::UNRECOGNIZED;
+				returnValue = CPPModel::TypeSpecifier::UNRECOGNIZED;
 				break;
 		}
 
@@ -242,16 +200,16 @@ namespace GCCInternalsTools
 
 	std::unique_ptr<const CPPModel::Type>			TypeTree::type( const CPPModel::ASTDictionary&		dictionary ) const
 	{
-		CPPModel::TypeInfo::Specifier				currentType = typeSpecifier();
+		CPPModel::TypeSpecifier						currentTypeSpec = typeSpecifier();
 		std::unique_ptr<const CPPModel::Type>		returnValue( new CPPModel::UnrecognizedType());
 
 		//	TODO add other enumerations
 
-		switch( CPPModel::CPPTypes[(int)currentType].classification )
+		switch( CPPModel::CPPTypes[(int)currentTypeSpec].classification )
 		{
 			case CPPModel::TypeInfo::Classification::FUNDAMENTAL :
 			{
-				returnValue.reset( new CPPModel::FundamentalType( currentType ));
+				returnValue.reset( new CPPModel::FundamentalType( currentTypeSpec ));
 			}
 			break;
 
@@ -259,7 +217,9 @@ namespace GCCInternalsTools
 			{
 				const CPPModel::UID typeUID = uid();
 
-				const CPPModel::ASTDictionary::UIDIndexConstIterator	entry = dictionary.UIDIdx().find( typeUID );
+				const std::string	fqName = enclosingNamespace() + identifier();
+
+				const CPPModel::ASTDictionary::UIDIndexConstIterator		entry = dictionary.UIDIdx().find( typeUID );
 
 				if( entry != dictionary.UIDIdx().end() )
 				{
@@ -271,12 +231,12 @@ namespace GCCInternalsTools
 						{
 							CPPModel::ConstListPtr<CPPModel::Attribute>	attributes( CPPModel::Attributes::deepCopy( classEntry->attributes() ));
 
-							returnValue.reset( new CPPModel::UserDefinedType( classEntry->typeSpec(),
-																			  classEntry->name(),
-																			  typeUID,
-																			  classEntry->enclosingNamespace(),
-																			  classEntry->sourceLocation(),
-																			  attributes ));
+							returnValue.reset( new CPPModel::ClassOrStructType( classEntry->typeSpec(),
+																			    classEntry->name(),
+																			    typeUID,
+																			    classEntry->enclosingNamespace(),
+																			    classEntry->sourceLocation(),
+																			    attributes ));
 						}
 					}
 					else
@@ -292,14 +252,21 @@ namespace GCCInternalsTools
 
 					const CPPModel::Namespace*		namespaceScope;
 
+					std::string			scope = enclosingNamespace();
+
 					dictionary.GetNamespace( enclosingNamespace(), namespaceScope );
 
-					returnValue.reset( new CPPModel::UserDefinedType( currentType,
-																	  convert( TYPE_NAME( m_tree ))->identifier(),
-																	  uid(),
-																	  *namespaceScope,
-																	  CPPModel::SourceLocation( "", 1, 1, 1 ),
-																	  attributes ));
+					if( namespaceScope == NULL )
+					{
+						std::cerr << "Null Scope" << std::endl;
+					}
+
+					returnValue.reset( new CPPModel::ClassOrStructType( currentTypeSpec,
+																	    convert( TYPE_NAME( m_tree ))->identifier(),
+																	    uid(),
+																	    *namespaceScope,
+																	    CPPModel::SourceLocation( "", 1, 1, 1 ),
+																	    attributes ));
 				}
 			}
 			break;
@@ -312,7 +279,7 @@ namespace GCCInternalsTools
 
 				TypeTree		nextType( TREE_TYPE( m_tree ));
 
-				returnValue.reset( new CPPModel::DerivedType( currentType, attributes, nextType.type( dictionary ) ));
+				returnValue.reset( new CPPModel::DerivedType( currentTypeSpec, attributes, nextType.type( dictionary ) ));
 			}
 			break;
 
@@ -347,7 +314,7 @@ namespace GCCInternalsTools
 
 					dictionary.GetNamespace( enclosingNamespace(), namespaceScope );
 
-					returnValue.reset( new CPPModel::UnionType( currentType,
+					returnValue.reset( new CPPModel::UnionType( currentTypeSpec,
 																convert( TYPE_NAME( m_tree ))->identifier(),
 																uid(),
 																*namespaceScope,

@@ -14,6 +14,9 @@ Contributors:
 
 
 
+#include "Serialization.h"
+
+
 
 namespace CPPModel
 {
@@ -44,6 +47,12 @@ namespace CPPModel
 		virtual ~SourceLocation()
 		{}
 
+
+
+		const SourceLocation&		sourceLocation() const
+		{
+			return( *this );
+		}
 
 
 		virtual const bool			isUnknown() const

@@ -15,6 +15,11 @@ Contributors:
 #define SOURCEELEMENT_H_
 
 
+#include "UID.h"
+#include "SourceLocation.h"
+#include "NamedEntity.h"
+
+
 namespace CPPModel
 {
 
@@ -44,10 +49,15 @@ namespace CPPModel
 		virtual ~SourceElement() {};
 
 
+		const SourceElement&	sourceElement() const
+		{
+			return( *this );
+		}
+
+
 		std::ostream&			toXML( std::ostream&			outputStream,
 							   	   	   int						indentLevel,
 							   	   	   SerializationOptions		options ) const;
-
 	};
 
 }

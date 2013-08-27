@@ -15,6 +15,21 @@ Contributors:
 #define DECLORTYPEBASETREE_H_
 
 
+#include <memory>
+
+
+
+typedef union tree_node *tree;
+
+namespace CPPModel
+{
+	enum class TypeSpecifier;
+	class CompilerSpecific;
+	class UID;
+	class Type;
+	class ASTDictionary;
+}
+
 
 namespace GCCInternalsTools
 {
@@ -49,11 +64,13 @@ namespace GCCInternalsTools
 
 		virtual const CPPModel::UID							uid() const = 0;
 
+		virtual const CPPModel::CompilerSpecific			compilerSpecificFlags() const = 0;
+
 		//	TODO Rename to NamespaceScopeFQName
 
 		virtual const std::string							enclosingNamespace() const = 0;
 
-		virtual CPPModel::TypeInfo::Specifier				typeSpecifier() const = 0;
+		virtual CPPModel::TypeSpecifier						typeSpecifier() const = 0;
 
 		virtual std::unique_ptr<const CPPModel::Type>		type( const CPPModel::ASTDictionary&		dictionary ) const = 0;
 

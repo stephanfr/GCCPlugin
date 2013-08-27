@@ -10,7 +10,7 @@ Contributors:
     Stephan Friedl
 -------------------------------------------------------------------------------*/
 
-
+/*
 #include <cassert>
 
 #include <algorithm>
@@ -32,19 +32,9 @@ Contributors:
 #include <boost/ptr_container/ptr_list.hpp>
 #include <boost/ptr_container/ptr_map.hpp>
 
-#include "config.h"
-
-#include "gcc-plugin.h"
-
-#include "tree.h"
-#include "cp/cp-tree.h"
-#include "diagnostic.h"
-#include "real.h"
-#include "toplev.h"
 
 #include "ListAliases.h"
 
-#include "Constants.h"
 #include "Serialization.h"
 #include "ConstantValue.h"
 #include "Result.h"
@@ -57,24 +47,30 @@ Contributors:
 #include "Access.h"
 #include "SourceElement.h"
 #include "Namespace.h"
-#include "NamespaceScoped.h"
 #include "ASTEntry.h"
 #include "Types.h"
 #include "Union.h"
 #include "Function.h"
+#include "Template.h"
 #include "GlobalVar.h"
 #include "Class.h"
 #include "ASTDictionary.h"
 
 #include "ConstantTree.h"
-#include "IdentifierTree.h"
 #include "DeclOrTypeBaseTree.h"
 #include "TypeTree.h"
 #include "DeclTree.h"
 #include "TreeList.h"
-#include "AttributeParser.h"
+*/
+
 
 #include "GCCInternalsTools.h"
+
+#include "ConstantTree.h"
+#include "IdentifierTree.h"
+#include "DeclTree.h"
+#include "AttributeParser.h"
+
 
 
 
@@ -82,23 +78,23 @@ Contributors:
 namespace GCCInternalsTools
 {
 
-	CPPModel::TypeInfo::Specifier			TypeSpecifier( const tree&	treeToType )
+	CPPModel::TypeSpecifier			TypeSpecifier( const tree&	treeToType )
 	{
-		CPPModel::TypeInfo::Specifier		returnValue = CPPModel::TypeInfo::Specifier::UNRECOGNIZED;
+		CPPModel::TypeSpecifier		returnValue = CPPModel::TypeSpecifier::UNRECOGNIZED;
 
 
 		switch( TREE_CODE( treeToType ) )
 		{
 			case VOID_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::VOID;
+				returnValue = CPPModel::TypeSpecifier::VOID;
 				break;
 
 			case ENUMERAL_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::ENUM;
+				returnValue = CPPModel::TypeSpecifier::ENUM;
 				break;
 
 			case BOOLEAN_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::BOOLEAN;
+				returnValue = CPPModel::TypeSpecifier::BOOLEAN;
 				break;
 
 			case INTEGER_TYPE :
@@ -113,19 +109,19 @@ namespace GCCInternalsTools
 					switch( dynamic_cast<const CPPModel::IntegerConstant*>( typeLengthInBits.get() )->value() )
 					{
 						case 8 :
-							returnValue = isUnsigned ? CPPModel::TypeInfo::Specifier::UNSIGNED_CHAR : CPPModel::TypeInfo::Specifier::CHAR;
+							returnValue = isUnsigned ? CPPModel::TypeSpecifier::UNSIGNED_CHAR : CPPModel::TypeSpecifier::CHAR;
 							break;
 
 						case 16 :
-							returnValue = isUnsigned ? CPPModel::TypeInfo::Specifier::UNSIGNED_SHORT_INT : CPPModel::TypeInfo::Specifier::SHORT_INT;
+							returnValue = isUnsigned ? CPPModel::TypeSpecifier::UNSIGNED_SHORT_INT : CPPModel::TypeSpecifier::SHORT_INT;
 							break;
 
 						case 32 :
-							returnValue = isUnsigned ? CPPModel::TypeInfo::Specifier::UNSIGNED_INT : CPPModel::TypeInfo::Specifier::INT;
+							returnValue = isUnsigned ? CPPModel::TypeSpecifier::UNSIGNED_INT : CPPModel::TypeSpecifier::INT;
 							break;
 
 						case 64 :
-							returnValue = isUnsigned ? CPPModel::TypeInfo::Specifier::UNSIGNED_LONG_INT : CPPModel::TypeInfo::Specifier::LONG_INT;
+							returnValue = isUnsigned ? CPPModel::TypeSpecifier::UNSIGNED_LONG_INT : CPPModel::TypeSpecifier::LONG_INT;
 							break;
 					}
 				}
@@ -140,59 +136,166 @@ namespace GCCInternalsTools
 					switch( dynamic_cast<const CPPModel::IntegerConstant*>( typeLengthInBits.get() )->value() )
 					{
 						case 32 :
-							returnValue = CPPModel::TypeInfo::Specifier::FLOAT;
+							returnValue = CPPModel::TypeSpecifier::FLOAT;
 							break;
 
 						case 64 :
-							returnValue = CPPModel::TypeInfo::Specifier::DOUBLE;
+							returnValue = CPPModel::TypeSpecifier::DOUBLE;
 							break;
 
 						case 128 :
-							returnValue = CPPModel::TypeInfo::Specifier::LNG_DOUBLE;
+							returnValue = CPPModel::TypeSpecifier::LNG_DOUBLE;
 							break;
 					}
 				}
 				break;
 
 			case POINTER_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::POINTER;
+				returnValue = CPPModel::TypeSpecifier::POINTER;
 				break;
 
 			case REFERENCE_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::REFERENCE;
+				returnValue = CPPModel::TypeSpecifier::REFERENCE;
 				break;
 
 			case NULLPTR_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::NULL_POINTER;
+				returnValue = CPPModel::TypeSpecifier::NULL_POINTER;
 				break;
 
 			case ARRAY_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::ARRAY;
+				returnValue = CPPModel::TypeSpecifier::ARRAY;
 				break;
 
 			case RECORD_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::CLASS;
+				returnValue = CPPModel::TypeSpecifier::CLASS;
 				break;
 
 			case UNION_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::UNION;
+				returnValue = CPPModel::TypeSpecifier::UNION;
 				break;
 
 			case QUAL_UNION_TYPE :
 				//	We should not see this type in a C/C++ program.  QUAL_UNION_TYPE is associated with Ada only.
-				returnValue = CPPModel::TypeInfo::Specifier::UNRECOGNIZED;
+				returnValue = CPPModel::TypeSpecifier::UNRECOGNIZED;
 				break;
 
 			case FUNCTION_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::FUNCTION;
+				returnValue = CPPModel::TypeSpecifier::FUNCTION;
 				break;
 
 			case METHOD_TYPE :
-				returnValue = CPPModel::TypeInfo::Specifier::METHOD;
+				returnValue = CPPModel::TypeSpecifier::METHOD;
 				break;
 
 			default :
-				returnValue = CPPModel::TypeInfo::Specifier::UNRECOGNIZED;
+				returnValue = CPPModel::TypeSpecifier::UNRECOGNIZED;
+				break;
+		}
+
+		return( returnValue );
+	}
+
+
+	tree				ASTTreeForType( CPPModel::TypeSpecifier		typeSpec )
+	{
+		tree		returnValue;
+
+		switch( typeSpec )
+		{
+			case	CPPModel::TypeSpecifier::UNRECOGNIZED :
+				returnValue = NULL;
+				break;
+
+			case	CPPModel::TypeSpecifier::VOID :
+				returnValue = void_type_node;
+				break;
+
+			case	CPPModel::TypeSpecifier::ENUM :
+				returnValue = NULL;
+				break;
+
+			case	CPPModel::TypeSpecifier::CHAR :
+				returnValue = signed_char_type_node;
+				break;
+
+			case	CPPModel::TypeSpecifier::UNSIGNED_CHAR :
+				returnValue = unsigned_char_type_node;
+				break;
+
+			case	CPPModel::TypeSpecifier::SHORT_INT :
+				returnValue = short_integer_type_node;
+				break;
+
+			case	CPPModel::TypeSpecifier::UNSIGNED_SHORT_INT :
+				returnValue = short_unsigned_type_node;
+				break;
+
+			case	CPPModel::TypeSpecifier::INT :
+				returnValue = integer_type_node;
+				break;
+
+			case	CPPModel::TypeSpecifier::UNSIGNED_INT :
+				returnValue = unsigned_type_node;
+				break;
+
+			case	CPPModel::TypeSpecifier::LONG_INT :
+				returnValue = long_integer_type_node;
+				break;
+
+			case	CPPModel::TypeSpecifier::UNSIGNED_LONG_INT :
+				returnValue = long_unsigned_type_node;
+				break;
+
+			case	CPPModel::TypeSpecifier::FLOAT :
+				returnValue = float_type_node;
+				break;
+
+			case	CPPModel::TypeSpecifier::DOUBLE :
+				returnValue = double_type_node;
+				break;
+
+			case	CPPModel::TypeSpecifier::LNG_DOUBLE :
+				returnValue = long_double_type_node;
+				break;
+
+			case	CPPModel::TypeSpecifier::BOOLEAN :
+				returnValue = boolean_type_node;
+				break;
+
+			case	CPPModel::TypeSpecifier::FUNCTION :
+				returnValue = NULL;
+				break;
+
+			case	CPPModel::TypeSpecifier::METHOD :
+				returnValue = NULL;
+				break;
+
+			case	CPPModel::TypeSpecifier::CLASS :
+				returnValue = NULL;
+				break;
+
+			case	CPPModel::TypeSpecifier::POINTER :
+				returnValue = NULL;
+				break;
+
+			case	CPPModel::TypeSpecifier::REFERENCE :
+				returnValue = NULL;
+				break;
+
+			case	CPPModel::TypeSpecifier::ARRAY :
+				returnValue = NULL;
+				break;
+
+			case	CPPModel::TypeSpecifier::UNION :
+				returnValue = NULL;
+				break;
+
+			case	CPPModel::TypeSpecifier::NULL_POINTER :
+				returnValue = NULL;
+				break;
+
+			case	CPPModel::TypeSpecifier::NO_RETURN :
+				returnValue = NULL;
 				break;
 		}
 
@@ -369,12 +472,12 @@ namespace GCCInternalsTools
 			{
 				case TYPE_DECL:
 				{
-					//	TODO I think this is wrong
+					//	TODO This is wrong - it should handle things like: typedef struct { char __arr[2]; } __two;
 
-					if( !DECL_SELF_REFERENCE_P( (const tree&)*itrField ))
-					{
-						fieldList->push_back( new CPPModel::FieldDeclaration( itrField->identifier(), itrField->uid(), sourceLocation, itrField->type( dictionaryEntry.Dictionary() ), isStatic, accessSpec, attributes ) );
-					}
+//					if( !DECL_SELF_REFERENCE_P( (const tree&)*itrField ))
+//					{
+//						fieldList->push_back( new CPPModel::FieldDeclaration( itrField->identifier(), itrField->uid(), sourceLocation, itrField->type( dictionaryEntry.Dictionary() ), isStatic, accessSpec, attributes ) );
+//					}
 					break;
 				}
 				case FIELD_DECL:
@@ -398,6 +501,61 @@ namespace GCCInternalsTools
 
 
 
+	CPPModel::ListPtr<CPPModel::FunctionParameter>			GetFunctionParameters( ParameterList						rawParameters,
+																				   const CPPModel::ASTDictionary&		dictionary )
+	{
+		CPPModel::ListPtr<CPPModel::FunctionParameter>	parameterList( new boost::ptr_list<CPPModel::FunctionParameter>() );
+
+		for( ParameterList::iterator itrParameter = rawParameters.begin(); itrParameter != rawParameters.end(); ++itrParameter )
+		{
+			//	Add the argument to the list
+
+			std::unique_ptr<DeclOrTypeBaseTree>		typeDecl = DeclOrTypeBaseTree::convert( TREE_TYPE( (const tree&)itrParameter ) );
+
+			parameterList->push_back( new CPPModel::FunctionParameter( itrParameter->identifier(), typeDecl->type( dictionary ), itrParameter->compilerSpecificFlags() ) );
+		}
+
+		return( parameterList );
+	}
+
+
+	CPPModel::ListPtr<CPPModel::TemplateParameter>			GetTemplateParameters( const tree&							functionTree,
+																				   const CPPModel::ASTDictionary&		dictionary )
+	{
+		CPPModel::ListPtr<CPPModel::TemplateParameter>	parameterList( new boost::ptr_list<CPPModel::TemplateParameter>() );
+
+		PurposeValueList		topLevelList = PurposeValueList( DECL_TEMPLATE_PARMS( functionTree ) );
+
+		for( PurposeValueList::iterator itrVector = topLevelList.begin(); itrVector != topLevelList.end(); ++itrVector )
+		{
+			const tree&		templateParamVec = itrVector->value();
+
+			int				vecLength = TREE_VEC_LENGTH( templateParamVec );
+
+			std::cerr << "Vec Length: " << vecLength << std::endl;
+
+			for( int i = 0; i < vecLength; ++i )
+			{
+				const tree&		innerListTree = TREE_VEC_ELT( templateParamVec, i );
+
+				PurposeValueList		innerList = PurposeValueList( innerListTree );
+
+				for( PurposeValueList::iterator itrParam = innerList.begin(); itrParam != innerList.end(); ++itrParam )
+				{
+					DeclTree				paramDecl( itrParam->value() );
+
+					CPPModel::CompilerSpecific		compilerSpecificAttr( DECL_BUILT_IN( (const tree&)paramDecl ), DECL_ARTIFICIAL( (const tree&)paramDecl ) );
+
+					parameterList->push_back( new CPPModel::TemplateParameter( DeclOrTypeBaseTree::convert( itrParam->value() )->identifier(), compilerSpecificAttr ) );
+				}
+			}
+		}
+
+		return( parameterList );
+	}
+
+
+
 	CPPModel::ConstListPtr<CPPModel::MethodDeclaration>		GetMethods( const DictionaryClassEntryImpl&		dictionaryEntry,
 																		const CPPModel::ParseOptions&		options )
 	{
@@ -411,8 +569,10 @@ namespace GCCInternalsTools
 		{
 			//	Don't add artificial or built-in methods, gcc appears to use 'artificial' methods as placeholders it creates in the AST
 			//		and built-in methods are added for RTTI and a couple other language features.
+			//
+			//	Also, we are only interested in function decls in this method
 
-			if( itrMethod->isArtificial() || itrMethod->isBuiltIn() )
+			if( itrMethod->isArtificial() || itrMethod->isBuiltIn() || ( TREE_CODE( (const tree&)*itrMethod ) != FUNCTION_DECL ) )
 			{
 				continue;
 			}
@@ -444,25 +604,18 @@ namespace GCCInternalsTools
 
 			CPPModel::ConstListPtr<CPPModel::Attribute>		attributes( GetAttributes( PurposeValueList( DECL_ATTRIBUTES( (const tree&)*itrMethod ) )));
 
-			CPPModel::ListPtr<CPPModel::FunctionParameter>	parameterList( new boost::ptr_list<CPPModel::FunctionParameter>() );
+			CPPModel::ListPtr<CPPModel::FunctionParameter>	parameterList( GetFunctionParameters( ParameterList( DECL_ARGUMENTS( (const tree&)*itrMethod )), dictionaryEntry.Dictionary() ) );
 
-			//	Choose the first argument to convert conditionally on the compiler generated arguments option
-			//		The compiler will add 'this' to methods, and potentially other arguments for handling virtual calls
+			//	Add the method to our list.  A null DECL_RESULT indicates no return value (such as from a destructor or exception handler).
 
-			ParameterList		parameters = options.includeCompilerGeneratedFunctionArguments ? DECL_ARGUMENTS( (const tree&)*itrMethod ) : FUNCTION_FIRST_USER_PARM( (const tree&)*itrMethod );
-
-			//	Loop over all the arguments
-
-			for( ParameterList::iterator itrParameter = parameters.begin(); itrParameter != parameters.end(); ++itrParameter )
+			if( DECL_RESULT( (const tree&)*itrMethod ) != NULL )
 			{
-				//	Add the argument to the list
-
-				parameterList->push_back( new CPPModel::FunctionParameter( itrParameter->identifier(), DeclOrTypeBaseTree::convert( TREE_TYPE( (const tree&)itrParameter ) )->type( dictionaryEntry.Dictionary() )));
+				methodList->push_back( new CPPModel::MethodDeclaration( methodName, itrMethod->uid(), itrMethod->sourceLocation(), isStatic, accessSpec, DeclOrTypeBaseTree::convert( TREE_TYPE( DECL_RESULT( (const tree&)*itrMethod ) ) )->type( dictionaryEntry.Dictionary() ), attributes, parameterList ) );
 			}
-
-			//	Add the method to our list
-
-			methodList->push_back( new CPPModel::MethodDeclaration( methodName, itrMethod->uid(), itrMethod->sourceLocation(), isStatic, accessSpec, DeclOrTypeBaseTree::convert( TREE_TYPE( DECL_RESULT( (const tree&)*itrMethod ) ) )->type( dictionaryEntry.Dictionary() ), attributes, parameterList ) );
+			else
+			{
+				methodList->push_back( new CPPModel::MethodDeclaration( methodName, itrMethod->uid(), itrMethod->sourceLocation(), isStatic, accessSpec, std::unique_ptr<const CPPModel::Type>( new CPPModel::FundamentalType( CPPModel::TypeSpecifier::NO_RETURN ) ), attributes, parameterList ) );
+			}
 		}
 
 		//	Return the list of methods and we are done
@@ -472,15 +625,86 @@ namespace GCCInternalsTools
 
 
 
+	CPPModel::ConstListPtr<CPPModel::TemplateMethodDeclaration>		GetTemplateMethods( const DictionaryClassEntryImpl&		dictionaryEntry,
+																						const CPPModel::ParseOptions&		options )
+	{
+		CPPModel::ListPtr<CPPModel::TemplateMethodDeclaration>		templateMethodList( new boost::ptr_list<CPPModel::TemplateMethodDeclaration>() );
+
+		//	Iterate over the methods
+
+		MethodList		methods( TYPE_METHODS( dictionaryEntry.getTree() ) );
+
+		for( MethodList::iterator itrMethod = methods.begin(); itrMethod != methods.end(); ++itrMethod )
+		{
+			//	Don't add artificial or built-in methods, gcc appears to use 'artificial' methods as placeholders it creates in the AST
+			//		and built-in methods are added for RTTI and a couple other language features.
+			//
+			//	Also, we are only interested in template decls in this method
+
+			if( itrMethod->isArtificial() || itrMethod->isBuiltIn() || ( TREE_CODE( (const tree&)*itrMethod ) != TEMPLATE_DECL ) )
+			{
+				continue;
+			}
+
+			//	OK, cloned functions.  GCC may generate 3 versions of every constructor and 3 versions of every destructor.
+			//		(I don't fully understand this at the moment but this is my current 'best guess'.)
+			//
+			//		__base_ctor		- 'base' constructor initializes all the non-virtual stuff in a class
+			//		__comp_ctor		- 'complete' constructor does everything the 'base' constructor does plus virtual base class initialization
+			//		allocating complete constructor - does everything the 'complete' constructor does plus allocates heap
+			//
+			//		__base_dtor		- 'base' destructor that handles all non-virtual destruction
+			//		__comp_ctor		- 'complete' destructor that does everything the base does and handles virtual base class destruction
+			//		deleting complete destructor - does everything the 'complete' destructor does plus free any heap held by the object
+			//
+			//	Include cloned functions only if instructed.  The default is to omit them as they don't actually appear in the source code.
+
+			if( !options.includeClonedFunctions && DECL_CLONED_FUNCTION_P( (const tree&)*itrMethod ))
+			{
+				continue;
+			}
+
+			//	Get the method name and create the parameter list for the method
+
+			const std::string								methodName = itrMethod->identifier();
+			bool											isStatic = !DECL_NONSTATIC_MEMBER_P( (const tree&)*itrMethod );
+
+			CPPModel::AccessSpecifier						accessSpec = itrMethod->accessSpecifier();
+
+			CPPModel::ConstListPtr<CPPModel::Attribute>		attributes( GetAttributes( PurposeValueList( DECL_ATTRIBUTES( (const tree&)*itrMethod ) )));
+
+			CPPModel::ListPtr<CPPModel::TemplateParameter>	parameterList( GetTemplateParameters( (const tree&)*itrMethod, dictionaryEntry.Dictionary() ) );
+
+			//	Add the method to our list.  A null DECL_RESULT indicates no return value (such as from a destructor or exception handler).
+
+			if( DECL_RESULT( (const tree&)*itrMethod ) != NULL )
+			{
+				templateMethodList->push_back( new CPPModel::TemplateMethodDeclaration( methodName, itrMethod->uid(), itrMethod->sourceLocation(), isStatic, accessSpec, DeclOrTypeBaseTree::convert( TREE_TYPE( DECL_RESULT( (const tree&)*itrMethod ) ) )->type( dictionaryEntry.Dictionary() ), attributes, parameterList ) );
+			}
+			else
+			{
+				templateMethodList->push_back( new CPPModel::TemplateMethodDeclaration( methodName, itrMethod->uid(), itrMethod->sourceLocation(), isStatic, accessSpec, std::unique_ptr<const CPPModel::Type>( new CPPModel::FundamentalType( CPPModel::TypeSpecifier::NO_RETURN ) ), attributes, parameterList ) );
+			}
+		}
+
+		//	Return the list of methods and we are done
+
+		return( CPPModel::MakeConst<CPPModel::TemplateMethodDeclaration>( templateMethodList ));
+	}
+
+
+
+
 	bool		DictionaryClassEntryImpl::GetClassDefinition( const CPPModel::ParseOptions&							options,
 												   	     	  std::unique_ptr<const CPPModel::ClassDefinition>&		classDef ) const
 	{
 		//	Let's get base classes, friends, fields, methods and attributes
 
-		CPPModel::ConstListPtr<CPPModel::BaseClassIdentifier>		baseClasses( GetBaseClasses( *this, options ));
-		CPPModel::ConstListPtr<CPPModel::FriendIdentifier>	 		friends( GetFriends( *this, options ));
-		CPPModel::ConstListPtr<CPPModel::FieldDeclaration>	 		fields( GetFields( *this, options ));
-		CPPModel::ConstListPtr<CPPModel::MethodDeclaration>	 		methods( GetMethods( *this, options ));
+		CPPModel::ConstListPtr<CPPModel::BaseClassIdentifier>			baseClasses( GetBaseClasses( *this, options ));
+		CPPModel::ConstListPtr<CPPModel::FriendIdentifier>	 			friends( GetFriends( *this, options ));
+		CPPModel::ConstListPtr<CPPModel::FieldDeclaration>	 			fields( GetFields( *this, options ));
+		CPPModel::ConstListPtr<CPPModel::MethodDeclaration>	 			methods( GetMethods( *this, options ));
+		CPPModel::ConstListPtr<CPPModel::TemplateMethodDeclaration>	 	templateMethods( GetTemplateMethods( *this, options ));
 
 		CPPModel::ConstListPtr<CPPModel::Attribute>					attr( CPPModel::Attributes::deepCopy( attributes() ));
 
@@ -496,6 +720,7 @@ namespace GCCInternalsTools
 													   friends,
 													   fields,
 													   methods,
+													   templateMethods,
 													   sourceLocation() ));
 
 		return( true );
@@ -533,8 +758,23 @@ namespace GCCInternalsTools
 		{
 			//	Add the argument to the list
 
-			parameterList->push_back( new CPPModel::FunctionParameter( itrParameter->identifier(), DeclOrTypeBaseTree::convert( TREE_TYPE( (const tree&)itrParameter ) )->type( Dictionary() )));
+			parameterList->push_back( new CPPModel::FunctionParameter( itrParameter->identifier(), DeclOrTypeBaseTree::convert( TREE_TYPE( (const tree&)itrParameter ) )->type( Dictionary() ), itrParameter->compilerSpecificFlags() ));
 		}
+
+		//	Special case for 'noreturn' functions
+
+		std::unique_ptr<const CPPModel::Type>		returnType;
+
+		if( returnTypeSpec() == CPPModel::TypeSpecifier::NO_RETURN )
+		{
+			returnType.reset( new CPPModel::FundamentalType( CPPModel::TypeSpecifier::NO_RETURN ) );
+		}
+		else
+		{
+			returnType = DeclOrTypeBaseTree::convert( TREE_TYPE( DECL_RESULT( getTree() )))->type( Dictionary() );
+		}
+
+		//	Build out the function definition
 
 		functionDef.reset( new CPPModel::FunctionDefinition( name(),
 															 uid(),
@@ -542,8 +782,10 @@ namespace GCCInternalsTools
 															 sourceLocation(),
 															 isHiddenFriend(),
 															 CPPModel::Attributes::deepCopy( attributes() ),
-															 DeclOrTypeBaseTree::convert( TREE_TYPE( DECL_RESULT( getTree() )))->type( Dictionary() ),
+															 std::move( returnType ),
 															 CPPModel::MakeConst<CPPModel::FunctionParameter>( parameterList )));
+
+		//	Finished with success
 
 		return( true );
 	}
@@ -557,7 +799,7 @@ namespace GCCInternalsTools
 															enclosingNamespace(),
 															sourceLocation(),
 															isStatic(),
-															CPPModel::Attributes::deepCopy( attributes() ),
+															attributes(),
 															DeclOrTypeBaseTree::convert( TREE_TYPE( getTree() ))->type( Dictionary() ) ));
 
 		return( true );
@@ -568,28 +810,12 @@ namespace GCCInternalsTools
 	void 	ASTDictionaryImpl::DecodingPass( const tree&			namespaceNode,
 							  	  	  	  	 ITreeDecoder&			decoder )
 	{
-		DeclTree		namespaceTree( namespaceNode );
-
-//		CPPModel::ConstListPtr<CPPModel::Attribute>			noAttributes( CPPModel::Attributes::emptyList() );
-
-//		if( namespaceNode )
-//		AddNamespace( new NestedNamespaceImpl( namespaceTree.uid(),
-//											   namespaceTree.identifier(),
-//											   namespaceTree.enclosingNamespace(),
-//											   noAttributes,
-//											   namespaceNode ) );
-
 		cp_binding_level*		currentLevel = NAMESPACE_LEVEL( namespaceNode );
 
-		DeclList		elements = currentLevel->names;
+		DeclList				elements = currentLevel->names;
 
 		for( DeclList::iterator itrDecl = elements.begin(); itrDecl != elements.end(); ++itrDecl )
 		{
-			if( DECL_IS_BUILTIN( (tree&)itrDecl ) )
-			{
-				continue;
-			}
-
 			decoder.Decode( (tree&)itrDecl, *this );
 		}
 
@@ -597,11 +823,6 @@ namespace GCCInternalsTools
 
 		for( NamespaceList::iterator itrNested = nestedNamespaces.begin(); itrNested != nestedNamespaces.end(); ++itrNested )
 		{
-			if( DECL_IS_BUILTIN( (tree&)itrNested ))
-			{
-				continue;
-			}
-
 			DecodingPass( (tree&)itrNested, decoder );
 		}
 	}
@@ -621,51 +842,40 @@ namespace GCCInternalsTools
 				return( false );
 			}
 
-			//	Classes appear in the AST as a RECORD_TYPE that is ARTIFICIAL.
-			//		The ARTIFICIAL flag distinguishes between a 'typedef' and a 'class' or 'struct' declaration,
-			//		internally GCC treats class declarations like a typedef and attaches the ARTIFICIAL
-			//		flag to indicate that it has artificially overloaded this typedef as a class declaration.
+			//	Classes, structs and typedefed flavors of each are RECORD_TYPEs
 
-			if( !(( TREE_CODE( classTree ) == TYPE_DECL ) && ( TREE_CODE( treeType ) == RECORD_TYPE ) && ( DECL_ARTIFICIAL( classTree ) )))
+			if( !(( TREE_CODE( classTree ) == TYPE_DECL ) && ( TREE_CODE( treeType ) == RECORD_TYPE ) ))
 			{
 				return( false );
 			}
 		}
 
-
 		const CPPModel::SourceLocation	sourceLocation = DeclTree( classTree ).sourceLocation();
 		const TypeTree					typeDeclared = TypeTree( TREE_TYPE( classTree ));
 
-		const TypeTree					mainTypeDecl = TypeTree( TYPE_MAIN_VARIANT( (const tree&)typeDeclared ));
+		std::string						className = typeDeclared.identifier();
 
-		std::string						className = DeclTree( TYPE_NAME( (const tree&)mainTypeDecl )).identifier();
-
-		//	Don't decode templates here
-
-		if( CLASSTYPE_TEMPLATE_INFO( (const tree&)mainTypeDecl ) )
-		{
-			return( false );
-		}
-
-		CPPModel::TypeInfo::Specifier	typeSpec = typeDeclared.typeSpecifier();
+		CPPModel::TypeSpecifier	typeSpec = typeDeclared.typeSpecifier();
 
 		if( CPPModel::CPPTypes[(int)typeSpec].classification == CPPModel::TypeInfo::Classification::CLASS )
 		{
 			if( dictionary.UIDIdx().find( typeDeclared.uid() ) == dictionary.UIDIdx().end() )
 			{
+				std::string			scope = typeDeclared.enclosingNamespace();
+
 				const CPPModel::Namespace*		namespaceScope;
 
-				dictionary.GetNamespace( mainTypeDecl.enclosingNamespace(), namespaceScope );
+				dictionary.GetNamespace( scope, namespaceScope );
 
 				dictionary.Insert( new DictionaryClassEntryImpl( dictionary,
-																 mainTypeDecl.uid(),
+																 typeDeclared.uid(),
 																 className,
 																 *namespaceScope,
 																 sourceLocation,
-																 DeclTree( classTree ).compilerSpecificAttr(),
-																 GetAttributes( PurposeValueList( TYPE_ATTRIBUTES( (const tree&)mainTypeDecl ) )),
+																 DeclTree( classTree ).compilerSpecificFlags(),
+																 GetAttributes( PurposeValueList( TYPE_ATTRIBUTES( (const tree&)typeDeclared ) )),
 																 typeSpec,
-																 mainTypeDecl ));
+																 typeDeclared ));
 			}
 		}
 
@@ -696,7 +906,7 @@ namespace GCCInternalsTools
 
 		DeclTree							unionTree( unionNode );
 
-		CPPModel::TypeInfo::Specifier		typeSpec = unionTree.typeSpecifier();
+		CPPModel::TypeSpecifier		typeSpec = unionTree.typeSpecifier();
 
 		const CPPModel::UID					unionUID = unionTree.uid();
 
@@ -713,7 +923,7 @@ namespace GCCInternalsTools
 																  unionTree.identifier(),
 																  *namespaceScope,
 																  unionTree.sourceLocation(),
-																  unionTree.compilerSpecificAttr(),
+																  unionTree.compilerSpecificFlags(),
 																  unionTree.treeType().attributes(),
 																  typeSpec,
 																  unionNode ));
@@ -749,10 +959,18 @@ namespace GCCInternalsTools
 //			continue;
 //		}
 
-
-		CPPModel::TypeInfo::Specifier		typeSpec = functionTree.typeSpecifier();
+		CPPModel::TypeSpecifier		typeSpec = functionTree.typeSpecifier();
 
 		const CPPModel::UID					functionUID = functionTree.uid();
+
+		//	 Special case here for function return types.  If the DECL_RESULT for the tree is NULL,
+		//		then the function has been declared 'noreturn'.  Set the type spec accordingly.
+
+
+		tree								declResult = DECL_RESULT( functionNode );
+
+		CPPModel::TypeSpecifier		returnTypeSpec = declResult != NULL ? DeclTree( declResult ).typeSpecifier() : CPPModel::TypeSpecifier::NO_RETURN;
+
 
 		//	Make sure at a finer grained level that we have a function
 
@@ -769,9 +987,9 @@ namespace GCCInternalsTools
 																	 functionTree.identifier(),
 																	 *namespaceScope,
 																	 functionTree.sourceLocation(),
-																	 functionTree.compilerSpecificAttr(),
+																	 functionTree.compilerSpecificFlags(),
 																	 functionTree.attributes(),
-																	 typeSpec,
+																	 returnTypeSpec,
 																	 DECL_HIDDEN_FRIEND_P( functionNode ),
 																	 functionNode ));
 			}
@@ -820,7 +1038,7 @@ namespace GCCInternalsTools
 																 *namespaceScope,
 																 TREE_STATIC( globalVarNode ) != 0,
 																 globalVarTree.sourceLocation(),
-																 globalVarTree.compilerSpecificAttr(),
+																 globalVarTree.compilerSpecificFlags(),
 																 globalVarTree.attributes(),
 																 globalVarTree.typeSpecifier(),
 																 globalVarNode ));
@@ -847,7 +1065,7 @@ namespace GCCInternalsTools
 																				namespaceTree.identifier(),
 																				parentNamespace,
 																				namespaceTree.sourceLocation(),
-																				namespaceTree.compilerSpecificAttr(),
+																				namespaceTree.compilerSpecificFlags(),
 																				noAttributes,
 																				namespaceNode );
 
@@ -857,11 +1075,6 @@ namespace GCCInternalsTools
 
 			for( NamespaceList::iterator itrNested = nestedNamespaces.begin(); itrNested != nestedNamespaces.end(); ++itrNested )
 			{
-				if( DECL_IS_BUILTIN( (tree&)itrNested ))
-				{
-					continue;
-				}
-
 				recurseOnNamespace( (const tree&)itrNested, *currentNamespace );
 			}
 		};
@@ -987,7 +1200,7 @@ namespace GCCInternalsTools
 																			namespaceTree.identifier(),
 																			*parentNamespace,
 																			namespaceTree.sourceLocation(),
-																			namespaceTree.compilerSpecificAttr(),
+																			namespaceTree.compilerSpecificFlags(),
 																			noAttributes,
 																			namespaceNode );
 
@@ -1004,41 +1217,54 @@ namespace GCCInternalsTools
 	}
 
 
-
 	CPPModel::Result	ASTDictionaryImpl::CreateGlobalVar( const CPPModel::GlobalVarDeclaration&			globalDecl )
 	{
-		//	TODO add proper error reporting
+		tree	declType;
 
-		//	Lookup the namespace
+		switch( globalDecl.typeVariant().which() )
+		{
+			case 0:
+				declType = ASTTreeForType( boost::get<const CPPModel::Type&>( globalDecl.typeVariant() ).typeSpec() );
+				break;
 
-		const CPPModel::Namespace*			namespaceEntry = &globalDecl.namespaceScope();
-		//	TODO	Finish building out this function
+			case 1:
+				declType = dynamic_cast<const DictionaryClassEntryImpl&>( boost::get<const CPPModel::DictionaryClassEntry&>( globalDecl.typeVariant() )).getTree();
+				break;
 
-		tree __glob_id = get_identifier( globalDecl.name().c_str() );
-		tree __glob_decl = build_decl(UNKNOWN_LOCATION, VAR_DECL, __glob_id, unsigned_type_node);
+			case 2:
+				declType = dynamic_cast<const DictionaryUnionEntryImpl&>( boost::get<const CPPModel::DictionaryUnionEntry&>( globalDecl.typeVariant() )).getTree();
+				break;
+		}
+
+		//	Create the global declaration
+
+		tree globalDeclaration = build_decl( UNKNOWN_LOCATION,
+											 VAR_DECL,
+											 get_identifier( globalDecl.name().c_str() ),
+											 declType );
 
 		/* allocate static storage for this variable */
-		TREE_STATIC(__glob_decl) = true;
+		TREE_STATIC( globalDeclaration ) = true;
 
 		/* static: internal linkage */
-		TREE_PUBLIC(__glob_decl) = false;
+		TREE_PUBLIC( globalDeclaration ) = false;
 
 		/* the context of this declaration: namespace scope */
 
-		DECL_CONTEXT(__glob_decl) = (dynamic_cast<const GCCInternalsTools::DictionaryTreeMixin*>(namespaceEntry))->getTree();
+		DECL_CONTEXT( globalDeclaration ) = (dynamic_cast<const GCCInternalsTools::DictionaryTreeMixin&>( globalDecl.namespaceScope() )).getTree();
 
 		/* this declaration is used in its scope */
-		TREE_USED(__glob_decl) = true;
+		TREE_USED( globalDeclaration ) = true;
 
 		/* initialization to 0 */
-		tree __glob_init_val = build_int_cstu(unsigned_type_node, 1);
-		DECL_INITIAL(__glob_decl) = __glob_init_val;
+//		DECL_INITIAL( globalDeclaration ) = build_real_from_int_cst( declType, build_int_cstu(unsigned_type_node, 1));
 
-		layout_decl(__glob_decl, false);
-		rest_of_decl_compilation(__glob_decl, 1, 0);
+		layout_decl( globalDeclaration, false );
+		rest_of_decl_compilation( globalDeclaration, 1, 0 );
 
-		GCCInternalsTools::GlobalVarDecoder().Decode( __glob_decl, *this );
+		//	TODO fix root namespace
 
+		GCCInternalsTools::GlobalVarDecoder().Decode( globalDeclaration, *this );
 
 		//	If we are down here, all went well so return SUCCESS
 

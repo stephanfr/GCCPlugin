@@ -15,6 +15,21 @@ Contributors:
 #define __CLASS_H__
 
 
+#include "ListAliases.h"
+
+#include "CompilerSpecific.h"
+#include "Access.h"
+#include "Static.h"
+#include "NamedEntity.h"
+#include "Attribute.h"
+#include "SourceElement.h"
+#include "Namespace.h"
+#include "Types.h"
+
+#include "Function.h"
+#include "Template.h"
+
+
 
 namespace CPPModel
 {
@@ -287,7 +302,7 @@ namespace CPPModel
 			return( *m_parameterList );
 		}
 
-		const Attributes&				attributes() const
+		const Attributes&							attributes() const
 		{
 			return( m_attributes );
 		}
@@ -305,6 +320,60 @@ namespace CPPModel
 	};
 
 
+	class TemplateMethodDeclaration : public SourceElement, public Static, public Access, public IAttributes
+	{
+	public :
+
+		TemplateMethodDeclaration() = delete;
+		TemplateMethodDeclaration( TemplateMethodDeclaration& ) = delete;
+		TemplateMethodDeclaration( const TemplateMethodDeclaration& ) = delete;
+
+		TemplateMethodDeclaration( const std::string&				name,
+						   	   	   const UID&						uid,
+						   	   	   const SourceLocation&			sourceLocation,
+						   	   	   bool								isStatic,
+						   	   	   AccessSpecifier					accessSpec,
+						   	   	   std::unique_ptr<const Type>		resultType,
+						   	   	   ConstListPtr<Attribute>&			attributeList,
+						   	   	   ListPtr<TemplateParameter>&		parameterList )
+					: SourceElement( name, uid, sourceLocation ),
+					  Static( isStatic ),
+					  Access( accessSpec ),
+					  m_attributes( attributeList ),
+					  m_resultType( std::move( resultType )),
+					  m_parameterList( std::move( parameterList ))
+		{}
+
+
+
+		const Type&									resultType() const
+		{
+			return( *m_resultType );
+		}
+
+		const ListRef<TemplateParameter>			parameterList() const
+		{
+			return( *m_parameterList );
+		}
+
+		const Attributes&							attributes() const
+		{
+			return( m_attributes );
+		}
+
+		std::ostream&	toXML( std::ostream&			outputStream,
+							   int						indentLevel,
+							   SerializationOptions		options ) const;
+
+	private :
+
+		const Attributes							m_attributes;
+
+		const std::unique_ptr<const Type>			m_resultType;
+		const ConstListPtr<TemplateParameter>		m_parameterList;
+	};
+
+
 
 
 	class ClassDefinition : public SourceElement, public CompilerSpecific, public NamespaceScoped, public IAttributes
@@ -315,17 +384,18 @@ namespace CPPModel
 		ClassDefinition( ClassDefinition& ) = delete;
 		ClassDefinition( const ClassDefinition& ) = delete;
 
-		ClassDefinition( const std::string&						name,
-						 const UID&								uid,
-						 const Namespace&						namespaceScope,
-						 const CompilerSpecific&				compilerSpecificAttr,
-						 bool									isStruct,
-						 ConstListPtr<Attribute>&				attributes,
-						 ConstListPtr<BaseClassIdentifier>&		baseClassList,
-						 ConstListPtr<FriendIdentifier>&		friendClassList,
-						 ConstListPtr<FieldDeclaration>&		fieldList,
-						 ConstListPtr<MethodDeclaration>&		methodList,
-						 const SourceLocation&					sourceLocation )
+		ClassDefinition( const std::string&								name,
+						 const UID&										uid,
+						 const Namespace&								namespaceScope,
+						 const CompilerSpecific&						compilerSpecificAttr,
+						 bool											isStruct,
+						 ConstListPtr<Attribute>&						attributes,
+						 ConstListPtr<BaseClassIdentifier>&				baseClassList,
+						 ConstListPtr<FriendIdentifier>&				friendClassList,
+						 ConstListPtr<FieldDeclaration>&				fieldList,
+						 ConstListPtr<MethodDeclaration>&				methodList,
+						 ConstListPtr<TemplateMethodDeclaration>&		templateMethodList,
+						 const SourceLocation&							sourceLocation )
 			: SourceElement( name, uid, sourceLocation ),
 			  CompilerSpecific( compilerSpecificAttr ),
 			  NamespaceScoped( namespaceScope ),
@@ -334,7 +404,8 @@ namespace CPPModel
 			  m_baseClassList( std::move( baseClassList )),
 			  m_friendClassList( std::move( friendClassList )),
 			  m_fieldList( std::move( fieldList )),
-			  m_methodList( std::move( methodList ))
+			  m_methodList( std::move( methodList )),
+		  	  m_templateMethodList( std::move( templateMethodList ))
 		{}
 
 
@@ -364,7 +435,12 @@ namespace CPPModel
 			return( *m_methodList );
 		}
 
-		const Attributes&				attributes() const
+		const ListRef<TemplateMethodDeclaration>	templateMethods() const
+		{
+			return( *m_templateMethodList );
+		}
+
+		const Attributes&							attributes() const
 		{
 			return( m_attributes );
 		}
@@ -375,15 +451,16 @@ namespace CPPModel
 
 	private :
 
-		const Attributes								m_attributes;
+		const Attributes										m_attributes;
 
-		const bool										m_isStruct;
+		const bool												m_isStruct;
 
-		const ConstListPtr<BaseClassIdentifier>			m_baseClassList;
-		const ConstListPtr<FriendIdentifier>			m_friendClassList;
+		const ConstListPtr<BaseClassIdentifier>					m_baseClassList;
+		const ConstListPtr<FriendIdentifier>					m_friendClassList;
 
-		const ConstListPtr<FieldDeclaration>			m_fieldList;
-		const ConstListPtr<MethodDeclaration>			m_methodList;
+		const ConstListPtr<FieldDeclaration>					m_fieldList;
+		const ConstListPtr<MethodDeclaration>					m_methodList;
+		const ConstListPtr<TemplateMethodDeclaration>			m_templateMethodList;
 	};
 
 }	//	CPPModel
