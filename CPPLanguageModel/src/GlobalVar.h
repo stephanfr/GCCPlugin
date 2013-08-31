@@ -16,10 +16,9 @@ Contributors:
 #define GLOBALVAR_H_
 
 
-#include "DeclarationType.h"
+#include "DeclarationBase.h"
 #include "Static.h"
-#include "ASTEntry.h"
-#include "NamedEntity.h"
+#include "SourceElement.h"
 #include "Attribute.h"
 #include "Namespace.h"
 
@@ -28,92 +27,52 @@ Contributors:
 namespace CPPModel
 {
 
-	class GlobalVarBase : public NamedEntity, public NamespaceScoped, public Static, public IAttributes
+
+	class GlobalVarDeclaration : public TypedDeclarationBase
 	{
 	public :
 
-		GlobalVarBase() = delete;
-		GlobalVarBase( GlobalVarBase& ) = delete;
-		GlobalVarBase( const GlobalVarBase& ) = delete;
+		GlobalVarDeclaration() = delete;
+		GlobalVarDeclaration( GlobalVarDeclaration& ) = delete;
+		GlobalVarDeclaration( const GlobalVarDeclaration& ) = delete;
 
-		GlobalVarBase( const std::string&			name,
-					   const Namespace&				namespaceScope,
-					   bool							isStatic,
-					   const Attributes&			attributes )
-			: NamedEntity( name ),
-			  NamespaceScoped( namespaceScope ),
-			  Static( isStatic ),
-			  m_attributes( attributes )
+		GlobalVarDeclaration( const std::string&			name,
+							  const Namespace&				namespaceScope,
+							  bool							isStatic,
+							  const Attributes&				attributes,
+							  std::unique_ptr<const Type>	varType )
+			: TypedDeclarationBase( name, namespaceScope, isStatic, attributes, std::move( varType ))
 		{}
 
-		virtual ~GlobalVarBase() {};
+		GlobalVarDeclaration( const std::string&			name,
+							  const Namespace&				namespaceScope,
+							  bool							isStatic,
+							  const Attributes&				attributes,
+							  const DictionaryClassEntry&	classType )
+			: TypedDeclarationBase( name, namespaceScope, isStatic, attributes, classType )
+		{}
+
+		GlobalVarDeclaration( const std::string&			name,
+							  const Namespace&				namespaceScope,
+							  bool							isStatic,
+							  const Attributes&				attributes,
+							  const DictionaryUnionEntry&	unionType )
+			: TypedDeclarationBase( name, namespaceScope, isStatic, attributes, unionType )
+		{}
+
+		virtual ~GlobalVarDeclaration() {};
 
 
-		const Attributes&				attributes() const
-		{
-			return( m_attributes );
-		}
 
-	private :
+		std::ostream&	toXML( std::ostream&			outputStream,
+							   int						indentLevel,
+							   SerializationOptions		options ) const;
 
-		const Attributes							m_attributes;
 	};
 
 
 
-
-		class GlobalVarDeclaration : public GlobalVarBase, public DeclarationType
-		{
-		public :
-
-			GlobalVarDeclaration() = delete;
-			GlobalVarDeclaration( GlobalVarDeclaration& ) = delete;
-			GlobalVarDeclaration( const GlobalVarDeclaration& ) = delete;
-
-			GlobalVarDeclaration( const std::string&			name,
-								  const Namespace&				namespaceScope,
-								  bool							isStatic,
-								  const Attributes&				attributes,
-								  std::unique_ptr<const Type>	varType )
-				: GlobalVarBase( name, namespaceScope, isStatic, attributes ),
-				  DeclarationType( varType )
-			{}
-
-			GlobalVarDeclaration( const std::string&			name,
-								  const Namespace&				namespaceScope,
-								  bool							isStatic,
-								  const Attributes&				attributes,
-								  const DictionaryClassEntry&	classType )
-				: GlobalVarBase( name, namespaceScope, isStatic, attributes ),
-				  DeclarationType( classType )
-			{}
-
-			GlobalVarDeclaration( const std::string&			name,
-								  const Namespace&				namespaceScope,
-								  bool							isStatic,
-								  const Attributes&				attributes,
-								  const DictionaryUnionEntry&	unionType )
-				: GlobalVarBase( name, namespaceScope, isStatic, attributes ),
-				  DeclarationType( unionType )
-			{}
-
-			virtual ~GlobalVarDeclaration() {};
-
-
-
-			std::ostream&	toXML( std::ostream&			outputStream,
-								   int						indentLevel,
-								   SerializationOptions		options ) const;
-
-		private :
-
-			const Attributes					m_attributes;
-		};
-
-
-
-
-	class GlobalVarEntry : public GlobalVarBase, public ASTEntry
+	class GlobalVarEntry : public SourceElement, public NamespaceScoped, public Static, public IAttributes
 	{
 	public :
 
@@ -128,8 +87,10 @@ namespace CPPModel
 						bool							isStatic,
 						const Attributes&				attributes,
 						std::unique_ptr<const Type>		varType )
-			: GlobalVarBase( name, namespaceScope, isStatic, std::move( attributes ) ),
-			  ASTEntry( uid, sourceLocation ),
+			: SourceElement( name, uid, sourceLocation ),
+			  NamespaceScoped( namespaceScope ),
+			  Static( isStatic ),
+			  m_attributes( std::move( attributes ) ),
 			  m_varType( std::move( varType ) )
 		{}
 
@@ -141,11 +102,19 @@ namespace CPPModel
 			return( *m_varType );
 		}
 
+		const Attributes&				attributes() const
+		{
+			return( m_attributes );
+		}
+
+
 		std::ostream&		toXML( std::ostream&			outputStream,
 							   	   int						indentLevel,
 							   	   SerializationOptions		options ) const;
 
 	private :
+
+		const Attributes							m_attributes;
 
 		const std::unique_ptr<const Type>			m_varType;
 	};

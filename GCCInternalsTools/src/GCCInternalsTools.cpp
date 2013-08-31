@@ -10,59 +10,6 @@ Contributors:
     Stephan Friedl
 -------------------------------------------------------------------------------*/
 
-/*
-#include <cassert>
-
-#include <algorithm>
-#include <cstdlib>
-#include <gmp.h>
-#include <map>
-#include <memory>
-#include <ostream>
-#include <stdlib.h>
-#include <string>
-#include <utility>
-
-#include <boost/multi_index_container.hpp>
-#include <boost/multi_index/identity.hpp>
-#include <boost/multi_index/ordered_index.hpp>
-#include <boost/multi_index/member.hpp>
-
-#include <boost/lexical_cast.hpp>
-#include <boost/ptr_container/ptr_list.hpp>
-#include <boost/ptr_container/ptr_map.hpp>
-
-
-#include "ListAliases.h"
-
-#include "Serialization.h"
-#include "ConstantValue.h"
-#include "Result.h"
-#include "CompilerSpecific.h"
-#include "NamedEntity.h"
-#include "Attribute.h"
-#include "UID.h"
-#include "SourceLocation.h"
-#include "Static.h"
-#include "Access.h"
-#include "SourceElement.h"
-#include "Namespace.h"
-#include "ASTEntry.h"
-#include "Types.h"
-#include "Union.h"
-#include "Function.h"
-#include "Template.h"
-#include "GlobalVar.h"
-#include "Class.h"
-#include "ASTDictionary.h"
-
-#include "ConstantTree.h"
-#include "DeclOrTypeBaseTree.h"
-#include "TypeTree.h"
-#include "DeclTree.h"
-#include "TreeList.h"
-*/
-
 
 #include "GCCInternalsTools.h"
 
@@ -1139,13 +1086,13 @@ namespace GCCInternalsTools
 
 
 
-	CPPModel::Result	ASTDictionaryImpl::CreateNamespace( const std::string&				namespaceToAdd )
+	CPPModel::CreateNamespaceResult			ASTDictionaryImpl::CreateNamespace( const std::string&				namespaceToAdd )
 	{
 		//	Return an error now if the namespace already exists
 
 		if( ContainsNamespace( namespaceToAdd ) )
 		{
-			return( CPPModel::Result::Failed( CPPModel::ResultCode::NAMESPACE_ALREADY_EXISTS, "Namespace Already Exists"  ) );
+			return( CPPModel::CreateNamespaceResult::Failure( CPPModel::CreateNamespaceResultCodes::NAMESPACE_ALREADY_EXISTS, "Namespace Already Exists"  ) );
 		}
 
 		//	If this is a nested namespace, get the individual nested elements
@@ -1213,11 +1160,11 @@ namespace GCCInternalsTools
 
 		//	If we are down here, all went well so return SUCCESS
 
-  		return( CPPModel::Result::Success() );
+  		return( CPPModel::CreateNamespaceResult::Success() );
 	}
 
 
-	CPPModel::Result	ASTDictionaryImpl::CreateGlobalVar( const CPPModel::GlobalVarDeclaration&			globalDecl )
+	CPPModel::CreateGlobalVarResult			ASTDictionaryImpl::CreateGlobalVar( const CPPModel::GlobalVarDeclaration&			globalDecl )
 	{
 		tree	declType;
 
@@ -1268,7 +1215,7 @@ namespace GCCInternalsTools
 
 		//	If we are down here, all went well so return SUCCESS
 
-  		return( CPPModel::Result::Success() );
+  		return( CPPModel::CreateGlobalVarResult::Success( DeclTree( globalDeclaration ).uid() ));
 	}
 
 }

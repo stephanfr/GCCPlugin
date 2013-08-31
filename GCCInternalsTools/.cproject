@@ -29,12 +29,13 @@
 								<option id="gnu.cpp.compiler.so.debug.option.optimization.level.1663223297" name="Optimization Level" superClass="gnu.cpp.compiler.so.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.so.debug.option.debugging.level.1001563023" name="Debug Level" superClass="gnu.cpp.compiler.so.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.include.paths.336075203" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Utility/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CPPLanguageModel/src}&quot;"/>
 									<listOptionValue builtIn="false" value="/usr/gcc-4.8.0/lib/gcc/x86_64-linux-gnu/4.8.0/plugin/include"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.other.pic.770973554" name="Position Independent Code (-fPIC)" superClass="gnu.cpp.compiler.option.other.pic" value="true" valueType="boolean"/>
 								<option id="gnu.cpp.compiler.option.other.other.352639848" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -std=c++0x -gdwarf-3 " valueType="string"/>
-								<option id="gnu.cpp.compiler.option.preprocessor.def.1018549737" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols"/>
+								<option id="gnu.cpp.compiler.option.preprocessor.def.1018549737" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def"/>
 								<option id="gnu.cpp.compiler.option.other.verbose.178854955" name="Verbose (-v)" superClass="gnu.cpp.compiler.option.other.verbose" value="false" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1318848437" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>

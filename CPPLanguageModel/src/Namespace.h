@@ -35,7 +35,7 @@ namespace CPPModel
 	{
 	public :
 
-		Namespace() = delete;
+//		Namespace() = delete;
 
 		virtual ~Namespace()
 		{};

@@ -25,12 +25,12 @@ Contributors:
 
 #include "Serialization.h"
 #include "CompilerSpecific.h"
-#include "Result.h"
 #include "Attribute.h"
 #include "UID.h"
 #include "SourceLocation.h"
 #include "Namespace.h"
 #include "Types.h"
+#include "DeclarationBase.h"
 
 #include "GlobalVar.h"
 #include "Function.h"
@@ -390,6 +390,14 @@ namespace CPPModel
 	};
 
 
+	enum class CreateNamespaceResultCodes { SUCCESS, NAMESPACE_ALREADY_EXISTS };
+
+	typedef SEFUtility::Result<CreateNamespaceResultCodes>									CreateNamespaceResult;
+
+	enum class CreateGlobalVarResultCodes { SUCCESS, NAME_ALREADY_EXISTS };
+
+	typedef SEFUtility::ResultWithReturnValue<CreateGlobalVarResultCodes, const UID>		CreateGlobalVarResult;
+
 
 	class ASTDictionary
 	{
@@ -465,9 +473,9 @@ namespace CPPModel
 
 		virtual void		Build() = 0;
 
-		virtual Result		CreateNamespace( const std::string&							namespaceToAdd ) = 0;
+		virtual CreateNamespaceResult			CreateNamespace( const std::string&							namespaceToAdd ) = 0;
 
-		virtual Result		CreateGlobalVar( const CPPModel::GlobalVarDeclaration&		globalDecl ) = 0;
+		virtual CreateGlobalVarResult			CreateGlobalVar( const CPPModel::GlobalVarDeclaration&		globalDecl ) = 0;
 
 
 

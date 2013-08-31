@@ -139,24 +139,6 @@ namespace CPPModel
 
 
 	//
-	//	ASTEntry
-	//
-
-	std::ostream&	ASTEntry::toXML( std::ostream&				outputStream,
-									 int						indentLevel,
-									 SerializationOptions		options ) const
-	{
-		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-
-
-		outputStream << currentIndent << "<uid>" << (boost::lexical_cast<std::string>(uid().uidValue())) << "</uid>\n";
-
-		SourceLocation::toXML( outputStream, indentLevel, options );
-
-		return( outputStream );
-	}
-
-	//
 	//	ASTDictionary
 	//
 
@@ -667,28 +649,6 @@ namespace CPPModel
 		return( outputStream );
 	}
 
-
-	std::ostream&	GlobalVarEntry::toXML( std::ostream&			outputStream,
-					   	   	   	   	   	   int						indentLevel,
-					   	   	   	   	   	   SerializationOptions		options ) const
-	{
-		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		std::string		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
-
-
-		outputStream << currentIndent << "<global_var>\n";
-
-		NamedEntity::toXML( outputStream, indentLevel + 1, options );
-		NamespaceScoped::toXML( outputStream, indentLevel + 1, options );
-		ASTEntry::toXML( outputStream, indentLevel + 1, options );
-		Static::toXML( outputStream, indentLevel + 1, options );
-		type().toXML( outputStream, indentLevel + 1, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
-		attributes().toXML( outputStream, indentLevel + 1, options );
-
-		outputStream << currentIndent << "</global_var>\n";
-
-		return( outputStream );
-	}
 
 
 	//

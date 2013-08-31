@@ -28,18 +28,18 @@ bool	AddNamespaceTest( CPPModel::ASTDictionary*		astDictionary )
 
 	//	This first call should succeed and create a total of 3 namespaces
 
-	CPPModel::Result		cnResult = astDictionary->CreateNamespace( "TestCreatedNamespace::NestedNamespace::SecondNestedNamespace::" );
+	CPPModel::CreateNamespaceResult		cnResult = astDictionary->CreateNamespace( "TestCreatedNamespace::NestedNamespace::SecondNestedNamespace::" );
 
-	if( !cnResult.isSuccess() )
+	if( !cnResult.Succeeded() )
 	{
 		return( false );
 	}
 
 	//	This call should fail as the namespace has already been created
 
-	cnResult = astDictionary->CreateNamespace( "TestCreatedNamespace::" );
+	CPPModel::CreateNamespaceResult		cnResult2 = astDictionary->CreateNamespace( "TestCreatedNamespace::" );
 
-	if( cnResult.code() != CPPModel::ResultCode::NAMESPACE_ALREADY_EXISTS )
+	if( cnResult2.errorCode() != CPPModel::CreateNamespaceResultCodes::NAMESPACE_ALREADY_EXISTS )
 	{
 		return( false );
 	}

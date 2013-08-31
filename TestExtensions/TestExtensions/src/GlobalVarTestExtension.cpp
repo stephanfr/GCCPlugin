@@ -29,9 +29,9 @@ bool	AddGlobalVarsTest( CPPModel::ASTDictionary*		astDictionary )
 
 	//	Start by creating a namespace for our new global
 
-	CPPModel::Result		cnResult = astDictionary->CreateNamespace( "TestCreatedNamespace::" );
+	CPPModel::CreateNamespaceResult		cnResult = astDictionary->CreateNamespace( "TestCreatedNamespace::" );
 
-	if( !cnResult.isSuccess() )
+	if( !cnResult.Succeeded() )
 	{
 		std::cerr << "In AddGlobalVarsTest: Create TestCreatedNamesapce failed." << std::endl;
 		return( false );
@@ -55,9 +55,9 @@ bool	AddGlobalVarsTest( CPPModel::ASTDictionary*		astDictionary )
 													  emptyAttributeList,
 													  std::unique_ptr<const CPPModel::Type>( new CPPModel::FundamentalType( CPPModel::TypeSpecifier::INT ) ));
 
-	cnResult = astDictionary->CreateGlobalVar( globalVarDec );
+	CPPModel::CreateGlobalVarResult		gvResult = astDictionary->CreateGlobalVar( globalVarDec );
 
-	if( !cnResult.isSuccess() )
+	if( !gvResult.Succeeded() )
 	{
 		std::cerr << "In AddGlobalVarsTest: CreateGlobalVar failed." << std::endl;
 		return( false );
@@ -81,7 +81,7 @@ bool	AddGlobalVarsTest( CPPModel::ASTDictionary*		astDictionary )
 															emptyAttributeList,
 															stdStringEntry );
 
-	cnResult = astDictionary->CreateGlobalVar( globalStringVarDec );
+	CPPModel::CreateGlobalVarResult		gvResult2 = astDictionary->CreateGlobalVar( globalStringVarDec );
 
 	//	Finished with success
 

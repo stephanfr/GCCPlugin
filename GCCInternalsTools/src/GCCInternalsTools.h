@@ -246,9 +246,9 @@ namespace GCCInternalsTools
 
 		virtual void		Build();
 
-		virtual CPPModel::Result		CreateNamespace( const std::string&							namespaceToAdd );
+		virtual CPPModel::CreateNamespaceResult			CreateNamespace( const std::string&							namespaceToAdd );
 
-		virtual CPPModel::Result		CreateGlobalVar( const CPPModel::GlobalVarDeclaration&		globalDecl );
+		virtual CPPModel::CreateGlobalVarResult			CreateGlobalVar( const CPPModel::GlobalVarDeclaration&		globalDecl );
 
 	private :
 

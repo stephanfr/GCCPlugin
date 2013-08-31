@@ -24,7 +24,7 @@ Contributors:
 namespace CPPModel
 {
 
-
+/*
 	class ASTEntry : public SourceLocation
 	{
 	public :
@@ -61,7 +61,7 @@ namespace CPPModel
 
 		const UID				m_uid;
 	};
-
+*/
 }
 
 
