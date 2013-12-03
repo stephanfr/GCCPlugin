@@ -5,6 +5,7 @@
 	<projects>
 		<project>CPPLanguageModel</project>
 		<project>GCCInternalsTools</project>
+		<project>Utility</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

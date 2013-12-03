@@ -153,10 +153,14 @@ namespace CPPModel
 
 		outputStream << currentIndent << "<dictionary_entry>\n";
 
+		enclosingNamespace().toXML( outputStream, indentLevel +1, options );
+
 		outputStream << currentIndentPlusOne << "<name>" << name() << "</name>\n";
 		outputStream << currentIndentPlusOne << "<uid>" << (boost::lexical_cast<std::string>(uid().uidValue())) << "</uid>\n";
 
-		enclosingNamespace().toXML( outputStream, indentLevel +1, options );
+		sourceLocation().toXML( outputStream, indentLevel + 1, options );
+
+		attributes().toXML( outputStream, indentLevel + 1, options );
 
 		//	Be careful below, classes cannot be static and are fixed false in the constructor for their
 		//		dictionary entry.  If you punch out the 'static' flag all the time then it will
@@ -166,10 +170,6 @@ namespace CPPModel
 		{
 			outputStream << currentIndentPlusOne << "<static>true</static>\n";
 		}
-
-		sourceLocation().toXML( outputStream, indentLevel + 1, options );
-
-		attributes().toXML( outputStream, indentLevel + 1, options );
 
 		outputStream << currentIndent << "</dictionary_entry>\n";
 
@@ -609,12 +609,12 @@ namespace CPPModel
 			outputStream << currentIndent << "<function type=\"hiddenFriend\">\n";
 		}
 
-		SourceElement::toXML( outputStream, indentLevel + 1, options );
 		NamespaceScoped::toXML( outputStream, indentLevel + 1, options );
+		SourceElement::toXML( outputStream, indentLevel + 1, options );
+		attributes().toXML( outputStream, indentLevel + 1, options );
 		outputStream << currentIndentPlusOne << "<returnType>\n";
 		returnType().toXML( outputStream, indentLevel + 2, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
 		outputStream << currentIndentPlusOne << "</returnType>\n";
-		attributes().toXML( outputStream, indentLevel + 1, options );
 
 		m_parameters.toXML( outputStream, indentLevel + 1, options );
 
@@ -640,11 +640,33 @@ namespace CPPModel
 
 		NamedEntity::toXML( outputStream, indentLevel + 1, options );
 		NamespaceScoped::toXML( outputStream, indentLevel + 1, options );
-		Static::toXML( outputStream, indentLevel + 1, options );
 	//		type().toXML( outputStream, indentLevel + 1, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
 		attributes().toXML( outputStream, indentLevel + 1, options );
+		Static::toXML( outputStream, indentLevel + 1, options );
 
 		outputStream << currentIndent << "</global_var_decl>\n";
+
+		return( outputStream );
+	}
+
+
+	std::ostream&	GlobalVarEntry::toXML( std::ostream&				outputStream,
+												 int						indentLevel,
+												 SerializationOptions		options ) const
+	{
+		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
+		std::string		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+
+
+		outputStream << currentIndent << "<global_var_entry>\n";
+
+		NamespaceScoped::toXML( outputStream, indentLevel + 1, options );
+		SourceElement::toXML( outputStream, indentLevel + 1, options );
+		attributes().toXML( outputStream, indentLevel + 1, options );
+		Static::toXML( outputStream, indentLevel + 1, options );
+		type().toXML( outputStream, indentLevel + 1, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+
+		outputStream << currentIndent << "</global_var_entry>\n";
 
 		return( outputStream );
 	}

@@ -10,7 +10,7 @@
 
 #include <string>
 
-#include "../contrib/gtest/gtest.h"
+#include "gtest/gtest.h"
 
 
 

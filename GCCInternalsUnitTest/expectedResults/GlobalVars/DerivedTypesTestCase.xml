@@ -1,126 +1,126 @@
 <dictionary_entry>
-    <name>refGlobalInt</name>
-    <uid>2003</uid>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
-    <static>true</static>
+    <name>refGlobalInt</name>
+    <uid>2003</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>52</line>
         <char-count>1</char-count>
-        <location>6561</location>
+        <location>15170</location>
     </source-info>
+    <static>true</static>
 </dictionary_entry>
 <dictionary_entry>
-    <name>globalInt</name>
-    <uid>2002</uid>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
-    <static>true</static>
+    <name>globalInt</name>
+    <uid>2002</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>51</line>
         <char-count>1</char-count>
-        <location>6438</location>
+        <location>15047</location>
     </source-info>
+    <static>true</static>
 </dictionary_entry>
 <dictionary_entry>
-    <name>hdlGlobalFloatWithoutStaticKeyword</name>
-    <uid>2001</uid>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
-    <static>true</static>
+    <name>hdlGlobalFloatWithoutStaticKeyword</name>
+    <uid>2001</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>49</line>
         <char-count>1</char-count>
-        <location>6180</location>
+        <location>14789</location>
     </source-info>
+    <static>true</static>
 </dictionary_entry>
 <dictionary_entry>
-    <name>hdlGlobalFloat</name>
-    <uid>2000</uid>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
-    <static>true</static>
+    <name>hdlGlobalFloat</name>
+    <uid>2000</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>47</line>
         <char-count>1</char-count>
-        <location>5929</location>
+        <location>14538</location>
     </source-info>
+    <static>true</static>
 </dictionary_entry>
 <dictionary_entry>
-    <name>ptrGlobalLongWithoutStaticKeyword</name>
-    <uid>1999</uid>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
-    <static>true</static>
+    <name>ptrGlobalLongWithoutStaticKeyword</name>
+    <uid>1999</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>45</line>
         <char-count>1</char-count>
-        <location>5666</location>
+        <location>14275</location>
     </source-info>
+    <static>true</static>
 </dictionary_entry>
 <dictionary_entry>
-    <name>ptrGlobalLong</name>
-    <uid>1998</uid>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
-    <static>true</static>
+    <name>ptrGlobalLong</name>
+    <uid>1998</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>43</line>
         <char-count>1</char-count>
-        <location>5415</location>
+        <location>14024</location>
     </source-info>
+    <static>true</static>
 </dictionary_entry>
 <dictionary_entry>
-    <name>ptrGlobalClassWithoutStaticKeyword</name>
-    <uid>1997</uid>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
-    <static>true</static>
+    <name>ptrGlobalClassWithoutStaticKeyword</name>
+    <uid>1997</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>41</line>
         <char-count>1</char-count>
-        <location>5171</location>
+        <location>13780</location>
     </source-info>
+    <static>true</static>
 </dictionary_entry>
 <dictionary_entry>
-    <name>ptrGlobalClass</name>
-    <uid>1996</uid>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
-    <static>true</static>
+    <name>ptrGlobalClass</name>
+    <uid>1996</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>39</line>
         <char-count>1</char-count>
-        <location>4920</location>
+        <location>13529</location>
     </source-info>
+    <static>true</static>
 </dictionary_entry>
-<global_var>
-    <name>refGlobalInt</name>
+<global_var_entry>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
+    <name>refGlobalInt</name>
     <uid>2003</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>52</line>
         <char-count>1</char-count>
-        <location>6561</location>
+        <location>15170</location>
     </source-info>
     <static>true</static>
     <type>
@@ -133,36 +133,36 @@
             </type>
         </declaration>
     </type>
-</global_var>
-<global_var>
-    <name>globalInt</name>
+</global_var_entry>
+<global_var_entry>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
+    <name>globalInt</name>
     <uid>2002</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>51</line>
         <char-count>1</char-count>
-        <location>6438</location>
+        <location>15047</location>
     </source-info>
     <static>true</static>
     <type>
         <kind>fundamental</kind>
         <declaration>int</declaration>
     </type>
-</global_var>
-<global_var>
-    <name>hdlGlobalFloatWithoutStaticKeyword</name>
+</global_var_entry>
+<global_var_entry>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
+    <name>hdlGlobalFloatWithoutStaticKeyword</name>
     <uid>2001</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>49</line>
         <char-count>1</char-count>
-        <location>6180</location>
+        <location>14789</location>
     </source-info>
     <static>true</static>
     <type>
@@ -176,18 +176,18 @@
             </type>
         </declaration>
     </type>
-</global_var>
-<global_var>
-    <name>hdlGlobalFloat</name>
+</global_var_entry>
+<global_var_entry>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
+    <name>hdlGlobalFloat</name>
     <uid>2000</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>47</line>
         <char-count>1</char-count>
-        <location>5929</location>
+        <location>14538</location>
     </source-info>
     <static>true</static>
     <type>
@@ -201,18 +201,18 @@
             </type>
         </declaration>
     </type>
-</global_var>
-<global_var>
-    <name>ptrGlobalLongWithoutStaticKeyword</name>
+</global_var_entry>
+<global_var_entry>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
+    <name>ptrGlobalLongWithoutStaticKeyword</name>
     <uid>1999</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>45</line>
         <char-count>1</char-count>
-        <location>5666</location>
+        <location>14275</location>
     </source-info>
     <static>true</static>
     <type>
@@ -225,18 +225,18 @@
             </type>
         </declaration>
     </type>
-</global_var>
-<global_var>
-    <name>ptrGlobalLong</name>
+</global_var_entry>
+<global_var_entry>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
+    <name>ptrGlobalLong</name>
     <uid>1998</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>43</line>
         <char-count>1</char-count>
-        <location>5415</location>
+        <location>14024</location>
     </source-info>
     <static>true</static>
     <type>
@@ -249,18 +249,18 @@
             </type>
         </declaration>
     </type>
-</global_var>
-<global_var>
-    <name>ptrGlobalClassWithoutStaticKeyword</name>
+</global_var_entry>
+<global_var_entry>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
+    <name>ptrGlobalClassWithoutStaticKeyword</name>
     <uid>1997</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>41</line>
         <char-count>1</char-count>
-        <location>5171</location>
+        <location>13780</location>
     </source-info>
     <static>true</static>
     <type>
@@ -276,18 +276,18 @@
             </type>
         </declaration>
     </type>
-</global_var>
-<global_var>
-    <name>ptrGlobalClass</name>
+</global_var_entry>
+<global_var_entry>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
+    <name>ptrGlobalClass</name>
     <uid>1996</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/DerivedTypesTestCase.cpp</file>
         <line>39</line>
         <char-count>1</char-count>
-        <location>4920</location>
+        <location>13529</location>
     </source-info>
     <static>true</static>
     <type>
@@ -303,4 +303,4 @@
             </type>
         </declaration>
     </type>
-</global_var>
+</global_var_entry>

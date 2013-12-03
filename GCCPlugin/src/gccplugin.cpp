@@ -42,7 +42,7 @@ Contributors:
 
 #include "ListAliases.h"
 
-#include "Constants.h"
+//#include "Constants.h"
 #include "Serialization.h"
 #include "ConstantValue.h"
 #include "NamedEntity.h"
@@ -53,7 +53,7 @@ Contributors:
 #include "Access.h"
 #include "SourceElement.h"
 #include "Namespace.h"
-#include "NamespaceScoped.h"
+//#include "NamespaceScoped.h"
 #include "ASTEntry.h"
 #include "Types.h"
 #include "Union.h"
@@ -69,9 +69,9 @@ Contributors:
 #include "DeclTree.h"
 #include "TreeList.h"
 
-#include "Result.h"
+#include "Utility/Result.h"
 #include "GCCInternalsTools.h"
-#include "ASTModifiers.h"
+//#include "ASTModifiers.h"
 
 #include "plugin.h"
 #include "tree-pass.h"
@@ -127,12 +127,12 @@ void DumpAST( std::shared_ptr<GCCInternalsTools::ASTDictionaryImpl>&	astDict,
 {
 	for( CPPModel::ASTDictionary::NamespaceMapConstIterator itrNamespace = astDict->namespaces().begin(); itrNamespace != astDict->namespaces().end(); itrNamespace++ )
 	{
-		itrNamespace->second->toXML( std::cerr, 0, CPPModel::XMLSerializable::SerializationOptions::NONE );
+		itrNamespace->second->toXML( std::cerr, 0, CPPModel::SerializationOptions::NONE );
 	}
 
 	for( CPPModel::ASTDictionary::NamespaceIndexConstIterator namespaceIndex = astDict->NamespaceIdx().lower_bound( sourceCodeNamespace ); namespaceIndex != astDict->NamespaceIdx().upper_bound( sourceCodeNamespace ); namespaceIndex++ )
 	{
-		(*namespaceIndex)->toXML( std::cerr, 0, CPPModel::XMLSerializable::SerializationOptions::NONE );
+		(*namespaceIndex)->toXML( std::cerr, 0, CPPModel::SerializationOptions::NONE );
 	}
 
 	CPPModel::ParseOptions		parseOptions;
@@ -145,7 +145,7 @@ void DumpAST( std::shared_ptr<GCCInternalsTools::ASTDictionaryImpl>&	astDict,
 
 			((CPPModel::DictionaryClassEntry*)&(**namespaceIndex))->GetClassDefinition( parseOptions, classDef );
 
-			classDef->toXML( std::cerr, 0, CPPModel::XMLSerializable::SerializationOptions::NONE );
+			classDef->toXML( std::cerr, 0, CPPModel::SerializationOptions::NONE );
 		}
 		else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::UNION )
 		{
@@ -153,7 +153,7 @@ void DumpAST( std::shared_ptr<GCCInternalsTools::ASTDictionaryImpl>&	astDict,
 
 			((CPPModel::DictionaryUnionEntry*)&(**namespaceIndex))->GetUnionDefinition( parseOptions, unionDef );
 
-			unionDef->toXML( std::cerr, 0, CPPModel::XMLSerializable::SerializationOptions::NONE );
+			unionDef->toXML( std::cerr, 0, CPPModel::SerializationOptions::NONE );
 		}
 		else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::FUNCTION )
 		{
@@ -161,7 +161,7 @@ void DumpAST( std::shared_ptr<GCCInternalsTools::ASTDictionaryImpl>&	astDict,
 
 			((CPPModel::DictionaryFunctionEntry*)&(**namespaceIndex))->GetFunctionDefinition( parseOptions, functionDef );
 
-			functionDef->toXML( std::cerr, 0, CPPModel::XMLSerializable::SerializationOptions::NONE );
+			functionDef->toXML( std::cerr, 0, CPPModel::SerializationOptions::NONE );
 		}
 		else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::GLOBAL_VAR )
 		{
@@ -169,7 +169,7 @@ void DumpAST( std::shared_ptr<GCCInternalsTools::ASTDictionaryImpl>&	astDict,
 
 			((CPPModel::DictionaryGlobalVarEntry*)&(**namespaceIndex))->GetGlobalVarEntry( parseOptions, globalVarEntry );
 
-			globalVarEntry->toXML( std::cerr, 0, CPPModel::XMLSerializable::SerializationOptions::NONE );
+			globalVarEntry->toXML( std::cerr, 0, CPPModel::SerializationOptions::NONE );
 		}
 	}
 }
@@ -191,8 +191,8 @@ static void GateCallback( void*		eventData,
 
 	astDict->Build();
 
-	GCCInternalsTools::AddNamespace( *astDict, "TestCreatedNamespace::NestedNamespace::SecondNestedNamespace::" );
-	GCCInternalsTools::AddNamespace( *astDict, "TestCreatedNamespace::" );
+	astDict->CreateNamespace( "TestCreatedNamespace::NestedNamespace::SecondNestedNamespace::" );
+	astDict->CreateNamespace( "TestCreatedNamespace::" );
 
 	const CPPModel::Namespace		*testNamespace;
 
@@ -201,10 +201,10 @@ static void GateCallback( void*		eventData,
 	CPPModel::GlobalVarDeclaration		globalVarDec( "testVar",
 													  *testNamespace,
 													  true,
-													  CPPModel::Attributes::emptyList(),
-													  std::unique_ptr<CPPModel::Type>( new CPPModel::FundamentalType( CPPModel::TypeInfo::Specifier::INT ) ) );
+													  CPPModel::Attributes(),
+													  std::unique_ptr<CPPModel::Type>( new CPPModel::FundamentalType( CPPModel::TypeSpecifier::INT ) ) );
 
-	GCCInternalsTools::AddGlobalVar( *astDict, globalVarDec );
+	astDict->CreateGlobalVar( globalVarDec );
 
 	DumpAST( astDict, "TestCreatedNamespace::" );
 }

@@ -1,15 +1,14 @@
 <dictionary_entry>
-    <name>globaldoubleWithoutStaticKeyword</name>
-    <uid>1961</uid>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
-    <static>true</static>
+    <name>globaldoubleWithoutStaticKeyword</name>
+    <uid>1961</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/AttributesTestCase.cpp</file>
         <line>15</line>
         <char-count>1</char-count>
-        <location>1821</location>
+        <location>10430</location>
     </source-info>
     <attributes>
         <attribute>
@@ -20,19 +19,19 @@
             </arguments>
         </attribute>
     </attributes>
+    <static>true</static>
 </dictionary_entry>
 <dictionary_entry>
-    <name>globalInt</name>
-    <uid>1960</uid>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
-    <static>true</static>
+    <name>globalInt</name>
+    <uid>1960</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/AttributesTestCase.cpp</file>
         <line>13</line>
         <char-count>1</char-count>
-        <location>1568</location>
+        <location>10177</location>
     </source-info>
     <attributes>
         <attribute>
@@ -42,51 +41,47 @@
             </arguments>
         </attribute>
     </attributes>
+    <static>true</static>
 </dictionary_entry>
-<global_var>
-    <name>globaldoubleWithoutStaticKeyword</name>
+<global_var_entry>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
+    <name>globaldoubleWithoutStaticKeyword</name>
     <uid>1961</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/AttributesTestCase.cpp</file>
         <line>15</line>
         <char-count>1</char-count>
-        <location>1821</location>
+        <location>10430</location>
     </source-info>
+    <attributes>
+        <attribute>
+            <name>attribute1</name>
+            <arguments>
+                <constant type="STRING">arg2</constant>
+                <constant type="STRING">arg3</constant>
+            </arguments>
+        </attribute>
+    </attributes>
     <static>true</static>
     <type>
         <kind>fundamental</kind>
         <declaration>double</declaration>
     </type>
-    <attributes>
-        <attribute>
-            <name>attribute1</name>
-            <arguments>
-                <constant type="STRING">arg2</constant>
-                <constant type="STRING">arg3</constant>
-            </arguments>
-        </attribute>
-    </attributes>
-</global_var>
-<global_var>
-    <name>globalInt</name>
+</global_var_entry>
+<global_var_entry>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
+    <name>globalInt</name>
     <uid>1960</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/AttributesTestCase.cpp</file>
         <line>13</line>
         <char-count>1</char-count>
-        <location>1568</location>
+        <location>10177</location>
     </source-info>
-    <static>true</static>
-    <type>
-        <kind>fundamental</kind>
-        <declaration>int</declaration>
-    </type>
     <attributes>
         <attribute>
             <name>attribute1</name>
@@ -95,4 +90,9 @@
             </arguments>
         </attribute>
     </attributes>
-</global_var>
+    <static>true</static>
+    <type>
+        <kind>fundamental</kind>
+        <declaration>int</declaration>
+    </type>
+</global_var_entry>

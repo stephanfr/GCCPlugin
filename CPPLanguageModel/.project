@@ -3,6 +3,7 @@
 	<name>CPPLanguageModel</name>
 	<comment></comment>
 	<projects>
+		<project>Utility</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -1,64 +1,64 @@
 <dictionary_entry>
-    <name>globalStringWithoutStaticKeyword</name>
-    <uid>19340</uid>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
-    <static>true</static>
+    <name>globalStringWithoutStaticKeyword</name>
+    <uid>19336</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/NonIntrinsicTestCase.cpp</file>
         <line>22</line>
         <char-count>1</char-count>
-        <location>4818769</location>
+        <location>4843794</location>
     </source-info>
+    <static>true</static>
 </dictionary_entry>
 <dictionary_entry>
-    <name>globalString</name>
-    <uid>19339</uid>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
-    <static>true</static>
+    <name>globalString</name>
+    <uid>19335</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/NonIntrinsicTestCase.cpp</file>
         <line>20</line>
         <char-count>1</char-count>
-        <location>4818518</location>
+        <location>4843543</location>
     </source-info>
+    <static>true</static>
 </dictionary_entry>
-<global_var>
-    <name>globalStringWithoutStaticKeyword</name>
+<global_var_entry>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
-    <uid>19340</uid>
+    <name>globalStringWithoutStaticKeyword</name>
+    <uid>19336</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/NonIntrinsicTestCase.cpp</file>
         <line>22</line>
         <char-count>1</char-count>
-        <location>4818769</location>
+        <location>4843794</location>
     </source-info>
     <static>true</static>
     <type>
         <kind>class-or-struct</kind>
         <declaration>std::string</declaration>
     </type>
-</global_var>
-<global_var>
-    <name>globalString</name>
+</global_var_entry>
+<global_var_entry>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
-    <uid>19339</uid>
+    <name>globalString</name>
+    <uid>19335</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/NonIntrinsicTestCase.cpp</file>
         <line>20</line>
         <char-count>1</char-count>
-        <location>4818518</location>
+        <location>4843543</location>
     </source-info>
     <static>true</static>
     <type>
         <kind>class-or-struct</kind>
         <declaration>std::string</declaration>
     </type>
-</global_var>
+</global_var_entry>

@@ -1,54 +1,54 @@
 <dictionary_entry>
-    <name>FunctionReturningString</name>
-    <uid>19343</uid>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
+    <name>FunctionReturningString</name>
+    <uid>19339</uid>
     <source-info>
         <file>../testCaseSourceCode/Functions/SimpleFunctionTestCase.cpp</file>
         <line>24</line>
         <char-count>1</char-count>
-        <location>4819023</location>
+        <location>4844048</location>
     </source-info>
 </dictionary_entry>
 <dictionary_entry>
-    <name>FunctionReturningInt</name>
-    <uid>19341</uid>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
+    <name>FunctionReturningInt</name>
+    <uid>19337</uid>
     <source-info>
         <file>../testCaseSourceCode/Functions/SimpleFunctionTestCase.cpp</file>
         <line>19</line>
         <char-count>1</char-count>
-        <location>4818377</location>
+        <location>4843402</location>
     </source-info>
 </dictionary_entry>
 <dictionary_entry>
-    <name>FunctionReturningVoid</name>
-    <uid>19339</uid>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
+    <name>FunctionReturningVoid</name>
+    <uid>19335</uid>
     <source-info>
         <file>../testCaseSourceCode/Functions/SimpleFunctionTestCase.cpp</file>
         <line>17</line>
         <char-count>1</char-count>
-        <location>4818121</location>
+        <location>4843146</location>
     </source-info>
 </dictionary_entry>
 <function>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <name>FunctionReturningString</name>
-    <uid>19343</uid>
+    <uid>19339</uid>
     <source-info>
         <file>../testCaseSourceCode/Functions/SimpleFunctionTestCase.cpp</file>
         <line>24</line>
         <char-count>1</char-count>
-        <location>4819023</location>
+        <location>4844048</location>
     </source-info>
-    <namespace>
-        <name>TestNamespace::</name>
-    </namespace>
     <returnType>
         <type>
             <kind>derived</kind>
@@ -63,17 +63,17 @@
     </returnType>
 </function>
 <function>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <name>FunctionReturningInt</name>
-    <uid>19341</uid>
+    <uid>19337</uid>
     <source-info>
         <file>../testCaseSourceCode/Functions/SimpleFunctionTestCase.cpp</file>
         <line>19</line>
         <char-count>1</char-count>
-        <location>4818377</location>
+        <location>4843402</location>
     </source-info>
-    <namespace>
-        <name>TestNamespace::</name>
-    </namespace>
     <returnType>
         <type>
             <kind>fundamental</kind>
@@ -82,17 +82,17 @@
     </returnType>
 </function>
 <function>
+    <namespace>
+        <name>TestNamespace::</name>
+    </namespace>
     <name>FunctionReturningVoid</name>
-    <uid>19339</uid>
+    <uid>19335</uid>
     <source-info>
         <file>../testCaseSourceCode/Functions/SimpleFunctionTestCase.cpp</file>
         <line>17</line>
         <char-count>1</char-count>
-        <location>4818121</location>
+        <location>4843146</location>
     </source-info>
-    <namespace>
-        <name>TestNamespace::</name>
-    </namespace>
     <returnType>
         <type>
             <kind>fundamental</kind>

@@ -1215,7 +1215,7 @@ namespace GCCInternalsTools
 
 		//	If we are down here, all went well so return SUCCESS
 
-  		return( CPPModel::CreateGlobalVarResult::Success( DeclTree( globalDeclaration ).uid() ));
+  		return( CPPModel::CreateGlobalVarResult( DeclTree( globalDeclaration ).uid() ));
 	}
 
 }

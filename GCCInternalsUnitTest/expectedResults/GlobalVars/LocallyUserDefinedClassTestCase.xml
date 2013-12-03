@@ -1,42 +1,42 @@
 <dictionary_entry>
-    <name>globalClassWithoutStaticKeyword</name>
-    <uid>2006</uid>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
-    <static>true</static>
+    <name>globalClassWithoutStaticKeyword</name>
+    <uid>2006</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/LocallyUserDefinedClassTestCase.cpp</file>
         <line>40</line>
         <char-count>1</char-count>
-        <location>5042</location>
+        <location>13651</location>
     </source-info>
+    <static>true</static>
 </dictionary_entry>
 <dictionary_entry>
-    <name>globalClass</name>
-    <uid>1996</uid>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
-    <static>true</static>
+    <name>globalClass</name>
+    <uid>1996</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/LocallyUserDefinedClassTestCase.cpp</file>
         <line>38</line>
         <char-count>1</char-count>
-        <location>4791</location>
+        <location>13400</location>
     </source-info>
+    <static>true</static>
 </dictionary_entry>
-<global_var>
-    <name>globalClassWithoutStaticKeyword</name>
+<global_var_entry>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
+    <name>globalClassWithoutStaticKeyword</name>
     <uid>2006</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/LocallyUserDefinedClassTestCase.cpp</file>
         <line>40</line>
         <char-count>1</char-count>
-        <location>5042</location>
+        <location>13651</location>
     </source-info>
     <static>true</static>
     <type>
@@ -46,18 +46,18 @@
             <name>LocalNamespace::</name>
         </namespace>
     </type>
-</global_var>
-<global_var>
-    <name>globalClass</name>
+</global_var_entry>
+<global_var_entry>
     <namespace>
         <name>TestNamespace::</name>
     </namespace>
+    <name>globalClass</name>
     <uid>1996</uid>
     <source-info>
         <file>../testCaseSourceCode/GlobalVars/LocallyUserDefinedClassTestCase.cpp</file>
         <line>38</line>
         <char-count>1</char-count>
-        <location>4791</location>
+        <location>13400</location>
     </source-info>
     <static>true</static>
     <type>
@@ -67,4 +67,4 @@
             <name>LocalNamespace::</name>
         </namespace>
     </type>
-</global_var>
+</global_var_entry>

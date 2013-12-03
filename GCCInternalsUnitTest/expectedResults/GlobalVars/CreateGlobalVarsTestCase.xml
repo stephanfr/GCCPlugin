@@ -1,31 +1,31 @@
 <dictionary_entry>
-    <name>testVar</name>
-    <uid>21168</uid>
     <namespace>
         <name>TestCreatedNamespace::</name>
     </namespace>
-    <static>true</static>
+    <name>testVar</name>
+    <uid>21164</uid>
     <source-info>
         <unknown>true</unknown>
     </source-info>
+    <static>true</static>
 </dictionary_entry>
 <dictionary_entry>
-    <name>testStringVar</name>
-    <uid>21169</uid>
     <namespace>
         <name>TestCreatedNamespace::</name>
     </namespace>
-    <static>true</static>
+    <name>testStringVar</name>
+    <uid>21165</uid>
     <source-info>
         <unknown>true</unknown>
     </source-info>
+    <static>true</static>
 </dictionary_entry>
-<global_var>
-    <name>testVar</name>
+<global_var_entry>
     <namespace>
         <name>TestCreatedNamespace::</name>
     </namespace>
-    <uid>21168</uid>
+    <name>testVar</name>
+    <uid>21164</uid>
     <source-info>
         <unknown>true</unknown>
     </source-info>
@@ -34,13 +34,13 @@
         <kind>fundamental</kind>
         <declaration>int</declaration>
     </type>
-</global_var>
-<global_var>
-    <name>testStringVar</name>
+</global_var_entry>
+<global_var_entry>
     <namespace>
         <name>TestCreatedNamespace::</name>
     </namespace>
-    <uid>21169</uid>
+    <name>testStringVar</name>
+    <uid>21165</uid>
     <source-info>
         <unknown>true</unknown>
     </source-info>
@@ -49,4 +49,4 @@
         <kind>class-or-struct</kind>
         <declaration>std::string</declaration>
     </type>
-</global_var>
+</global_var_entry>
