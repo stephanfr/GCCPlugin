@@ -124,7 +124,7 @@ static void GateCallback( void*		eventData,
 	{
 		for( CPPModel::ASTDictionary::NamespaceMapConstIterator itrNamespace = astDict->namespaces().begin(); itrNamespace != astDict->namespaces().end(); itrNamespace++ )
 		{
-			itrNamespace->second->toXML( resultsFile, 0, CPPModel::SerializationOptions::NONE );
+			itrNamespace->second->toXML( resultsFile, CPPModel::SerializationOptions::NONE );
 		}
 	}
 
@@ -134,7 +134,7 @@ static void GateCallback( void*		eventData,
 
 		for( CPPModel::ASTDictionary::NamespaceIndexConstIterator namespaceIndex = (*astDict).NamespaceIdx().lower_bound( currentNamespace ); namespaceIndex != astDict->NamespaceIdx().upper_bound( currentNamespace ); namespaceIndex++ )
 		{
-			(*namespaceIndex)->toXML( resultsFile, 0, CPPModel::SerializationOptions::NONE );
+			(*namespaceIndex)->toXML( resultsFile, CPPModel::SerializationOptions::NONE );
 		}
 
 		CPPModel::ParseOptions		parseOptions;
@@ -147,7 +147,7 @@ static void GateCallback( void*		eventData,
 
 				((CPPModel::DictionaryClassEntry*)&(**namespaceIndex))->GetClassDefinition( parseOptions, classDef );
 
-				classDef->toXML( resultsFile, 0, CPPModel::SerializationOptions::NONE );
+				classDef->toXML( resultsFile, CPPModel::SerializationOptions::NONE );
 			}
 			else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::UNION )
 			{
@@ -155,7 +155,7 @@ static void GateCallback( void*		eventData,
 
 				((CPPModel::DictionaryUnionEntry*)&(**namespaceIndex))->GetUnionDefinition( parseOptions, unionDef );
 
-				unionDef->toXML( resultsFile, 0, CPPModel::SerializationOptions::NONE );
+				unionDef->toXML( resultsFile, CPPModel::SerializationOptions::NONE );
 			}
 			else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::FUNCTION )
 			{
@@ -163,7 +163,7 @@ static void GateCallback( void*		eventData,
 
 				if( ((CPPModel::DictionaryFunctionEntry*)&(**namespaceIndex))->GetFunctionDefinition( parseOptions, functionDef ))
 				{
-					functionDef->toXML( resultsFile, 0, CPPModel::SerializationOptions::NONE );
+					functionDef->toXML( resultsFile, CPPModel::SerializationOptions::NONE );
 				}
 			}
 			else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::GLOBAL_VAR )
@@ -172,7 +172,7 @@ static void GateCallback( void*		eventData,
 
 				((CPPModel::DictionaryGlobalVarEntry*)&(**namespaceIndex))->GetGlobalVarEntry( parseOptions, globalVarDef );
 
-				globalVarDef->toXML( resultsFile, 0, CPPModel::SerializationOptions::NONE );
+				globalVarDef->toXML( resultsFile, CPPModel::SerializationOptions::NONE );
 			}
 		}
 	}

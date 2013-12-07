@@ -54,7 +54,6 @@ namespace CPPModel
 
 
 		std::ostream&	toXML( std::ostream&			outputStream,
-							   int						indentLevel,
 							   SerializationOptions		options ) const;
 
 	protected :
@@ -192,10 +191,9 @@ namespace CPPModel
 		}
 
 		std::ostream&	toXML( std::ostream&			outputStream,
-							   int						indentLevel,
 							   SerializationOptions		options ) const
 		{
-			m_namespaceScope.toXML( outputStream, indentLevel, options );
+			m_namespaceScope.toXML( outputStream, options );
 
 			return( outputStream );
 		}

@@ -29,78 +29,13 @@ Contributors:
 
 #include <boost/lexical_cast.hpp>
 
+#include "Utility/IndentingOutputStreambuf.h"
+
+
 
 
 namespace CPPModel
 {
-
-	const std::string XMLIndentTable::IndentTable[] = {
-		{ std::string() },
-		{ std::string( 1 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 2 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 3 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 4 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 5 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 6 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 7 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 8 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 9 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 10 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 11 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 12 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 13 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 14 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 15 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 16 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 17 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 18 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 19 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 20 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 21 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 22 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 23 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 24 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 25 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 26 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 27 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 28 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 29 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 30 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 31 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 32 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 33 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 34 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 35 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 36 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 37 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 38 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 39 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 40 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 41 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 42 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 43 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 44 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 45 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 46 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 47 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 48 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 49 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 50 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 51 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 52 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 53 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 54 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 55 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 56 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 57 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 58 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 59 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 60 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 61 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 62 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 63 * XML_INDENT_SIZE, ' ' ) },
-		{ std::string( 64 * XML_INDENT_SIZE, ' ' ) }
-	};
 
 
 	bool						MatchOptions( SerializationOptions			firstOption,
@@ -129,10 +64,9 @@ namespace CPPModel
 
 
 	std::ostream&		Access::toXML( std::ostream&			outputStream,
-									   int						indentLevel,
 									   SerializationOptions		options ) const
 	{
-		outputStream << XMLIndentTable::GetIndent( indentLevel ) << "<access>" << toString( m_accessSpec ) << "</access>\n";
+		outputStream << "<access>" << toString( m_accessSpec ) << "</access>\n";
 
 		return( outputStream );
 	}
@@ -144,34 +78,33 @@ namespace CPPModel
 
 
 	std::ostream&	DictionaryEntry::toXML( std::ostream&			outputStream,
-											int						indentLevel,
 											SerializationOptions	options ) const
 	{
-		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		const std::string&		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+		outputStream << "<dictionary_entry>\n";
 
-
-		outputStream << currentIndent << "<dictionary_entry>\n";
-
-		enclosingNamespace().toXML( outputStream, indentLevel +1, options );
-
-		outputStream << currentIndentPlusOne << "<name>" << name() << "</name>\n";
-		outputStream << currentIndentPlusOne << "<uid>" << (boost::lexical_cast<std::string>(uid().uidValue())) << "</uid>\n";
-
-		sourceLocation().toXML( outputStream, indentLevel + 1, options );
-
-		attributes().toXML( outputStream, indentLevel + 1, options );
-
-		//	Be careful below, classes cannot be static and are fixed false in the constructor for their
-		//		dictionary entry.  If you punch out the 'static' flag all the time then it will
-		//		always appear as false for classes (beyond just not making sense for classes anyway).
-
-		if( isStatic() )
 		{
-			outputStream << currentIndentPlusOne << "<static>true</static>\n";
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			enclosingNamespace().toXML( outputStream, options );
+
+			outputStream << "<name>" << name() << "</name>\n";
+			outputStream << "<uid>" << (boost::lexical_cast<std::string>(uid().uidValue())) << "</uid>\n";
+
+			sourceLocation().toXML( outputStream, options );
+
+			attributes().toXML( outputStream, options );
+
+			//	Be careful below, classes cannot be static and are fixed false in the constructor for their
+			//		dictionary entry.  If you punch out the 'static' flag all the time then it will
+			//		always appear as false for classes (beyond just not making sense for classes anyway).
+
+			if( isStatic() )
+			{
+				outputStream << "<static>true</static>\n";
+			}
 		}
 
-		outputStream << currentIndent << "</dictionary_entry>\n";
+		outputStream << "</dictionary_entry>\n";
 
 		return( outputStream );
 	}
@@ -184,28 +117,33 @@ namespace CPPModel
 
 
 	std::ostream&	Attribute::toXML( std::ostream&				outputStream,
-						   	   	      int						indentLevel,
 						   	   	      SerializationOptions		options ) const
 	{
-		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		const std::string&		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+		outputStream << "<attribute>\n";
 
-		outputStream << currentIndent + "<attribute>\n";
-		NamedEntity::toXML( outputStream, indentLevel + 1, options );
-
-		if( !m_arguments->empty() )
 		{
-			outputStream << currentIndentPlusOne << "<arguments>\n";
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
 
-			for( const ConstantValue& itrArgument : *m_arguments )
+			NamedEntity::toXML( outputStream, options );
+
+			if( !m_arguments->empty() )
 			{
-				itrArgument.toXML( outputStream, indentLevel + 2, options );
-			}
+				outputStream << "<arguments>\n";
 
-			outputStream << currentIndentPlusOne << "</arguments>\n";
+				{
+					SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+					for( const ConstantValue& itrArgument : *m_arguments )
+					{
+						itrArgument.toXML( outputStream, options );
+					}
+				}
+
+				outputStream << "</arguments>\n";
+			}
 		}
 
-		outputStream << currentIndent + "</attribute>\n";
+		outputStream << "</attribute>\n";
 
 		return( outputStream );
 	}
@@ -213,7 +151,6 @@ namespace CPPModel
 
 
 	std::ostream&	Attributes::toXML( std::ostream&			outputStream,
-						   	   	       int						indentLevel,
 						   	   	       SerializationOptions		options ) const
 	{
 		//	If we have been passed the NO_ATTRIBUTES option or there are now attributes, then return now
@@ -224,16 +161,18 @@ namespace CPPModel
 		}
 
 
-		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
+		outputStream << "<attributes>\n";
 
-		outputStream << currentIndent << "<attributes>\n";
-
-		for( const Attribute& itrAttribute : *m_attributes )
 		{
-			itrAttribute.toXML( outputStream, indentLevel + 1, options );
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			for( const Attribute& itrAttribute : *m_attributes )
+			{
+				itrAttribute.toXML( outputStream, options );
+			}
 		}
 
-		outputStream << currentIndent << "</attributes>\n";
+		outputStream << "</attributes>\n";
 
 		return( outputStream );
 	}
@@ -245,60 +184,73 @@ namespace CPPModel
 
 
 	std::ostream&	BaseClassIdentifier::toXML( std::ostream&			outputStream,
-					   	   	   	   	   	   	    int						indentLevel,
 					   	   	   	   	   	   	    SerializationOptions	options ) const
 	{
-		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
+		outputStream << "<base-class>\n";
 
-		outputStream << currentIndent << "<base-class>\n";
-		NamedEntity::toXML( outputStream, indentLevel + 1, options );
-		outputStream << currentIndent << XMLIndentTable::GetIndent( 1 ) << "<virtual>" << (boost::lexical_cast<std::string>( isVirtual() )) << "</virtual>\n";
-		outputStream << currentIndent << XMLIndentTable::GetIndent( 1 ) << "<access>" << std::string( toString( accessSpecifier() )) << "</access>\n";
-		outputStream << currentIndent << "</base-class>\n";
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			NamedEntity::toXML( outputStream, options );
+
+			outputStream << "<virtual>" << (boost::lexical_cast<std::string>( isVirtual() )) << "</virtual>\n";
+			outputStream << "<access>" << std::string( toString( accessSpecifier() )) << "</access>\n";
+		}
+
+		outputStream << "</base-class>\n";
 
 		return( outputStream );
 	}
 
 
 	std::ostream&	FriendClassIdentifier::toXML( std::ostream&				outputStream,
-					   	   	   	   	   	   	 	  int						indentLevel,
 					   	   	   	   	   	   	 	  SerializationOptions		options ) const
 	{
-		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
+		outputStream << "<friend>\n";
 
-		outputStream << currentIndent << "<friend>\n";
-		outputStream << currentIndent << XMLIndentTable::GetIndent( 1 ) << "<type>CLASS</type>\n";
-		m_type->toXML( outputStream, indentLevel + 1, AddOption( options, SerializationOptions::NO_ATTRIBUTES ) );
-		outputStream << currentIndent << "</friend>\n";
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			outputStream << "<type>CLASS</type>\n";
+			m_type->toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ) );
+		}
+
+		outputStream << "</friend>\n";
 
 		return( outputStream );
 	}
 
 
 	std::ostream&	FriendClassMemberIdentifier::toXML( std::ostream&			outputStream,
-					   	   	   	   	   	   	 	  	    int						indentLevel,
 					   	   	   	   	   	   	 	  	    SerializationOptions	options ) const
 	{
-		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
+		outputStream << "<friend>\n";
 
-		outputStream << currentIndent << "<friend>\n";
-		outputStream << currentIndent << XMLIndentTable::GetIndent( 1 ) << "<type>CLASS_MEMBER</type>\n";
-		m_type->toXML( outputStream, indentLevel + 1, AddOption( options, SerializationOptions::NO_ATTRIBUTES ) );
-		outputStream << currentIndent << "</friend>\n";
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			outputStream << "<type>CLASS_MEMBER</type>\n";
+			m_type->toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ) );
+		}
+
+		outputStream << "</friend>\n";
 
 		return( outputStream );
 	}
 
 
 	std::ostream&	FriendFunctionIdentifier::toXML( std::ostream&				outputStream,
-					   	   	   	   	   	   	 	     int						indentLevel,
 					   	   	   	   	   	   	 	     SerializationOptions		options ) const
 	{
-		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
+		outputStream << "<friend>\n";
 
-		outputStream << currentIndent << "<friend>\n";
-		outputStream << currentIndent << XMLIndentTable::GetIndent( 1 ) << "<type>FUNCTION</type>\n";
-		outputStream << currentIndent << "</friend>\n";
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			outputStream << "<type>FUNCTION</type>\n";
+		}
+
+		outputStream << "</friend>\n";
 
 		return( outputStream );
 	}
@@ -306,87 +258,108 @@ namespace CPPModel
 
 
 	std::ostream&	FieldDeclaration::toXML( std::ostream&				outputStream,
-					   	   	   	   	   	   	 int						indentLevel,
 					   	   	   	   	   	   	 SerializationOptions		options ) const
 	{
-		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		std::string		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+		outputStream << "<field>\n";
 
-		outputStream << currentIndent << "<field>\n";
-		NamedEntity::toXML( outputStream, indentLevel + 1, options );
-		SourceLocation::toXML( outputStream, indentLevel + 1, options );
-		type().toXML( outputStream, indentLevel + 1, AddOption( options, SerializationOptions::NO_ATTRIBUTES ) );
-		Access::toXML( outputStream, indentLevel + 1, options );
-		Static::toXML( outputStream, indentLevel + 1, options );
-		attributes().toXML( outputStream, indentLevel + 1, options );
-		outputStream << currentIndent << "</field>\n";
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			NamedEntity::toXML( outputStream, options );
+			SourceLocation::toXML( outputStream, options );
+			type().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ) );
+			Access::toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+			attributes().toXML( outputStream, options );
+		}
+
+		outputStream << "</field>\n";
 
 		return( outputStream );
 	}
 
 
 	std::ostream&	MethodDeclaration::toXML( std::ostream&				outputStream,
-					   	   	   	   	   	   	  int						indentLevel,
 					   	   	   	   	   	   	  SerializationOptions		options ) const
 	{
-		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		std::string		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+		outputStream << "<method>\n";
 
-		outputStream << currentIndent << "<method>\n";
-		SourceElement::toXML( outputStream, indentLevel + 1, options );
-		Access::toXML( outputStream, indentLevel + 1, options );
-		Static::toXML( outputStream, indentLevel + 1, options );
-		outputStream << currentIndentPlusOne << "<result>\n";
-		resultType().toXML( outputStream, indentLevel + 2, AddOption( options, SerializationOptions::NO_ATTRIBUTES ) );
-		outputStream << currentIndentPlusOne << "</result>\n";
-
-		outputStream << currentIndentPlusOne << "<parameters>\n";
-		for( boost::ptr_list<FunctionParameter>::const_iterator itrParam = m_parameterList->begin(); itrParam != m_parameterList->end(); itrParam++ )
 		{
-			itrParam->toXML( outputStream, indentLevel + 2, options );
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			SourceElement::toXML( outputStream, options );
+			Access::toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+
+			outputStream << "<result>\n";
+			{
+				SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+				resultType().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ) );
+			}
+			outputStream << "</result>\n";
+
+			outputStream << "<parameters>\n";
+			{
+				SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+				for( boost::ptr_list<FunctionParameter>::const_iterator itrParam = m_parameterList->begin(); itrParam != m_parameterList->end(); itrParam++ )
+				{
+					itrParam->toXML( outputStream, options );
+				}
+			}
+			outputStream << "</parameters>\n";
+
+			attributes().toXML( outputStream, options );
 		}
-		outputStream << currentIndentPlusOne << "</parameters>\n";
 
-		attributes().toXML( outputStream, indentLevel + 1, options );
-
-		outputStream << currentIndent << "</method>\n";
+		outputStream << "</method>\n";
 
 		return( outputStream );
 	}
 
 
 	std::ostream&	TemplateMethodDeclaration::toXML( std::ostream&				outputStream,
-					   	   	   	   	   	   	  	  	  int						indentLevel,
 					   	   	   	   	   	   	  	  	  SerializationOptions		options ) const
 	{
-		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		std::string		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+		outputStream << "<template_method>\n";
 
-		outputStream << currentIndent << "<template_method>\n";
-		SourceElement::toXML( outputStream, indentLevel + 1, options );
-		Access::toXML( outputStream, indentLevel + 1, options );
-		Static::toXML( outputStream, indentLevel + 1, options );
-		outputStream << currentIndentPlusOne << "<result>\n";
-		resultType().toXML( outputStream, indentLevel + 2, AddOption( options, SerializationOptions::NO_ATTRIBUTES ) );
-		outputStream << currentIndentPlusOne << "</result>\n";
-
-		outputStream << currentIndentPlusOne << "<template_parameters>\n";
-		for( boost::ptr_list<TemplateParameter>::const_iterator itrParam = m_parameterList->begin(); itrParam != m_parameterList->end(); itrParam++ )
 		{
-			itrParam->toXML( outputStream, indentLevel + 2, options );
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			SourceElement::toXML( outputStream, options );
+			Access::toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+
+			outputStream << "<result>\n";
+			{
+				SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+				resultType().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ) );
+			}
+			outputStream << "</result>\n";
+
+			outputStream << "<template_parameters>\n";
+			{
+				SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+				for( boost::ptr_list<TemplateParameter>::const_iterator itrParam = m_parameterList->begin(); itrParam != m_parameterList->end(); itrParam++ )
+				{
+					itrParam->toXML( outputStream, options );
+				}
+			}
+			outputStream << "</template_parameters>\n";
+
+			attributes().toXML( outputStream, options );
 		}
-		outputStream << currentIndentPlusOne << "</template_parameters>\n";
 
-		attributes().toXML( outputStream, indentLevel + 1, options );
-
-		outputStream << currentIndent << "</template_method>\n";
+		outputStream << "</template_method>\n";
 
 		return( outputStream );
 	}
 
 
 	std::ostream&	ClassDefinition::toXML( std::ostream&			outputStream,
-					   	   	   	   	   	   	int						indentLevel,
 					   	   	   	   	   	   	SerializationOptions	options ) const
 	{
 		if( MatchOptions( SerializationMask(), options ) )
@@ -394,62 +367,86 @@ namespace CPPModel
 			return( outputStream );
 		}
 
-		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		std::string		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
-
-
 		if( !isStruct() )
 		{
-			outputStream << currentIndent << "<class type=\"class\">\n";
+			outputStream << "<class type=\"class\">\n";
 		}
 		else
 		{
-			outputStream << currentIndent << "<class type=\"struct\">\n";
+			outputStream << "<class type=\"struct\">\n";
 		}
 
-		SourceElement::toXML( outputStream, indentLevel + 1, options );
-		NamespaceScoped::toXML( outputStream, indentLevel + 1, options );
-		CompilerSpecific::toXML( outputStream, indentLevel + 1, options );
-
-		attributes().toXML( outputStream, indentLevel + 1, options );
-
-		outputStream << currentIndentPlusOne << "<base-classes>\n";
-
-		for( boost::ptr_list<BaseClassIdentifier>::const_iterator itr = baseClasses().begin(); itr != baseClasses().end(); itr++ )
 		{
-			itr->toXML( outputStream, indentLevel + 2, options );
-		}
-		outputStream << currentIndentPlusOne << "</base-classes>\n";
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
 
-		outputStream << currentIndentPlusOne << "<friends>\n";
-		for( boost::ptr_list<const FriendIdentifier>::const_iterator itr = friends().begin(); itr != friends().end(); itr++ )
-		{
-			itr->toXML( outputStream, indentLevel + 2, options );
-		}
-		outputStream << currentIndentPlusOne << "</friends>\n";
+			SourceElement::toXML( outputStream, options );
+			NamespaceScoped::toXML( outputStream, options );
+			CompilerSpecific::toXML( outputStream, options );
 
-		outputStream << currentIndentPlusOne << "<fields>\n";
-		for( boost::ptr_list<const FieldDeclaration>::const_iterator itr = fields().begin(); itr != fields().end(); itr++ )
-		{
-			itr->toXML( outputStream, indentLevel + 2, options );
-		}
-		outputStream << currentIndentPlusOne << "</fields>\n";
+			attributes().toXML( outputStream, options );
 
-		outputStream << currentIndentPlusOne << "<methods>\n";
-		for( boost::ptr_list<const MethodDeclaration>::const_iterator itr = methods().begin(); itr != methods().end(); itr++ )
-		{
-			itr->toXML( outputStream, indentLevel + 2, options );
-		}
-		outputStream << currentIndentPlusOne << "</methods>\n";
+			outputStream << "<base-classes>\n";
+			if( !baseClasses().empty() )
+			{
+				SEFUtility::IndentingOutputStreambuf		indent( outputStream );
 
-		outputStream << currentIndentPlusOne << "<template_methods>\n";
-		for( boost::ptr_list<const TemplateMethodDeclaration>::const_iterator itr = methods().begin(); itr != methods().end(); itr++ )
-		{
-			itr->toXML( outputStream, indentLevel + 2, options );
-		}
-		outputStream << currentIndentPlusOne << "</template_methods>\n";
+				for( boost::ptr_list<BaseClassIdentifier>::const_iterator itr = baseClasses().begin(); itr != baseClasses().end(); itr++ )
+				{
+					itr->toXML( outputStream, options );
+				}
+			}
+			outputStream << "</base-classes>\n";
 
-		outputStream << currentIndent << "</class>\n";
+			outputStream << "<friends>\n";
+			if( !friends().empty() )
+			{
+				SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+				for( boost::ptr_list<const FriendIdentifier>::const_iterator itr = friends().begin(); itr != friends().end(); itr++ )
+				{
+					itr->toXML( outputStream, options );
+				}
+			}
+			outputStream << "</friends>\n";
+
+			outputStream << "<fields>\n";
+			if( !fields().empty() )
+			{
+				SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+				for( boost::ptr_list<const FieldDeclaration>::const_iterator itr = fields().begin(); itr != fields().end(); itr++ )
+				{
+					itr->toXML( outputStream, options );
+				}
+			}
+			outputStream << "</fields>\n";
+
+			outputStream << "<methods>\n";
+			if( !methods().empty() )
+			{
+				SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+				for( boost::ptr_list<const MethodDeclaration>::const_iterator itr = methods().begin(); itr != methods().end(); itr++ )
+				{
+					itr->toXML( outputStream, options );
+				}
+			}
+			outputStream << "</methods>\n";
+
+			outputStream << "<template_methods>\n";
+			if( !templateMethods().empty() )
+			{
+				SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+				for( boost::ptr_list<const TemplateMethodDeclaration>::const_iterator itr = templateMethods().begin(); itr != templateMethods().end(); itr++ )
+				{
+					itr->toXML( outputStream, options );
+				}
+			}
+			outputStream << "</template_methods>\n";
+		}
+
+		outputStream << "</class>\n";
 
 		return( outputStream );
 	}
@@ -460,7 +457,6 @@ namespace CPPModel
 
 
 	std::ostream&	CompilerSpecific::toXML( std::ostream&				outputStream,
-											 int						indentLevel,
 											 SerializationOptions		options ) const
 	{
 		if( !m_builtIn && !m_artificial )
@@ -468,23 +464,21 @@ namespace CPPModel
 			return( outputStream );
 		}
 
-		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		std::string		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
-
-
-		outputStream << currentIndent << "<compiler_specific>\n";
+		outputStream << "<compiler_specific>\n";
 
 		if( m_builtIn )
 		{
-			outputStream << currentIndentPlusOne << "</built_in>\n";
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+			outputStream << "</built_in>\n";
 		}
 
 		if( m_artificial )
 		{
-			outputStream << currentIndentPlusOne << "</artificial>\n";
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+			outputStream << "</artificial>\n";
 		}
 
-		outputStream << currentIndent << "</compiler_specific>\n";
+		outputStream << "</compiler_specific>\n";
 
 		return( outputStream );
 	}
@@ -495,39 +489,35 @@ namespace CPPModel
 
 
 	std::ostream&	UnrecognizedConstant::toXML( std::ostream&			outputStream,
-					   	   	   	   	   	   	   	 int					indentLevel,
 					   	   	   	   	   	   	   	 SerializationOptions	options ) const
 	{
-		outputStream << XMLIndentTable::GetIndent( indentLevel ) << "</constant type=\"UNRECOGNIZED\">\n";
+		outputStream << "</constant type=\"UNRECOGNIZED\">\n";
 
 		return( outputStream );
 	}
 
 
 	std::ostream&	StringConstant::toXML( std::ostream&			outputStream,
-					   	   	   	   	   	   int						indentLevel,
 					   	   	   	   	   	   SerializationOptions		options ) const
 	{
-		outputStream << XMLIndentTable::GetIndent( indentLevel ) << "<constant type=\"STRING\">" << m_value << "</constant>\n";
+		outputStream << "<constant type=\"STRING\">" << m_value << "</constant>\n";
 
 		return( outputStream );
 	}
 
 
 	std::ostream&	IntegerConstant::toXML( std::ostream&			outputStream,
-					   	   	   	   	   	    int						indentLevel,
 					   	   	   	   	   	    SerializationOptions	options ) const
 	{
-		outputStream << XMLIndentTable::GetIndent( indentLevel ) << "<constant type=\"INTEGER\">" << (boost::lexical_cast<std::string>( m_value )) << "</constant>\n";
+		outputStream << "<constant type=\"INTEGER\">" << (boost::lexical_cast<std::string>( m_value )) << "</constant>\n";
 
 		return( outputStream );
 	}
 
 	std::ostream&	RealConstant::toXML( std::ostream&				outputStream,
-					   	   	   	   	   	 int						indentLevel,
 					   	   	   	   	   	 SerializationOptions		options ) const
 	{
-		outputStream << XMLIndentTable::GetIndent( indentLevel ) << "<constant type=\"REAL\">" << (boost::lexical_cast<std::string>( m_value )) << "</constant>\n";
+		outputStream << "<constant type=\"REAL\">" << (boost::lexical_cast<std::string>( m_value )) << "</constant>\n";
 
 		return( outputStream );
 	}
@@ -538,13 +528,9 @@ namespace CPPModel
 
 
 	std::ostream&	DeclarationType::toXML( std::ostream&			outputStream,
-									 	    int						indentLevel,
 									 	    SerializationOptions	options ) const
 	{
-		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-
-
-		outputStream << currentIndent << "<declaration-type>" << "</declaration-type>\n";
+		outputStream << "<declaration-type>" << "</declaration-type>\n";
 
 		return( outputStream );
 	}
@@ -554,38 +540,40 @@ namespace CPPModel
 	//
 
 	std::ostream&	FunctionParameter::toXML( std::ostream&				outputStream,
-					   	   	   	   	   	   	  int						indentLevel,
 					   	   	   	   	   	   	  SerializationOptions		options ) const
 	{
-		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
+		outputStream << "<parameter>\n";
 
-		outputStream << currentIndent + "<parameter>\n";
-		NamedEntity::toXML( outputStream, indentLevel + 1, options );
-		type().toXML( outputStream, indentLevel + 1, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
-		CompilerSpecific::toXML( outputStream, indentLevel + 1, options );
-		outputStream << currentIndent << "</parameter>\n";
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+			NamedEntity::toXML( outputStream, options );
+			type().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+			CompilerSpecific::toXML( outputStream, options );
+		}
+
+		outputStream << "</parameter>\n";
 
 		return( outputStream );
 	}
 
 
 	std::ostream&	FunctionParameters::toXML( std::ostream&			outputStream,
-						   	   	       	   	   int						indentLevel,
 						   	   	       	   	   SerializationOptions		options ) const
 	{
-		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-
-
 		if( !m_parameters->empty() )
 		{
-			outputStream << currentIndent << "<parameters>\n";
+			outputStream << "<parameters>\n";
 
-			for( const FunctionParameter& itrParameter : *m_parameters )
 			{
-				itrParameter.toXML( outputStream, indentLevel + 1, options );
+				SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+				for( const FunctionParameter& itrParameter : *m_parameters )
+				{
+					itrParameter.toXML( outputStream, options );
+				}
 			}
 
-			outputStream << currentIndent << "</parameters>\n";
+			outputStream << "</parameters>\n";
 		}
 
 		return( outputStream );
@@ -593,32 +581,37 @@ namespace CPPModel
 
 
 	std::ostream&	FunctionDefinition::toXML( std::ostream&			outputStream,
-					   	   	   	   	   	   	   int						indentLevel,
 					   	   	   	   	   	   	   SerializationOptions		options ) const
 	{
-		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		std::string		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
-
-
 		if( !isHiddenFriend() )
 		{
-			outputStream << currentIndent << "<function>\n";
+			outputStream << "<function>\n";
 		}
 		else
 		{
-			outputStream << currentIndent << "<function type=\"hiddenFriend\">\n";
+			outputStream << "<function type=\"hiddenFriend\">\n";
 		}
 
-		NamespaceScoped::toXML( outputStream, indentLevel + 1, options );
-		SourceElement::toXML( outputStream, indentLevel + 1, options );
-		attributes().toXML( outputStream, indentLevel + 1, options );
-		outputStream << currentIndentPlusOne << "<returnType>\n";
-		returnType().toXML( outputStream, indentLevel + 2, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
-		outputStream << currentIndentPlusOne << "</returnType>\n";
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
 
-		m_parameters.toXML( outputStream, indentLevel + 1, options );
+			NamespaceScoped::toXML( outputStream, options );
+			SourceElement::toXML( outputStream, options );
+			attributes().toXML( outputStream, options );
+			outputStream << "<returnType>\n";
 
-		outputStream << currentIndent << "</function>\n";
+			{
+				SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+				returnType().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+			}
+
+			outputStream << "</returnType>\n";
+
+			m_parameters.toXML( outputStream, options );
+		}
+
+		outputStream << "</function>\n";
 
 		return( outputStream );
 	}
@@ -629,44 +622,46 @@ namespace CPPModel
 
 
 	std::ostream&	GlobalVarDeclaration::toXML( std::ostream&				outputStream,
-												 int						indentLevel,
 												 SerializationOptions		options ) const
 	{
-		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		std::string		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+		outputStream << "<global_var_decl>\n";
 
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
 
-		outputStream << currentIndent << "<global_var_decl>\n";
+			NamedEntity::toXML( outputStream, options );
+			NamespaceScoped::toXML( outputStream, options );
+		//		type().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+			attributes().toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+		}
 
-		NamedEntity::toXML( outputStream, indentLevel + 1, options );
-		NamespaceScoped::toXML( outputStream, indentLevel + 1, options );
-	//		type().toXML( outputStream, indentLevel + 1, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
-		attributes().toXML( outputStream, indentLevel + 1, options );
-		Static::toXML( outputStream, indentLevel + 1, options );
-
-		outputStream << currentIndent << "</global_var_decl>\n";
+		outputStream << "</global_var_decl>\n";
 
 		return( outputStream );
 	}
 
 
-	std::ostream&	GlobalVarEntry::toXML( std::ostream&				outputStream,
-												 int						indentLevel,
-												 SerializationOptions		options ) const
+	std::ostream&	GlobalVarEntry::toXML( std::ostream&			outputStream,
+										   SerializationOptions		options ) const
 	{
-		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		std::string		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+//		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
+//		std::string		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
 
 
-		outputStream << currentIndent << "<global_var_entry>\n";
+		outputStream << "<global_var_entry>\n";
 
-		NamespaceScoped::toXML( outputStream, indentLevel + 1, options );
-		SourceElement::toXML( outputStream, indentLevel + 1, options );
-		attributes().toXML( outputStream, indentLevel + 1, options );
-		Static::toXML( outputStream, indentLevel + 1, options );
-		type().toXML( outputStream, indentLevel + 1, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
 
-		outputStream << currentIndent << "</global_var_entry>\n";
+			NamespaceScoped::toXML( outputStream, options );
+			SourceElement::toXML( outputStream, options );
+			attributes().toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+			type().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+		}
+
+		outputStream << "</global_var_entry>\n";
 
 		return( outputStream );
 	}
@@ -678,10 +673,9 @@ namespace CPPModel
 	//
 
 	std::ostream&	NamedEntity::toXML( std::ostream&			outputStream,
-						   	   	   	    int						indentLevel,
 						   	   	   	    SerializationOptions	options ) const
 	{
-		outputStream << XMLIndentTable::GetIndent( indentLevel ) << "<name>" << m_name << "</name>\n";
+		outputStream << "<name>" << m_name << "</name>\n";
 
 		return( outputStream );
 	}
@@ -692,7 +686,6 @@ namespace CPPModel
 	//
 
 	std::ostream&	Namespace::toXML( std::ostream&				outputStream,
-									  int						indentLevel,
 									  SerializationOptions		options ) const
 	{
 		if( MatchOptions( SerializationMask(), options ) )
@@ -700,13 +693,16 @@ namespace CPPModel
 			return( outputStream );
 		}
 
-		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		std::string		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+		outputStream << "<namespace>\n";
 
-		outputStream << currentIndent << "<namespace>\n";
-		outputStream << currentIndentPlusOne << "<name>" << fqName() << "</name>\n";
-		CompilerSpecific::toXML( outputStream, indentLevel + 1, options );
-		outputStream << currentIndent << "</namespace>\n";
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			outputStream << "<name>" << fqName() << "</name>\n";
+			CompilerSpecific::toXML( outputStream, options );
+		}
+
+		outputStream << "</namespace>\n";
 
 		return( outputStream );
 	}
@@ -718,13 +714,12 @@ namespace CPPModel
 
 
 	std::ostream&	SourceElement::toXML( std::ostream&				outputStream,
-										  int						indentLevel,
 										  SerializationOptions		options ) const
 	{
-		NamedEntity::toXML( outputStream, indentLevel, options );
-		UID::toXML( outputStream, indentLevel, options );
+		NamedEntity::toXML( outputStream, options );
+		UID::toXML( outputStream, options );
 
-		SourceLocation::toXML( outputStream, indentLevel, options );
+		SourceLocation::toXML( outputStream, options );
 
 		return( outputStream );
 	}
@@ -736,28 +731,28 @@ namespace CPPModel
 
 
 	std::ostream&	SourceLocation::toXML( std::ostream&			outputStream,
-							  	  	  	   int						indentLevel,
 							  	  	  	   SerializationOptions		options ) const
 
 	{
-		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		const std::string&		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+		outputStream << "<source-info>\n";
 
-		outputStream << currentIndent << "<source-info>\n";
-
-		if( !m_fileName.empty() )
 		{
-			outputStream << currentIndentPlusOne << "<file>" << m_fileName << "</file>\n";
-			outputStream << currentIndentPlusOne << "<line>" << (boost::lexical_cast<std::string>(m_lineNumber)) << "</line>\n";
-			outputStream << currentIndentPlusOne << "<char-count>" << (boost::lexical_cast<std::string>(m_characterCount)) << "</char-count>\n";
-			outputStream << currentIndentPlusOne << "<location>" << (boost::lexical_cast<std::string>(m_location)) << "</location>\n";
-		}
-		else
-		{
-			outputStream << currentIndentPlusOne << "<unknown>true</unknown>\n";
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			if( !m_fileName.empty() )
+			{
+				outputStream << "<file>" << m_fileName << "</file>\n";
+				outputStream << "<line>" << (boost::lexical_cast<std::string>(m_lineNumber)) << "</line>\n";
+				outputStream << "<char-count>" << (boost::lexical_cast<std::string>(m_characterCount)) << "</char-count>\n";
+				outputStream << "<location>" << (boost::lexical_cast<std::string>(m_location)) << "</location>\n";
+			}
+			else
+			{
+				outputStream << "<unknown>true</unknown>\n";
+			}
 		}
 
-		outputStream << currentIndent << "</source-info>\n";
+		outputStream << "</source-info>\n";
 
 		return( outputStream );
 	}
@@ -769,10 +764,9 @@ namespace CPPModel
 
 
 	std::ostream&	Static::toXML( std::ostream&			outputStream,
-								   int						indentLevel,
 								   SerializationOptions		options ) const
 	{
-		outputStream << XMLIndentTable::GetIndent( indentLevel ) << "<static>" << ( m_isStatic ? "true" : "false" ) << "</static>\n";
+		outputStream << "<static>" << ( m_isStatic ? "true" : "false" ) << "</static>\n";
 
 		return( outputStream );
 	}
@@ -784,37 +778,40 @@ namespace CPPModel
 	//
 
 	std::ostream&	TemplateParameter::toXML( std::ostream&				outputStream,
-											  int						indentLevel,
 											  SerializationOptions		options ) const
 	{
-		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
+		outputStream << "<parameter>\n";
 
-		outputStream << currentIndent + "<parameter>\n";
-		NamedEntity::toXML( outputStream, indentLevel + 1, options );
-		CompilerSpecific::toXML( outputStream, indentLevel + 1, options );
-		outputStream << currentIndent << "</parameter>\n";
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			NamedEntity::toXML( outputStream, options );
+			CompilerSpecific::toXML( outputStream, options );
+		}
+
+		outputStream << "</parameter>\n";
 
 		return( outputStream );
 	}
 
 
 	std::ostream&	TemplateParameters::toXML( std::ostream&			outputStream,
-											   int						indentLevel,
 											   SerializationOptions		options ) const
 	{
-		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-
-
 		if( !m_parameters->empty() )
 		{
-			outputStream << currentIndent << "<parameters>\n";
+			outputStream << "<parameters>\n";
 
-			for( const TemplateParameter& itrParameter : *m_parameters )
 			{
-				itrParameter.toXML( outputStream, indentLevel + 1, options );
+				SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+				for( const TemplateParameter& itrParameter : *m_parameters )
+				{
+					itrParameter.toXML( outputStream, options );
+				}
 			}
 
-			outputStream << currentIndent << "</parameters>\n";
+			outputStream << "</parameters>\n";
 		}
 
 		return( outputStream );
@@ -822,31 +819,30 @@ namespace CPPModel
 
 
 	std::ostream&	FunctionTemplateDefinition::toXML( std::ostream&			outputStream,
-					   	   	   	   	   	   	   	   	   int						indentLevel,
 					   	   	   	   	   	   	   	   	   SerializationOptions		options ) const
 	{
-		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		std::string		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
-
-
 		if( !isHiddenFriend() )
 		{
-			outputStream << currentIndent << "<function>\n";
+			outputStream << "<function>\n";
 		}
 		else
 		{
-			outputStream << currentIndent << "<function type=\"hiddenFriend\">\n";
+			outputStream << "<function type=\"hiddenFriend\">\n";
 		}
 
-		SourceElement::toXML( outputStream, indentLevel + 1, options );
-		NamespaceScoped::toXML( outputStream, indentLevel + 1, options );
-		outputStream << currentIndentPlusOne << "<returnType>\n";
-		outputStream << currentIndentPlusOne << "</returnType>\n";
-		attributes().toXML( outputStream, indentLevel + 1, options );
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
 
-		m_parameters.toXML( outputStream, indentLevel + 1, options );
+			SourceElement::toXML( outputStream, options );
+			NamespaceScoped::toXML( outputStream, options );
+			outputStream << "<returnType>\n";
+			outputStream << "</returnType>\n";
+			attributes().toXML( outputStream, options );
 
-		outputStream << currentIndent << "</function>\n";
+			m_parameters.toXML( outputStream, options );
+		}
+
+		outputStream << "</function>\n";
 
 		return( outputStream );
 	}
@@ -858,85 +854,95 @@ namespace CPPModel
 
 
 	std::ostream&	UnrecognizedType::toXML( std::ostream&			outputStream,
-											 int					indentLevel,
 											 SerializationOptions	options ) const
 	{
-		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		const std::string&		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+		outputStream << "<type>\n";
 
-		outputStream << currentIndent << "<type>\n";
-		outputStream << currentIndentPlusOne << "<kind>unrecognized</kind>\n";
-		outputStream << currentIndent << "</type>\n";
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
 
-		attributes().toXML( outputStream, indentLevel, options );
+			outputStream << "<kind>unrecognized</kind>\n";
+		}
+
+		outputStream << "</type>\n";
+
+		attributes().toXML( outputStream, options );
 
 		return( outputStream );
 	}
 
 
 	std::ostream&	FundamentalType::toXML( std::ostream&			outputStream,
-											int						indentLevel,
 											SerializationOptions	options ) const
 	{
-		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		const std::string&		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+		outputStream << "<type>\n";
 
-		outputStream << currentIndent << "<type>\n";
-		outputStream << currentIndentPlusOne << "<kind>fundamental</kind>\n";
-		outputStream << currentIndentPlusOne << "<declaration>" << CPPTypes[(int)typeSpec()].label.c_str() << "</declaration>\n";
-		outputStream << currentIndent << "</type>\n";
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
 
-		attributes().toXML( outputStream, indentLevel, options );
+			outputStream << "<kind>fundamental</kind>\n";
+			outputStream << "<declaration>" << CPPTypes[(int)typeSpec()].label.c_str() << "</declaration>\n";
+		}
+
+		outputStream << "</type>\n";
+
+		attributes().toXML( outputStream, options );
 
 		return( outputStream );
 	}
 
 
 	std::ostream&	ClassOrStructType::toXML( std::ostream&				outputStream,
-											  int						indentLevel,
 											  SerializationOptions	 	options ) const
 	{
-		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		const std::string&		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+		outputStream << "<type>\n";
 
-		outputStream << currentIndent << "<type>\n";
-		outputStream << currentIndentPlusOne << "<kind>class-or-struct</kind>\n";
-		outputStream << currentIndentPlusOne << "<declaration>" << fqName().c_str() << "</declaration>\n";
-		NamespaceScoped::toXML( outputStream, indentLevel + 1, options );
-		outputStream << currentIndent << "</type>\n";
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
 
-		attributes().toXML( outputStream, indentLevel, options );
+			outputStream << "<kind>class-or-struct</kind>\n";
+			outputStream << "<declaration>" << fqName().c_str() << "</declaration>\n";
+			NamespaceScoped::toXML( outputStream, options );
+		}
+
+		outputStream << "</type>\n";
+
+		attributes().toXML( outputStream, options );
 
 		return( outputStream );
 	}
 
 
 	std::ostream&	DerivedType::toXML( std::ostream&			outputStream,
-										int						indentLevel,
 										SerializationOptions	options ) const
 	{
-		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		const std::string&		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
-		const std::string&		currentIndentPlusTwo = XMLIndentTable::GetIndent( indentLevel + 2 );
+		outputStream << "<type>\n";
 
-
-		outputStream << currentIndent << "<type>\n";
-		outputStream << currentIndentPlusOne << "<kind>derived</kind>\n";
-		outputStream << currentIndentPlusOne << "<declaration>\n";
-
-		Type*		currentBaseType = (Type*)this;
-		while( currentBaseType->kind() == Type::Kind::DERIVED )
 		{
-			outputStream << currentIndentPlusTwo << "<operator>" << CPPTypes[(int)currentBaseType->typeSpec()].label << "</operator>\n";
-			currentBaseType = (Type*)(&(((DerivedType*)currentBaseType)->baseType()));
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			outputStream << "<kind>derived</kind>\n";
+			outputStream << "<declaration>\n";
+
+			{
+				SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+				Type*		currentBaseType = (Type*)this;
+				while( currentBaseType->kind() == Type::Kind::DERIVED )
+				{
+					outputStream << "<operator>" << CPPTypes[(int)currentBaseType->typeSpec()].label << "</operator>\n";
+					currentBaseType = (Type*)(&(((DerivedType*)currentBaseType)->baseType()));
+				}
+
+				((Type*)currentBaseType)->toXML( outputStream, options );
+			}
+
+			outputStream << "</declaration>\n";
 		}
 
-		((Type*)currentBaseType)->toXML( outputStream, indentLevel + 2, options );
-		outputStream << currentIndentPlusOne << "</declaration>\n";
+		outputStream << "</type>\n";
 
-		outputStream << currentIndent << "</type>\n";
-
-		attributes().toXML( outputStream, indentLevel, options );
+		attributes().toXML( outputStream, options );
 
 
 		return( outputStream );
@@ -944,18 +950,18 @@ namespace CPPModel
 
 
 	std::ostream&	UnionType::toXML( std::ostream&				outputStream,
-									  int						indentLevel,
 									  SerializationOptions		options ) const
 	{
-		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		const std::string&		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+		outputStream << "<type>\n";
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
 
+			outputStream << "<kind>union</kind>\n";
+			outputStream << "<declaration>" << name().c_str() << "</declaration>\n";
+		}
 
-		outputStream << currentIndent << "<type>\n";
-		outputStream << currentIndentPlusOne << "<kind>union</kind>\n";
-		outputStream << currentIndentPlusOne << "<declaration>" << name().c_str() << "</declaration>\n";
-		NamespaceScoped::toXML( outputStream, indentLevel, options );
-		outputStream << currentIndent << "</type>\n";
+		NamespaceScoped::toXML( outputStream, options );
+		outputStream << "</type>\n";
 
 		return( outputStream );
 	}
@@ -967,10 +973,9 @@ namespace CPPModel
 
 
 	std::ostream&		UID::toXML( std::ostream&			outputStream,
-						   	   	    int						indentLevel,
 						   	   	    SerializationOptions	options ) const
 	{
-		outputStream << XMLIndentTable::GetIndent( indentLevel ) << "<uid>" << m_uid << "</uid>\n";
+		outputStream << "<uid>" << m_uid << "</uid>\n";
 
 		return( outputStream );
 	}
@@ -983,42 +988,46 @@ namespace CPPModel
 
 
 	std::ostream&	UnionDefinition::toXML( std::ostream&			outputStream,
-					   	   	   	   	  	    int						indentLevel,
 					   	   	   	   	  	    SerializationOptions	options ) const
 	{
-		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
-		const std::string&		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );
+		outputStream << "<union>\n";
 
-		outputStream << currentIndent << "<union>\n";
-
-		SourceElement::toXML( outputStream, indentLevel + 1, options );
-		NamespaceScoped::toXML( outputStream, indentLevel + 1, options );
-		attributes().toXML( outputStream, indentLevel + 1, options );
-
-		outputStream << currentIndentPlusOne << "<members>\n";
-		for( const UnionMember& itrMember : members() )
 		{
-			itrMember.toXML( outputStream, indentLevel + 2, options );
-		}
-		outputStream << currentIndentPlusOne << "</members>\n";
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
 
-		outputStream << currentIndent << "</union>\n";;
+			SourceElement::toXML( outputStream, options );
+			NamespaceScoped::toXML( outputStream, options );
+			attributes().toXML( outputStream, options );
+
+			outputStream << "<members>\n";
+			for( const UnionMember& itrMember : members() )
+			{
+				SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+				itrMember.toXML( outputStream, options );
+			}
+			outputStream << "</members>\n";
+		}
+
+		outputStream << "</union>\n";;
 
 		return( outputStream );
 	}
 
 
 	std::ostream&	UnionMember::toXML( std::ostream&			outputStream,
-					   	   	   	   	  	int						indentLevel,
 					   	   	   	   	  	SerializationOptions	options ) const
 	{
-		const std::string&		currentIndent = XMLIndentTable::GetIndent( indentLevel );
+		outputStream << "<member>\n";
 
-		outputStream << currentIndent << "<member>\n";
-		NamedEntity::toXML( outputStream, indentLevel + 1, options );
-		SourceLocation::toXML( outputStream, indentLevel + 1, options );
-		type().toXML( outputStream, indentLevel + 1, options );
-		outputStream << currentIndent << "</member>\n";
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			NamedEntity::toXML( outputStream, options );
+			SourceLocation::toXML( outputStream, options );
+			type().toXML( outputStream, options );
+		}
+
+		outputStream << "</member>\n";
 
 		return( outputStream );
 	}

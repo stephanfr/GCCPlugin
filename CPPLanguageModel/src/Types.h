@@ -142,7 +142,6 @@ namespace CPPModel
 
 
 		virtual std::ostream&	toXML( std::ostream&			outputStream,
-							   	   	   int						indentLevel,
 							   	   	   SerializationOptions		options ) const = 0;
 
 
@@ -175,7 +174,6 @@ namespace CPPModel
 		}
 
 		std::ostream&	toXML( std::ostream&			outputStream,
-							   int						indentLevel,
 							   SerializationOptions		options ) const;
 	};
 
@@ -208,7 +206,6 @@ namespace CPPModel
 
 
 		std::ostream&	toXML( std::ostream&			outputStream,
-							   int						indentLevel,
 							   SerializationOptions		options ) const;
 	};
 
@@ -258,7 +255,6 @@ namespace CPPModel
 
 
 		std::ostream&	toXML( std::ostream&			outputStream,
-							   int						indentLevel,
 							   SerializationOptions		options ) const;
 	};
 
@@ -297,7 +293,6 @@ namespace CPPModel
 		}
 
 		std::ostream&	toXML( std::ostream&			outputStream,
-							   int						indentLevel,
 							   SerializationOptions		options ) const;
 
 	private :
@@ -345,7 +340,6 @@ namespace CPPModel
 
 
 		std::ostream&	toXML( std::ostream&			outputStream,
-							   int						indentLevel,
 							   SerializationOptions		options ) const;
 	};
 

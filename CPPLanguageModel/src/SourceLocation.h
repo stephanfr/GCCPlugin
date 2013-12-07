@@ -92,7 +92,6 @@ namespace CPPModel
 		//	Implementation of XMLSerializable virtual method
 
 		virtual std::ostream&	toXML( std::ostream&			outputStream,
-							   	   	   int						indentLevel,
 							   	   	   SerializationOptions		options ) const;
 
 	private :

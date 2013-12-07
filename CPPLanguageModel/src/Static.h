@@ -42,7 +42,6 @@ namespace CPPModel
 
 
 		std::ostream&	toXML( std::ostream&			outputStream,
-							   int						indentLevel,
 							   SerializationOptions		options ) const;
 
 

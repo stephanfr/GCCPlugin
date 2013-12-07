@@ -143,7 +143,6 @@ namespace CPPModel
 		}
 
 		virtual std::ostream&	toXML( std::ostream&			outputStream,
-									   int						indentLevel,
 									   SerializationOptions		options ) const;
 
 	private :
