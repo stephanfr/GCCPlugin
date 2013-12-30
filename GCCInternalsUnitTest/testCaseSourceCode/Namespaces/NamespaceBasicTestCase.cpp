@@ -9,7 +9,7 @@
 //		I expect that might change in the future.
 
 
-//#define _GLIBCXX_GTHREAD_USE_WEAK 0
+#define _GLIBCXX_GTHREAD_USE_WEAK 0
 
 
 
@@ -44,4 +44,9 @@ namespace NestedNamespaceBase
 }
 
 
+
+int main()
+{
+	return( 0 );
+}
 

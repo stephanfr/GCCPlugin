@@ -9,6 +9,7 @@
 
 
 #include "GCCInternalsTools.h"
+#include "DeclOrTypeBaseTree.h"
 
 #include "plugin.h"
 #include "tree-pass.h"
@@ -88,6 +89,120 @@ static void RegisterAttributes( void*		eventData,
 }
 
 
+std::unique_ptr<GCCInternalsTools::ASTDictionaryImpl>	astDict( new GCCInternalsTools::ASTDictionaryImpl() );
+
+
+
+static void DeclFinishedGateCallback( void*		eventData,
+		  	   	   	      	  	  	  void*		userData )
+{
+	//	If there has been an error, fall through and let the compiler handle it
+
+	if( errorcount || sorrycount )
+	{
+		return;
+	}
+
+	if( eventData == NULL )
+	{
+		return;
+	}
+
+//	std::cerr << "Processing File: " << main_input_filename << std::endl;
+
+//	tree type = (tree)eventData;
+//
+//	if( type == error_mark_node )
+//	{
+//		std::cerr << "Got an error mark node" << std::endl;
+//
+//		return;
+//	}
+
+
+//	std::unique_ptr<GCCInternalsTools::DeclOrTypeBaseTree>		typeAsTree = GCCInternalsTools::DeclOrTypeBaseTree::convert( type );
+
+//	const char *type_name;
+//
+//	if (TREE_CODE (DECL_NAME (type)) == IDENTIFIER_NODE) {
+//			type_name = IDENTIFIER_POINTER (DECL_NAME (type));
+//		} else {
+//			type_name = IDENTIFIER_POINTER (DECL_NAME (TYPE_NAME (type)));
+//		}
+
+//	std::cerr << "Type: " << typeAsTree->identifier() << "    " << typeAsTree->uid().uidValue() << std::endl;
+
+
+	if( DECL_P( (tree)eventData ) )
+	{
+		if( TREE_CODE ((tree)eventData) == NAMESPACE_DECL )
+		{
+			std::cerr << "Found a Namespace" << std::endl;
+		}
+		else
+		{
+			GCCInternalsTools::DecodeNodeResult			decodedNode = astDict->DecodeASTNode( (tree)eventData );
+
+			if( decodedNode.Succeeded() )
+			{
+				astDict->Insert( decodedNode.ReturnPtr().release() );
+			}
+		}
+	}
+}
+
+
+
+
+static void PreGenericizeGateCallback( void*		eventData,
+		  	   	   	      	  	  	   void*		userData )
+{
+	//	If there has been an error, fall through and let the compiler handle it
+
+	if( errorcount || sorrycount )
+	{
+		return;
+	}
+
+	if( eventData == NULL )
+	{
+		return;
+	}
+
+//	std::cerr << "Processing File: " << main_input_filename << std::endl;
+
+//	tree type = (tree)eventData;
+//
+//	if( type == error_mark_node )
+//	{
+//		std::cerr << "Got an error mark node" << std::endl;
+//
+//		return;
+//	}
+
+
+//	std::unique_ptr<GCCInternalsTools::DeclOrTypeBaseTree>		typeAsTree = GCCInternalsTools::DeclOrTypeBaseTree::convert( type );
+
+//	const char *type_name;
+//
+//	if (TREE_CODE (DECL_NAME (type)) == IDENTIFIER_NODE) {
+//			type_name = IDENTIFIER_POINTER (DECL_NAME (type));
+//		} else {
+//			type_name = IDENTIFIER_POINTER (DECL_NAME (TYPE_NAME (type)));
+//		}
+
+//	std::cerr << "Type: " << typeAsTree->identifier() << "    " << typeAsTree->uid().uidValue() << std::endl;
+
+
+	GCCInternalsTools::DecodeNodeResult			decodedNode = astDict->DecodeASTNode( (tree)eventData );
+
+	if( decodedNode.Succeeded() )
+	{
+		astDict->Insert( decodedNode.ReturnPtr().release() );
+	}
+}
+
+
 
 static void GateCallback( void*		eventData,
 		  	   	   	      void*		userData )
@@ -99,16 +214,45 @@ static void GateCallback( void*		eventData,
 		return;
 	}
 
+//	if( eventData == NULL )
+//	{
+//		return;
+//	}
+
 	std::cerr << "Processing File: " << main_input_filename << std::endl;
+
+	tree type = (tree)eventData;
+
+	if( type == error_mark_node )
+	{
+		std::cerr << "Got an error mark node" << std::endl;
+
+		return;
+	}
+
+
+//	std::unique_ptr<GCCInternalsTools::DeclOrTypeBaseTree>		typeAsTree = GCCInternalsTools::DeclOrTypeBaseTree::convert( type );
+
+//	const char *type_name;
+//
+//	if (TREE_CODE (DECL_NAME (type)) == IDENTIFIER_NODE) {
+//			type_name = IDENTIFIER_POINTER (DECL_NAME (type));
+//		} else {
+//			type_name = IDENTIFIER_POINTER (DECL_NAME (TYPE_NAME (type)));
+//		}
+
+//	std::cerr << "Type: " << typeAsTree->identifier() << "    " << typeAsTree->uid().uidValue() << std::endl;
 
 	std::ofstream		resultsFile;
 
 	resultsFile.open( outputFilename );
 
 
-	std::shared_ptr<GCCInternalsTools::ASTDictionaryImpl>	astDict( new GCCInternalsTools::ASTDictionaryImpl() );
+//	std::shared_ptr<GCCInternalsTools::ASTDictionaryImpl>	astDict( new GCCInternalsTools::ASTDictionaryImpl() );
 
-	astDict->Build();
+//	astDict->Build();
+
+	astDict->FixupNamespaceTree();
 
 	for( EntryPointRecord currentEntryPoint : entryPointsToCall )
 	{
@@ -257,9 +401,13 @@ int plugin_init( plugin_name_args*		info,
 
 
 
-	register_callback( info->base_name, PLUGIN_ATTRIBUTES, &RegisterAttributes, NULL );
+//	register_callback( info->base_name, PLUGIN_ATTRIBUTES, &RegisterAttributes, NULL );
 
-	register_callback( info->base_name, PLUGIN_ALL_IPA_PASSES_START, &GateCallback, NULL );
+//	register_callback( info->base_name, PLUGIN_FINISH_DECL, &DeclFinishedGateCallback, NULL );
+
+//	register_callback( info->base_name, PLUGIN_PRE_GENERICIZE, &PreGenericizeGateCallback, NULL );
+
+	register_callback( info->base_name, PLUGIN_FINISH_UNIT, &GateCallback, NULL );
 
 	std::cerr << "Plugin Initialized, attribute registered" << std::endl;
 

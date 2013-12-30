@@ -17,6 +17,7 @@ Contributors:
 
 #include "ListAliases.h"
 
+#include "Constants.h"
 #include "CompilerSpecific.h"
 #include "UID.h"
 #include "SourceElement.h"
@@ -26,8 +27,6 @@ Contributors:
 
 namespace CPPModel
 {
-	const std::string		SCOPE_RESOLUTION_OPERATOR = "::";
-	const std::string		STD_NAMESPACE_LABEL = "std::";
 
 
 

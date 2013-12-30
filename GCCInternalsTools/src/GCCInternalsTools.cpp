@@ -16,6 +16,7 @@ Contributors:
 #include "ConstantTree.h"
 #include "IdentifierTree.h"
 #include "DeclTree.h"
+#include "NamespaceTree.h"
 #include "AttributeParser.h"
 
 
@@ -250,6 +251,7 @@ namespace GCCInternalsTools
 	}
 
 
+
 	CPPModel::ConstListPtr<CPPModel::BaseClassIdentifier>		GetBaseClasses( const DictionaryClassEntryImpl&		dictionaryEntry,
 																				const CPPModel::ParseOptions&		options )
 	{
@@ -274,7 +276,7 @@ namespace GCCInternalsTools
 
 				const std::string 	baseClassName = DeclTree( TYPE_NAME( TYPE_MAIN_VARIANT( BINFO_TYPE( currentBaseClass )))).identifier();
 
-				std::string			baseNamespace = TypeTree( TYPE_MAIN_VARIANT( BINFO_TYPE( currentBaseClass )) ).enclosingNamespace();
+				std::string			baseNamespace = TypeTree( TYPE_MAIN_VARIANT( BINFO_TYPE( currentBaseClass )) ).fullyQualifiedNamespace().asString();
 //	TODO lookup base class by GUID and add namespace
 				bool				isVirtual( BINFO_VIRTUAL_P( currentBaseClass ));
 
@@ -297,8 +299,8 @@ namespace GCCInternalsTools
 	}
 
 
-	CPPModel::ConstListPtr<CPPModel::FriendIdentifier>			GetFriends( const DictionaryClassEntryImpl&		dictionaryEntry,
-																			const CPPModel::ParseOptions&		options )
+	CPPModel::ConstListPtr<CPPModel::FriendIdentifier>			GetFriends( const DictionaryClassEntryImpl&			dictionaryEntry,
+																			const CPPModel::ParseOptions&			options )
 	{
 		CPPModel::ListPtr<CPPModel::FriendIdentifier>		friendList( new boost::ptr_list<CPPModel::FriendIdentifier>() );
 
@@ -344,9 +346,9 @@ namespace GCCInternalsTools
 	}
 
 
-	CPPModel::ConstListPtr<CPPModel::UnionMember>		GetUnionMembers( const tree&						treeNode,
-												 	 	 	 	 	 	 const CPPModel::ASTDictionary&		dictionary,
-												 	 	 	 	 	 	 const CPPModel::ParseOptions&		options )
+	CPPModel::ConstListPtr<CPPModel::UnionMember>				GetUnionMembers( const tree&						treeNode,
+																				 const CPPModel::ASTDictionary&		dictionary,
+																				 const CPPModel::ParseOptions&		options )
 	{
 		CPPModel::ListPtr<CPPModel::UnionMember>		memberList( new boost::ptr_list<CPPModel::UnionMember>() );
 
@@ -388,9 +390,8 @@ namespace GCCInternalsTools
 	}
 
 
-
-	CPPModel::ConstListPtr<CPPModel::FieldDeclaration>		GetFields( const DictionaryClassEntryImpl&		dictionaryEntry,
-															   	   	   const CPPModel::ParseOptions&		options )
+	CPPModel::ConstListPtr<CPPModel::FieldDeclaration>			GetFields( const DictionaryClassEntryImpl&			dictionaryEntry,
+															   	   	   	   const CPPModel::ParseOptions&			options )
 	{
 		CPPModel::ListPtr<CPPModel::FieldDeclaration>		fieldList( new boost::ptr_list<CPPModel::FieldDeclaration>());
 
@@ -447,9 +448,8 @@ namespace GCCInternalsTools
 	}
 
 
-
-	CPPModel::ListPtr<CPPModel::FunctionParameter>			GetFunctionParameters( ParameterList						rawParameters,
-																				   const CPPModel::ASTDictionary&		dictionary )
+	CPPModel::ListPtr<CPPModel::FunctionParameter>				GetFunctionParameters( ParameterList						rawParameters,
+																				   	   const CPPModel::ASTDictionary&		dictionary )
 	{
 		CPPModel::ListPtr<CPPModel::FunctionParameter>	parameterList( new boost::ptr_list<CPPModel::FunctionParameter>() );
 
@@ -466,8 +466,8 @@ namespace GCCInternalsTools
 	}
 
 
-	CPPModel::ListPtr<CPPModel::TemplateParameter>			GetTemplateParameters( const tree&							functionTree,
-																				   const CPPModel::ASTDictionary&		dictionary )
+	CPPModel::ListPtr<CPPModel::TemplateParameter>				GetTemplateParameters( const tree&							functionTree,
+																				   	   const CPPModel::ASTDictionary&		dictionary )
 	{
 		CPPModel::ListPtr<CPPModel::TemplateParameter>	parameterList( new boost::ptr_list<CPPModel::TemplateParameter>() );
 
@@ -503,8 +503,8 @@ namespace GCCInternalsTools
 
 
 
-	CPPModel::ConstListPtr<CPPModel::MethodDeclaration>		GetMethods( const DictionaryClassEntryImpl&		dictionaryEntry,
-																		const CPPModel::ParseOptions&		options )
+	CPPModel::ConstListPtr<CPPModel::MethodDeclaration>			GetMethods( const DictionaryClassEntryImpl&		dictionaryEntry,
+																			const CPPModel::ParseOptions&		options )
 	{
 		CPPModel::ListPtr<CPPModel::MethodDeclaration>		methodList( new boost::ptr_list<CPPModel::MethodDeclaration>() );
 
@@ -754,315 +754,62 @@ namespace GCCInternalsTools
 
 
 
-	void 	ASTDictionaryImpl::DecodingPass( const tree&			namespaceNode,
-							  	  	  	  	 ITreeDecoder&			decoder )
+
+
+	ASTDictionaryImpl::ASTDictionaryImpl()
 	{
-		cp_binding_level*		currentLevel = NAMESPACE_LEVEL( namespaceNode );
-
-		DeclList				elements = currentLevel->names;
-
-		for( DeclList::iterator itrDecl = elements.begin(); itrDecl != elements.end(); ++itrDecl )
-		{
-			decoder.Decode( (tree&)itrDecl, *this );
-		}
-
-		NamespaceList	nestedNamespaces = currentLevel->namespaces;
-
-		for( NamespaceList::iterator itrNested = nestedNamespaces.begin(); itrNested != nestedNamespaces.end(); ++itrNested )
-		{
-			DecodingPass( (tree&)itrNested, decoder );
-		}
-	}
-
-
-
-
-
-	bool	ClassDecoder::Decode( const tree&					classTree,
-								  CPPModel::ASTDictionary&		dictionary ) const
-	{
-		{
-			const tree&		treeType = TREE_TYPE( classTree );
-
-			if( !treeType )
-			{
-				return( false );
-			}
-
-			//	Classes, structs and typedefed flavors of each are RECORD_TYPEs
-
-			if( !(( TREE_CODE( classTree ) == TYPE_DECL ) && ( TREE_CODE( treeType ) == RECORD_TYPE ) ))
-			{
-				return( false );
-			}
-		}
-
-		const CPPModel::SourceLocation	sourceLocation = DeclTree( classTree ).sourceLocation();
-		const TypeTree					typeDeclared = TypeTree( TREE_TYPE( classTree ));
-
-		std::string						className = typeDeclared.identifier();
-
-		CPPModel::TypeSpecifier	typeSpec = typeDeclared.typeSpecifier();
-
-		if( CPPModel::CPPTypes[(int)typeSpec].classification == CPPModel::TypeInfo::Classification::CLASS )
-		{
-			if( dictionary.UIDIdx().find( typeDeclared.uid() ) == dictionary.UIDIdx().end() )
-			{
-				std::string			scope = typeDeclared.enclosingNamespace();
-
-				const CPPModel::Namespace*		namespaceScope;
-
-				dictionary.GetNamespace( scope, namespaceScope );
-
-				dictionary.Insert( new DictionaryClassEntryImpl( dictionary,
-																 typeDeclared.uid(),
-																 className,
-																 *namespaceScope,
-																 sourceLocation,
-																 DeclTree( classTree ).compilerSpecificFlags(),
-																 GetAttributes( PurposeValueList( TYPE_ATTRIBUTES( (const tree&)typeDeclared ) )),
-																 typeSpec,
-																 typeDeclared ));
-			}
-		}
-
-		//	We decoded the class, return true
-
-		return( true );
-	}
-
-
-
-
-
-	bool	UnionDecoder::Decode( const tree&					unionNode,
-								  CPPModel::ASTDictionary&		dictionary ) const
-	{
-		const tree&		treeType = TREE_TYPE( unionNode );
-
-		if( !treeType )
-		{
-			return( false );
-		}
-
-		if( !(( TREE_CODE( unionNode ) == TYPE_DECL ) && ( TREE_CODE( treeType ) == UNION_TYPE ) ))
-		{
-			return( false );
-		}
-
-
-		DeclTree							unionTree( unionNode );
-
-		CPPModel::TypeSpecifier		typeSpec = unionTree.typeSpecifier();
-
-		const CPPModel::UID					unionUID = unionTree.uid();
-
-		if( CPPModel::CPPTypes[(int)typeSpec].classification == CPPModel::TypeInfo::Classification::UNION )
-		{
-			if( dictionary.UIDIdx().find( unionUID ) == dictionary.UIDIdx().end() )
-			{
-				const CPPModel::Namespace*		namespaceScope;
-
-				dictionary.GetNamespace( unionTree.enclosingNamespace(), namespaceScope );
-
-				dictionary.Insert(  new DictionaryUnionEntryImpl( dictionary,
-																  unionUID,
-																  unionTree.identifier(),
-																  *namespaceScope,
-																  unionTree.sourceLocation(),
-																  unionTree.compilerSpecificFlags(),
-																  unionTree.treeType().attributes(),
-																  typeSpec,
-																  unionNode ));
-			}
-		}
-
-		return( true );
-	}
-
-
-
-
-
-	bool	FunctionDecoder::Decode( const tree&					functionNode,
-  	  	  	    					 CPPModel::ASTDictionary&		dictionary ) const
-	{
-		if( !( TREE_CODE( (const tree&)functionNode ) == FUNCTION_DECL ))
-		{
-			return( false );
-		}
-
-		//	We have a DECL_TREE
-
-		DeclTree			functionTree( functionNode );
-
-		if( functionTree.isArtificial() || functionTree.isBuiltIn() )
-		{
-			return( false );
-		}
-
-//		if( !options.includeClonedFunctions && DECL_CLONED_FUNCTION_P( (const tree&)currentMethod ) )
-//		{
-//			continue;
-//		}
-
-		CPPModel::TypeSpecifier		typeSpec = functionTree.typeSpecifier();
-
-		const CPPModel::UID					functionUID = functionTree.uid();
-
-		//	 Special case here for function return types.  If the DECL_RESULT for the tree is NULL,
-		//		then the function has been declared 'noreturn'.  Set the type spec accordingly.
-
-
-		tree								declResult = DECL_RESULT( functionNode );
-
-		CPPModel::TypeSpecifier		returnTypeSpec = declResult != NULL ? DeclTree( declResult ).typeSpecifier() : CPPModel::TypeSpecifier::NO_RETURN;
-
-
-		//	Make sure at a finer grained level that we have a function
-
-		if( CPPModel::CPPTypes[(int)typeSpec].classification == CPPModel::TypeInfo::Classification::FUNCTION )
-		{
-			if( dictionary.UIDIdx().find( functionUID ) == dictionary.UIDIdx().end() )
-			{
-				const CPPModel::Namespace*		namespaceScope;
-
-				dictionary.GetNamespace( functionTree.enclosingNamespace(), namespaceScope );
-
-				dictionary.Insert(  new DictionaryFunctionEntryImpl( dictionary,
-																	 functionUID,
-																	 functionTree.identifier(),
-																	 *namespaceScope,
-																	 functionTree.sourceLocation(),
-																	 functionTree.compilerSpecificFlags(),
-																	 functionTree.attributes(),
-																	 returnTypeSpec,
-																	 DECL_HIDDEN_FRIEND_P( functionNode ),
-																	 functionNode ));
-			}
-		}
-
-		//	Return success
-
-		return( true );
-	}
-
-
-
-
-	bool	GlobalVarDecoder::Decode( const tree&					globalVarNode,
-								  	  CPPModel::ASTDictionary&		dictionary ) const
-	{
-		//	Make sure we have a VAR_DECL node
-
-		if( TREE_CODE( globalVarNode ) != VAR_DECL )
-		{
-			return( false );
-		}
-
-		//	We have a DECL_TREE
-
-		DeclTree			globalVarTree( globalVarNode );
-
-		if( globalVarTree.isArtificial() )
-		{
-			return( false );
-		}
-
-		CPPModel::UID			globalVarUID = globalVarTree.uid();
-
-		if( dictionary.UIDIdx().find( globalVarUID ) == dictionary.UIDIdx().end() )
-		{
-			//	Build and insert the dictionary entry
-
-			const CPPModel::Namespace*		namespaceScope;
-
-			dictionary.GetNamespace( globalVarTree.enclosingNamespace(), namespaceScope );
-
-			dictionary.Insert( new DictionaryGlobalVarEntryImpl( dictionary,
-																 globalVarUID,
-																 globalVarTree.identifier(),
-																 *namespaceScope,
-																 TREE_STATIC( globalVarNode ) != 0,
-																 globalVarTree.sourceLocation(),
-																 globalVarTree.compilerSpecificFlags(),
-																 globalVarTree.attributes(),
-																 globalVarTree.typeSpecifier(),
-																 globalVarNode ));
-		}
-
-		//	Finished with success
-
-		return( true );
-	}
-
-
-	void	ASTDictionaryImpl::Build()
-	{
-		//	Start by building out the namespace map
-
-		std::function<void (const tree&, CPPModel::Namespace&)> 		recurseOnNamespace = [&]( const tree&				namespaceNode,
-																		  	  	  	  	  	  	  CPPModel::Namespace&		parentNamespace )
-		{
-			DeclTree		namespaceTree( namespaceNode );
-
-			CPPModel::ConstListPtr<CPPModel::Attribute>			noAttributes( CPPModel::Attributes::emptyList() );
-
-			CPPModel::Namespace*	currentNamespace = new NestedNamespaceImpl( namespaceTree.uid(),
-																				namespaceTree.identifier(),
-																				parentNamespace,
-																				namespaceTree.sourceLocation(),
-																				namespaceTree.compilerSpecificFlags(),
-																				noAttributes,
-																				namespaceNode );
-
-			AddNamespace( currentNamespace );
-
-			NamespaceList	nestedNamespaces = NAMESPACE_LEVEL( namespaceNode )->namespaces;
-
-			for( NamespaceList::iterator itrNested = nestedNamespaces.begin(); itrNested != nestedNamespaces.end(); ++itrNested )
-			{
-				recurseOnNamespace( (const tree&)itrNested, *currentNamespace );
-			}
-		};
-
+		//	Create the global namespace
 
 		CPPModel::Namespace*	globalNamespace = new GlobalNamespaceImpl();
 
 		AddNamespace( globalNamespace );
+	}
 
+
+
+
+	void	ASTDictionaryImpl::FixupNamespaceTree()
+	{
+		//	Start by building out the namespace map
+
+		std::function<void (const tree&, const CPPModel::Namespace&)> 		recurseOnNamespace = [&]( const tree&						namespaceNode,
+																		  	  	  	  	  	  	  	  const CPPModel::Namespace&		parentNamespace )
+		{
+//			DeclTree						namespaceTree( namespaceNode );
+
+			NamespaceTree					fqNamespace( namespaceNode );
+
+			std::string						fqNamespaceString = fqNamespace.asString();
+
+			if( !ContainsNamespace( fqNamespaceString ) )
+			{
+				AddFQNamespace( fqNamespace );
+			}
+
+			NamespaceList	nestedNamespaces = NAMESPACE_LEVEL( namespaceNode )->namespaces;
+
+			const CPPModel::Namespace*			newParentNamespace;
+
+			GetNamespace( fqNamespaceString, newParentNamespace );
+
+			for( NamespaceList::iterator itrNested = nestedNamespaces.begin(); itrNested != nestedNamespaces.end(); ++itrNested )
+			{
+				recurseOnNamespace( (const tree&)itrNested, *newParentNamespace );
+			}
+		};
 
 		NamespaceList	nestedNamespaces = NAMESPACE_LEVEL( global_namespace )->namespaces;
+
+		const CPPModel::Namespace*			globalNamespace;
+
+		GetNamespace( CPPModel::SCOPE_RESOLUTION_OPERATOR, globalNamespace );
+
 
 		for( NamespaceList::iterator itrNested = nestedNamespaces.begin(); itrNested != nestedNamespaces.end(); ++itrNested )
 		{
 			recurseOnNamespace( (const tree&)itrNested, *globalNamespace );
 		}
 
-
-		{
-			ClassDecoder		classDecoder;
-
-			DecodingPass( global_namespace, (ITreeDecoder&)classDecoder );
-		}
-
-		{
-			UnionDecoder		unionDecoder;
-
-			DecodingPass( global_namespace, (ITreeDecoder&)unionDecoder );
-		}
-
-		{
-			FunctionDecoder		functionDecoder;
-
-			DecodingPass( global_namespace, (ITreeDecoder&)functionDecoder );
-		}
-
-		{
-			GlobalVarDecoder	globalVarDecoder;
-
-			DecodingPass( global_namespace, (ITreeDecoder&)globalVarDecoder );
-		}
 	}
 
 
@@ -1083,6 +830,341 @@ namespace GCCInternalsTools
 
 		return( individualNamespaces );
 	}
+
+
+
+
+	void		ASTDictionaryImpl::AddFQNamespace( const NamespaceTree&			fqNamespace )
+	{
+
+		std::string						currentFQNamespaceString;
+
+		const CPPModel::Namespace*		parentNamespace;
+
+		GetNamespace( CPPModel::SCOPE_RESOLUTION_OPERATOR, parentNamespace );
+
+		//	Step through the namespace list from start to finish
+
+		for( const tree& currentNamespace : fqNamespace.nodes() )
+		{
+			if( currentNamespace == global_namespace )
+			{
+				continue;
+			}
+
+			currentFQNamespaceString += DeclTree( currentNamespace ).identifier() + CPPModel::SCOPE_RESOLUTION_OPERATOR;
+
+			if( !ContainsNamespace( currentFQNamespaceString ) )
+			{
+				DeclTree		namespaceTree( currentNamespace );
+
+				CPPModel::ConstListPtr<CPPModel::Attribute>			noAttributes( CPPModel::Attributes::emptyList() );
+
+				CPPModel::Namespace*	newNamespace = new NestedNamespaceImpl( namespaceTree.uid(),
+																				namespaceTree.identifier(),
+																				*parentNamespace,
+																				namespaceTree.sourceLocation(),
+																				namespaceTree.compilerSpecificFlags(),
+																				noAttributes,
+																				currentNamespace );
+
+				AddNamespace( newNamespace );
+			}
+
+			GetNamespace( currentFQNamespaceString, parentNamespace );
+		}
+	}
+
+
+
+	DecodeNodeResult			ASTDictionaryImpl::DecodeASTNode( const tree&					ASTNode )
+	{
+		const tree&		treeType = TREE_TYPE( ASTNode );
+
+		if( !treeType )
+		{
+			return( DecodeNodeResult::Failure( DecodeNodeResultCodes::NULL_NODE, "Node is NULL" ) );
+		}
+
+		//	Classes, structs and typedefed flavors of each are RECORD_TYPEs
+
+		if(( TREE_CODE( ASTNode ) == TYPE_DECL ) && ( TREE_CODE( treeType ) == RECORD_TYPE ))
+		{
+			return( DecodeClass( ASTNode ) );
+		}
+
+		//	Unions next
+
+		if(( TREE_CODE( ASTNode ) == TYPE_DECL ) && ( TREE_CODE( treeType ) == UNION_TYPE ))
+		{
+			return( DecodeUnion( ASTNode ) );
+		}
+
+		//	Global Variables
+
+		if( TREE_CODE( ASTNode ) == VAR_DECL )
+		{
+			return( DecodeGlobalVar( ASTNode ) );
+		}
+
+		//	Functions
+
+		if( TREE_CODE( (const tree&)ASTNode ) == FUNCTION_DECL )
+		{
+			return( DecodeFunction( ASTNode ) );
+		}
+
+
+		return( DecodeNodeResult::Failure( DecodeNodeResultCodes::UNRECOGNIZED_NODE_TYPE, "Unrecognized Node Type" ) );
+	}
+
+
+
+	DecodeNodeResult	ASTDictionaryImpl::DecodeClass( const tree&					classTree )
+	{
+		{
+			const tree&		treeType = TREE_TYPE( classTree );
+
+			if( !treeType )
+			{
+				return( DecodeNodeResult::Failure( DecodeNodeResultCodes::NULL_NODE, "Node is NULL" ) );
+			}
+
+			//	Classes, structs and typedefed flavors of each are RECORD_TYPEs
+
+			if( !(( TREE_CODE( classTree ) == TYPE_DECL ) && ( TREE_CODE( treeType ) == RECORD_TYPE ) ))
+			{
+				return( DecodeNodeResult::Failure( DecodeNodeResultCodes::NOT_A_CLASS, "Node is not a class" ) );
+			}
+		}
+
+		const CPPModel::SourceLocation	sourceLocation = DeclTree( classTree ).sourceLocation();
+		const TypeTree					typeDeclared = TypeTree( TREE_TYPE( classTree ));
+
+		std::string						className = typeDeclared.identifier();
+
+		CPPModel::TypeSpecifier	typeSpec = typeDeclared.typeSpecifier();
+
+		if( CPPModel::CPPTypes[(int)typeSpec].classification == CPPModel::TypeInfo::Classification::CLASS )
+		{
+			if( UIDIdx().find( typeDeclared.uid() ) == UIDIdx().end() )
+			{
+				std::string				scope = typeDeclared.fullyQualifiedNamespace().asString();
+
+//				if( !dictionary.ContainsNamespace( scope ) )
+//				{
+//					AddNamespace( scope, dictionary );
+//				}
+
+				const CPPModel::Namespace*		namespaceScope;
+
+				GetNamespace( scope, namespaceScope );
+
+				return DecodeNodeResult( std::unique_ptr<CPPModel::DictionaryEntry>(
+											new DictionaryClassEntryImpl( *this,
+																		  typeDeclared.uid(),
+																		  className,
+																		  *namespaceScope,
+																		  sourceLocation,
+																		  DeclTree( classTree ).compilerSpecificFlags(),
+																		  GetAttributes( PurposeValueList( TYPE_ATTRIBUTES( (const tree&)typeDeclared ) )),
+																		  typeSpec,
+																		  typeDeclared )));
+			}
+		}
+
+		//	We decoded the class, return true
+
+		return( DecodeNodeResult::Failure( DecodeNodeResultCodes::ERROR_DECODING_CLASS, "Error decoding class" ));
+	}
+
+
+
+	DecodeNodeResult	ASTDictionaryImpl::DecodeUnion( const tree&					unionNode )
+	{
+		const tree&		treeType = TREE_TYPE( unionNode );
+
+		if( !treeType )
+		{
+			return( DecodeNodeResult::Failure( DecodeNodeResultCodes::NULL_NODE, "Node is NULL" ) );
+		}
+
+		if( !(( TREE_CODE( unionNode ) == TYPE_DECL ) && ( TREE_CODE( treeType ) == UNION_TYPE ) ))
+		{
+			return( DecodeNodeResult::Failure( DecodeNodeResultCodes::NOT_A_UNION, "Node is not a union" ) );
+		}
+
+
+		DeclTree							unionTree( unionNode );
+
+		CPPModel::TypeSpecifier		typeSpec = unionTree.typeSpecifier();
+
+		const CPPModel::UID					unionUID = unionTree.uid();
+
+		if( CPPModel::CPPTypes[(int)typeSpec].classification == CPPModel::TypeInfo::Classification::UNION )
+		{
+			if( UIDIdx().find( unionUID ) == UIDIdx().end() )
+			{
+				std::string				scope = unionTree.fullyQualifiedNamespace().asString();
+
+//				if( !dictionary.ContainsNamespace( scope ) )
+//				{
+//					AddNamespace( scope, dictionary );
+//				}
+
+				const CPPModel::Namespace*		namespaceScope;
+
+				GetNamespace( scope, namespaceScope );
+
+				return DecodeNodeResult( std::unique_ptr<CPPModel::DictionaryEntry>(
+											new DictionaryUnionEntryImpl( *this,
+																		  unionUID,
+																		  unionTree.identifier(),
+																		  *namespaceScope,
+																		  unionTree.sourceLocation(),
+																		  unionTree.compilerSpecificFlags(),
+																		  unionTree.treeType().attributes(),
+																		  typeSpec,
+																		  unionNode )));
+			}
+		}
+
+		return( DecodeNodeResult::Failure( DecodeNodeResultCodes::ERROR_DECODING_UNION, "Error decoding union" ));
+	}
+
+
+
+	DecodeNodeResult		ASTDictionaryImpl::DecodeGlobalVar( const tree&					globalVarNode )
+	{
+		//	Make sure we have a VAR_DECL node
+
+		if( TREE_CODE( globalVarNode ) != VAR_DECL )
+		{
+			return( DecodeNodeResult::Failure( DecodeNodeResultCodes::NOT_A_GLOBAL_VARIABLE, "Node is not a global variable" ) );
+		}
+
+		//	We have a DECL_TREE
+
+		DeclTree			globalVarTree( globalVarNode );
+
+		if( globalVarTree.isArtificial() )
+		{
+			return( DecodeNodeResult::Failure( DecodeNodeResultCodes::GLOBAL_VARIABLE_IS_ARTIFICIAL, "Global variable is artificial" ) );
+		}
+
+		CPPModel::UID			globalVarUID = globalVarTree.uid();
+
+		if( UIDIdx().find( globalVarUID ) == UIDIdx().end() )
+		{
+			//	Build and insert the dictionary entry
+
+			NamespaceTree			fqNamespace = globalVarTree.fullyQualifiedNamespace();
+
+			std::string				fqNamespaceString = fqNamespace.asString();
+
+			if( !ContainsNamespace( fqNamespaceString ) )
+			{
+				AddFQNamespace( fqNamespace );
+			}
+
+			const CPPModel::Namespace*		namespaceScope;
+
+			GetNamespace( fqNamespaceString, namespaceScope );
+
+			return DecodeNodeResult( std::unique_ptr<CPPModel::DictionaryEntry>(
+										new DictionaryGlobalVarEntryImpl( *this,
+																		  globalVarUID,
+																		  globalVarTree.identifier(),
+																		  *namespaceScope,
+																		  TREE_STATIC( globalVarNode ) != 0,
+																		  globalVarTree.sourceLocation(),
+																		  globalVarTree.compilerSpecificFlags(),
+																		  globalVarTree.attributes(),
+																		  globalVarTree.typeSpecifier(),
+																		  globalVarNode )));
+		}
+
+		//	If we are here, something has gone wrong
+
+		return( DecodeNodeResult::Failure( DecodeNodeResultCodes::ERROR_DECODING_GLOBAL_VARIABLE, "Error decoding global variable" ));
+	}
+
+
+
+
+
+	DecodeNodeResult	ASTDictionaryImpl::DecodeFunction( const tree&					functionNode )
+	{
+		if( !( TREE_CODE( (const tree&)functionNode ) == FUNCTION_DECL ))
+		{
+			return( DecodeNodeResult::Failure( DecodeNodeResultCodes::NOT_A_FUNCTION, "Node is not a function" ) );
+		}
+
+		//	We have a DECL_TREE
+
+		DeclTree			functionTree( functionNode );
+
+		if( functionTree.isArtificial() || functionTree.isBuiltIn() )
+		{
+			return( DecodeNodeResult::Failure( DecodeNodeResultCodes::ARTIFICIAL_OR_BUILTIN_FUNCTION, "Function is artificial or built-in" ) );
+		}
+
+//		if( !options.includeClonedFunctions && DECL_CLONED_FUNCTION_P( (const tree&)currentMethod ) )
+//		{
+//			continue;
+//		}
+
+		CPPModel::TypeSpecifier			typeSpec = functionTree.typeSpecifier();
+
+		const CPPModel::UID				functionUID = functionTree.uid();
+
+		//	 Special case here for function return types.  If the DECL_RESULT for the tree is NULL,
+		//		then the function has been declared 'noreturn'.  Set the type spec accordingly.
+
+
+		tree							declResult = DECL_RESULT( functionNode );
+
+		CPPModel::TypeSpecifier			returnTypeSpec = declResult != NULL ? DeclTree( declResult ).typeSpecifier() : CPPModel::TypeSpecifier::NO_RETURN;
+
+
+		//	Make sure at a finer grained level that we have a function
+
+		if( CPPModel::CPPTypes[(int)typeSpec].classification == CPPModel::TypeInfo::Classification::FUNCTION )
+		{
+			if( UIDIdx().find( functionUID ) == UIDIdx().end() )
+			{
+				std::string				scope = functionTree.fullyQualifiedNamespace().asString();
+
+//				if( !dictionary.ContainsNamespace( scope ) )
+//				{
+//					AddNamespace( scope, dictionary );
+//				}
+
+				const CPPModel::Namespace*		namespaceScope;
+
+				GetNamespace( functionTree.fullyQualifiedNamespace().asString(), namespaceScope );
+
+				return DecodeNodeResult( std::unique_ptr<CPPModel::DictionaryEntry>(
+											new DictionaryFunctionEntryImpl( *this,
+																			 functionUID,
+																			 functionTree.identifier(),
+																			 *namespaceScope,
+																			 functionTree.sourceLocation(),
+																			 functionTree.compilerSpecificFlags(),
+																			 functionTree.attributes(),
+																			 returnTypeSpec,
+																			 DECL_HIDDEN_FRIEND_P( functionNode ),
+																			 functionNode )));
+			}
+		}
+
+		//	Return success
+
+		return( DecodeNodeResult::Failure( DecodeNodeResultCodes::ERROR_DECODING_FUNCTION, "Error decoding function" ) );
+	}
+
+
+
 
 
 
@@ -1211,7 +1293,7 @@ namespace GCCInternalsTools
 
 		//	TODO fix root namespace
 
-		GCCInternalsTools::GlobalVarDecoder().Decode( globalDeclaration, *this );
+		DecodeGlobalVar( globalDeclaration );
 
 		//	If we are down here, all went well so return SUCCESS
 

@@ -117,7 +117,7 @@ namespace GCCInternalsTools
 		}
 
 
-		const std::string								enclosingNamespace() const;
+		virtual const NamespaceTree						fullyQualifiedNamespace() const;
 
 
 		CPPModel::TypeSpecifier							typeSpecifier() const

@@ -21,6 +21,7 @@ Contributors:
 #include "cp/cp-tree.h"
 
 #include "DeclTree.h"
+#include "NamespaceTree.h"
 #include "AttributeParser.h"
 
 
@@ -36,6 +37,118 @@ namespace GCCInternalsTools
 	}
 
 
+	const NamespaceTree									DeclTree::fullyQualifiedNamespace() const
+	{
+		tree			namespaceNode;
+
+		//	Functions have to be handled distinctly from other declarations
+		//
+		//	Handle other declarations first
+
+		if( TREE_CODE( m_tree ) == RECORD_TYPE )
+		{
+			namespaceNode = CP_DECL_CONTEXT( TREE_TYPE( m_tree ) );
+		}
+		else
+		{
+			namespaceNode = DECL_CONTEXT( m_tree );
+		}
+
+		return( NamespaceTree( namespaceNode ) );
+
+		//	Functions have to be handled distinctly from Types
+/*
+		if( TREE_CODE( m_tree ) == RECORD_TYPE )
+		{
+			//	Types first, they are pretty straightforward.  Use CP_DECL_CONTEXT.
+
+			tree&			declType = TREE_TYPE( m_tree );
+
+			//	Namespaces can be aliased in the AST, make sure we get the original
+
+			tree&			startingScope = CP_DECL_CONTEXT( declType );
+
+			//	If this is the global namespace, return the scope resolution operator
+
+			if( startingScope == global_namespace )
+			{
+				namespaceNodes.push_back( global_namespace );
+			}
+			else if( DECL_NAMESPACE_STD_P( startingScope ))
+			{
+				namespaceNodes.push_back( startingScope );
+			}
+			else
+			{
+				//	We have to build the namespace context by context
+
+				for( tree& currentScope = startingScope; currentScope != global_namespace; currentScope = CP_DECL_CONTEXT( currentScope ) )
+				{
+					if( TREE_CODE( currentScope ) == RECORD_TYPE )
+					{
+						currentScope = TYPE_NAME( currentScope );
+					}
+
+					namespaceNodes.push_front( currentScope );
+				}
+			}
+		}
+		else
+		{
+			//	For functions, use DECL_CONTEXT.
+			//
+			//	Best I can tell, the DECL_CONTEXT for a function is a linked list which has the translation unit decl for the function
+			//		as the last element in the list.  If a function is globally scoped, then the context just points to the translation unit.
+			//		If the function is within a namespace, the namespace decl(s) will precede the translation unit decl.
+
+
+			tree&			functionContext = DECL_CONTEXT( m_tree );
+
+			if( functionContext == NULL_TREE )
+			{
+				namespaceNodes.push_back( global_namespace );
+			}
+			else
+			{
+				tree&			originalNamespace = ORIGINAL_NAMESPACE( functionContext );
+
+				//	If this is the global namespace, return the scope resolution operator
+
+				if( TREE_CODE( originalNamespace ) != NAMESPACE_DECL )
+				{
+					namespaceNodes.push_back( global_namespace );
+				}
+				else if( DECL_NAMESPACE_STD_P( originalNamespace ))
+				{
+					//	If this is the standard library namespace, then return that constant now
+
+					namespaceNodes.push_back( originalNamespace );
+				}
+				else if( TREE_CODE( originalNamespace ) == NAMESPACE_DECL )
+				{
+					//	Build the namespace up level by level.  For functions, if the original namespace is not
+					//		a namespace decl then we have the global namespace
+
+					for( tree& currentContext = originalNamespace; ( currentContext != NULL ) && ( TREE_CODE( currentContext ) == NAMESPACE_DECL ); currentContext = DECL_CONTEXT( currentContext ) )
+					{
+						namespaceNodes.push_front( currentContext );
+					}
+				}
+				else
+				{
+					namespaceNodes.push_back( global_namespace );
+				}
+			}
+		}
+
+		//	Return the namespace
+
+		return( FullyQualifiedNamespace( namespaceNodes ) );
+*/
+
+	}
+
+/*
 	const std::string									DeclTree::enclosingNamespace() const
 	{
 		std::string			declScope = "";
@@ -87,7 +200,14 @@ namespace GCCInternalsTools
 			//		If the function is within a namespace, the namespace decl(s) will precede the translation unit decl.
 
 
-			tree&			originalNamespace = ORIGINAL_NAMESPACE( DECL_CONTEXT( m_tree ) );
+			tree&			functionContext = DECL_CONTEXT( m_tree );
+
+			if( functionContext == NULL_TREE )
+			{
+				return( CPPModel::SCOPE_RESOLUTION_OPERATOR );
+			}
+
+			tree&			originalNamespace = ORIGINAL_NAMESPACE( functionContext );
 
 			//	If this is the global namespace, return the scope resolution operator
 
@@ -123,7 +243,7 @@ namespace GCCInternalsTools
 
 		return( declScope );
 	}
-
+*/
 }
 
 

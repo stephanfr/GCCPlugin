@@ -18,12 +18,13 @@ Contributors:
 
 extern "C"
 {
-	bool AddGlobalVarsTest( CPPModel::ASTDictionary*		astDictionary );
+	bool AddStringGlobalVarTest( CPPModel::ASTDictionary*				astDictionary );
+	bool	AddGlobalVarClassInstanceTest( CPPModel::ASTDictionary*		astDictionary );
 }
 
 
 
-bool	AddGlobalVarsTest( CPPModel::ASTDictionary*		astDictionary )
+bool	AddStringGlobalVarTest( CPPModel::ASTDictionary*		astDictionary )
 {
 	std::cerr << "In Extension" << std::endl;
 
@@ -45,9 +46,11 @@ bool	AddGlobalVarsTest( CPPModel::ASTDictionary*		astDictionary )
 		return( false );
 	}
 
-	//	Now, declare and create a global int
+	//	Create an empty attribute list
 
 	CPPModel::Attributes				emptyAttributeList;
+
+	//	Now, declare and create a global int
 
 	CPPModel::GlobalVarDeclaration		globalVarDec( "testVar",
 													  *testNamespace,
@@ -82,6 +85,60 @@ bool	AddGlobalVarsTest( CPPModel::ASTDictionary*		astDictionary )
 															stdStringEntry );
 
 	CPPModel::CreateGlobalVarResult		gvResult2 = astDictionary->CreateGlobalVar( globalStringVarDec );
+
+	//	Finished with success
+
+	return( true );
+};
+
+
+
+
+bool	AddGlobalVarClassInstanceTest( CPPModel::ASTDictionary*		astDictionary )
+{
+	std::cerr << "In Extension" << std::endl;
+
+	//	Start by creating a namespace for our new global
+
+	CPPModel::CreateNamespaceResult		cnResult = astDictionary->CreateNamespace( "TestCreatedNamespace::" );
+
+	if( !cnResult.Succeeded() )
+	{
+		std::cerr << "In AddGlobalVarsTest: Create TestCreatedNamesapce failed." << std::endl;
+		return( false );
+	}
+
+	const CPPModel::Namespace		*testNamespace;
+
+	if( !astDictionary->GetNamespace( "TestCreatedNamespace::", testNamespace ))
+	{
+		std::cerr << "In AddGlobalVarsTest: Get TestCreatedNamesapce failed." << std::endl;
+		return( false );
+	}
+
+	//	Create an empty attribute list
+
+	CPPModel::Attributes				emptyAttributeList;
+
+	//	Next for an std::string type
+
+	CPPModel::ASTDictionary::FQNameIndexConstIterator		itrClassType = astDictionary->FQNameIdx().find( "::CTestClass" );
+
+	if( itrClassType == astDictionary->FQNameIdx().end() )
+	{
+		std::cerr << "Could not find CTestClass type" << std::endl;
+		return( false );
+	}
+
+	const CPPModel::DictionaryClassEntry&			stdClassEntry = dynamic_cast<const CPPModel::DictionaryClassEntry&>( **itrClassType );
+
+	CPPModel::GlobalVarDeclaration		globalClassVarDec( std::string( "testCLassInstanceVar" ),
+															*testNamespace,
+															true,
+															emptyAttributeList,
+															stdClassEntry );
+
+	CPPModel::CreateGlobalVarResult		gvResult2 = astDictionary->CreateGlobalVar( globalClassVarDec );
 
 	//	Finished with success
 

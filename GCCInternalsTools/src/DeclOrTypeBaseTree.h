@@ -21,6 +21,7 @@ Contributors:
 
 typedef union tree_node *tree;
 
+
 namespace CPPModel
 {
 	enum class TypeSpecifier;
@@ -33,6 +34,8 @@ namespace CPPModel
 
 namespace GCCInternalsTools
 {
+
+	class NamespaceTree;
 
 
 	class DeclOrTypeBaseTree
@@ -66,9 +69,7 @@ namespace GCCInternalsTools
 
 		virtual const CPPModel::CompilerSpecific			compilerSpecificFlags() const = 0;
 
-		//	TODO Rename to NamespaceScopeFQName
-
-		virtual const std::string							enclosingNamespace() const = 0;
+		virtual const NamespaceTree							fullyQualifiedNamespace() const = 0;
 
 		virtual CPPModel::TypeSpecifier						typeSpecifier() const = 0;
 

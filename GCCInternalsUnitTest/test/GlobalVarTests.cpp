@@ -22,10 +22,15 @@ namespace
 		ForkGCCTestCase( "GlobalVars", "DerivedTypesTestCase", "namespaces=TestNamespace::" );
 		ForkGCCTestCase( "GlobalVars", "AttributesTestCase", "namespaces=TestNamespace::" );
 
-		ForkGCCTestCase( "GlobalVars",
-						 "CreateGlobalVarsTestCase",
-						 "namespaces=TestCreatedNamespace::,bob::",
-						 "test-extension=libTestExtensions.so:AddGlobalVarsTest" );
+//		ForkGCCTestCase( "GlobalVars",
+//						 "CreateGlobalVarsTestCase",
+//						 "namespaces=TestCreatedNamespace::",
+//						 "test-extension=libTestExtensions.so:AddStringGlobalVarTest" );
+
+//		ForkGCCTestCase( "GlobalVars",
+//						 "CreateGlobalVarsTestCase",
+//						 "namespaces=TestCreatedNamespace::,testJunk::",
+//						 "test-extension=libTestExtensions.so:AddGlobalVarClassInstanceTest" );
 	}
 }
 

@@ -21,7 +21,7 @@ cd temp
 if [ $# -eq 2 ]
 then
 
-    /usr/gcc-4.8.0/bin/g++-4.8.0 -S -std=c++11 \
+    /usr/gcc-4.8.0/bin/g++-4.8.0 -fdump-tree-gimple -std=c++11 \
 							     -fplugin=../../GCCInternalsUTFixture/Debug/libGCCInternalsUTFixture.so \
                                                              -fplugin-arg-libGCCInternalsUTFixture-output-filename=../results/$TEST_DIRECTORY/$TEST_NAME.xml \
                                                              -o $TEST_DIRECTORY_$TEST_NAME.junk \
@@ -30,7 +30,7 @@ then
 elif [ $# -eq 3 ]
 then
 
-    /usr/gcc-4.8.0/bin/g++-4.8.0 -S -std=c++11 \
+    /usr/gcc-4.8.0/bin/g++-4.8.0 -fdump-tree-gimple -std=c++11 \
 							     -fplugin=../../GCCInternalsUTFixture/Debug/libGCCInternalsUTFixture.so \
                                                              -fplugin-arg-libGCCInternalsUTFixture-output-filename=../results/$TEST_DIRECTORY/$TEST_NAME.xml \
                                                              -fplugin-arg-libGCCInternalsUTFixture-$3 \
@@ -40,7 +40,7 @@ then
 elif [ $# -eq 4 ]
 then
 
-    /usr/gcc-4.8.0/bin/g++-4.8.0 -S -std=c++11 \
+    /usr/gcc-4.8.0/bin/g++-4.8.0 -fdump-tree-gimple -std=c++11 \
 							     -fplugin=../../GCCInternalsUTFixture/Debug/libGCCInternalsUTFixture.so \
                                                              -fplugin-arg-libGCCInternalsUTFixture-output-filename=../results/$TEST_DIRECTORY/$TEST_NAME.xml \
                                                              -fplugin-arg-libGCCInternalsUTFixture-$3 \
@@ -51,7 +51,7 @@ then
 elif [ $# -eq 5 ]
 then
 
-    /usr/gcc-4.8.0/bin/g++-4.8.0 -S -std=c++11 \
+    /usr/gcc-4.8.0/bin/g++-4.8.0 -fdump-tree-gimple -std=c++11 \
 							     -fplugin=../../GCCInternalsUTFixture/Debug/libGCCInternalsUTFixture.so \
                                                              -fplugin-arg-libGCCInternalsUTFixture-output-filename=../results/$TEST_DIRECTORY/$TEST_NAME.xml \
                                                              -fplugin-arg-libGCCInternalsUTFixture-$3 \
@@ -64,7 +64,7 @@ fi
 
 cd ..
 
-/bin/rm -f ./temp/*.*
+# /bin/rm -f ./temp/*.*
 
 cmp -s ./results/$TEST_DIRECTORY/$TEST_NAME.xml ./expectedResults/$TEST_DIRECTORY/$TEST_NAME.xml
 

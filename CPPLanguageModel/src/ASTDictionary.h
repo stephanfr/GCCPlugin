@@ -470,8 +470,6 @@ namespace CPPModel
 
 
 
-		virtual void		Build() = 0;
-
 		virtual CreateNamespaceResult			CreateNamespace( const std::string&							namespaceToAdd ) = 0;
 
 		virtual CreateGlobalVarResult			CreateGlobalVar( const CPPModel::GlobalVarDeclaration&		globalDecl ) = 0;

@@ -25,6 +25,7 @@ Contributors:
 #include "TypeTree.h"
 
 #include "DeclTree.h"
+#include "NamespaceTree.h"
 #include "AttributeParser.h"
 
 
@@ -39,6 +40,50 @@ namespace GCCInternalsTools
 	}
 
 
+	const NamespaceTree			TypeTree::fullyQualifiedNamespace() const
+	{
+/*		std::list<tree>			namespaceNodes;
+
+		//	For types, we have to start with the CP_TYPE_CONTEXT, and then move over to the CP_DECL_CONTEXT
+		//		as we iterate over the nested contexts.  Also, namespaces can be aliased, make sure we have the original.
+
+		tree&			startingScope = ORIGINAL_NAMESPACE( CP_TYPE_CONTEXT( m_tree ));
+
+		//	If this is the global namespace, return the scope resolution operator
+
+		if( startingScope == global_namespace )
+		{
+			namespaceNodes.push_back( global_namespace );
+		}
+		else
+		{
+			//	We have to build out the full namespace context by context
+
+			for( tree& currentScope = startingScope; currentScope != global_namespace; currentScope = ORIGINAL_NAMESPACE( CP_DECL_CONTEXT( currentScope ) ))
+			{
+				//	We might be inside of a class or struct.  If so, that is the current scope level name.
+
+				if( TREE_CODE( currentScope ) == RECORD_TYPE )
+				{
+					namespaceNodes.push_front( TYPE_NAME( currentScope ) );
+				}
+				else
+				{
+					namespaceNodes.push_front( currentScope );
+				}
+
+			}
+		}
+
+		//	Return the full scope
+
+		return( namespaceNodes );
+*/
+
+		return( NamespaceTree( ORIGINAL_NAMESPACE( CP_TYPE_CONTEXT( m_tree )) ) );
+	}
+
+/*
 	const std::string			TypeTree::enclosingNamespace() const
 	{
 		//	For types, we have to start with the CP_TYPE_CONTEXT, and then move over to the CP_DECL_CONTEXT
@@ -76,6 +121,7 @@ namespace GCCInternalsTools
 
 		return( fullScope );
 	}
+*/
 
 
 	CPPModel::TypeSpecifier			TypeTree::typeSpecifier() const
@@ -217,7 +263,7 @@ namespace GCCInternalsTools
 			{
 				const CPPModel::UID typeUID = uid();
 
-				const std::string	fqName = enclosingNamespace() + identifier();
+//				const FullyQualifiedNamespace	fqName = fullyQualifiedNamespace() + identifier();
 
 				const CPPModel::ASTDictionary::UIDIndexConstIterator		entry = dictionary.UIDIdx().find( typeUID );
 
@@ -252,9 +298,9 @@ namespace GCCInternalsTools
 
 					const CPPModel::Namespace*		namespaceScope;
 
-					std::string			scope = enclosingNamespace();
+					std::string			scope = fullyQualifiedNamespace().asString();
 
-					dictionary.GetNamespace( enclosingNamespace(), namespaceScope );
+					dictionary.GetNamespace( fullyQualifiedNamespace().asString(), namespaceScope );
 
 					if( namespaceScope == NULL )
 					{
@@ -312,7 +358,7 @@ namespace GCCInternalsTools
 
 					const CPPModel::Namespace*		namespaceScope;
 
-					dictionary.GetNamespace( enclosingNamespace(), namespaceScope );
+					dictionary.GetNamespace( fullyQualifiedNamespace().asString(), namespaceScope );
 
 					returnValue.reset( new CPPModel::UnionType( currentTypeSpec,
 																convert( TYPE_NAME( m_tree ))->identifier(),

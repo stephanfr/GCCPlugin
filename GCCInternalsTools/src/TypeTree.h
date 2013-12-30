@@ -61,13 +61,13 @@ namespace GCCInternalsTools
 			return( CPPModel::UID( TYPE_UID( m_tree ), CPPModel::UID::UIDType::TYPE ) );
 		}
 
-		const CPPModel::CompilerSpecific			compilerSpecificFlags() const
+		const CPPModel::CompilerSpecific					compilerSpecificFlags() const
 		{
 			return( CPPModel::CompilerSpecific( false, TYPE_ARTIFICIAL( m_tree ) ) );
 		}
 
 
-		const std::string									enclosingNamespace() const;
+		virtual const NamespaceTree							fullyQualifiedNamespace() const;
 
 		std::unique_ptr<const CPPModel::Type>				type( const CPPModel::ASTDictionary&		dictionary ) const;
 

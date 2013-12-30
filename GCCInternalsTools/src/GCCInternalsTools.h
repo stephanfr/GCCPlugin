@@ -31,6 +31,11 @@ namespace GCCInternalsTools
 {
 
 
+//	Forward Declarations
+
+	class NamespaceTree;
+
+
 
 	class DictionaryTreeMixin
 	{
@@ -182,54 +187,23 @@ namespace GCCInternalsTools
 
 
 
-	class ITreeDecoder
-	{
-	public :
-
-		virtual ~ITreeDecoder()
-		{};
-
-		virtual bool		Decode( const tree&						treeNode,
-				  	  	  	  	    CPPModel::ASTDictionary&		dictionary ) const = 0;
-	};
 
 
+	enum class DecodeNodeResultCodes { SUCCESS,
+									   NULL_NODE,
+									   UNRECOGNIZED_NODE_TYPE,
+									   NOT_A_CLASS,
+									   ERROR_DECODING_CLASS,
+									   NOT_A_UNION,
+									   ERROR_DECODING_UNION,
+									   NOT_A_GLOBAL_VARIABLE,
+									   GLOBAL_VARIABLE_IS_ARTIFICIAL,
+									   ERROR_DECODING_GLOBAL_VARIABLE,
+									   NOT_A_FUNCTION,
+									   ARTIFICIAL_OR_BUILTIN_FUNCTION,
+									   ERROR_DECODING_FUNCTION };
 
-	class ClassDecoder : public ITreeDecoder
-	{
-	public :
-
-		bool		Decode( const tree&						treeNode,
-	  	  	  	    		CPPModel::ASTDictionary&		dictionary ) const;
-	};
-
-
-
-	class UnionDecoder : public ITreeDecoder
-	{
-	public :
-
-		bool		Decode( const tree&						treeNode,
-	  	  	  	    		CPPModel::ASTDictionary&		dictionary ) const;
-	};
-
-
-	class FunctionDecoder : public ITreeDecoder
-	{
-	public :
-
-		bool		Decode( const tree&						treeNode,
-	  	  	  	    		CPPModel::ASTDictionary&		dictionary ) const;
-	};
-
-
-	class GlobalVarDecoder : public ITreeDecoder
-	{
-	public :
-
-		bool		Decode( const tree&						treeNode,
-	  	  	  	    		CPPModel::ASTDictionary&		dictionary ) const;
-	};
+	typedef SEFUtility::ResultWithReturnPtr<DecodeNodeResultCodes, CPPModel::DictionaryEntry>		DecodeNodeResult;
 
 
 
@@ -237,14 +211,15 @@ namespace GCCInternalsTools
 	{
 	public :
 
-		ASTDictionaryImpl()
-		{}
+		ASTDictionaryImpl();
 
 		virtual ~ASTDictionaryImpl()
 		{}
 
 
-		virtual void		Build();
+		DecodeNodeResult								DecodeASTNode( const tree&									ASTNode );
+
+		void											FixupNamespaceTree();
 
 		virtual CPPModel::CreateNamespaceResult			CreateNamespace( const std::string&							namespaceToAdd );
 
@@ -253,10 +228,19 @@ namespace GCCInternalsTools
 	private :
 
 
-		void 		DecodingPass( const tree&			namespaceNode,
-								  ITreeDecoder&			decoder );
-
 		void		collectFunction( const tree&		currentDecl );
+
+		void							AddFQNamespace( const NamespaceTree&				fqNamespace );
+
+
+		DecodeNodeResult				DecodeClass( const tree&							classTree );
+
+		DecodeNodeResult				DecodeUnion( const tree&							unionNode );
+
+		DecodeNodeResult				DecodeGlobalVar( const tree&						globalVarNode );
+
+		DecodeNodeResult				DecodeFunction( const tree&							functionNode );
+
 	};
 
 
