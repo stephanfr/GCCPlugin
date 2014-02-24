@@ -30,6 +30,7 @@
 								<option id="gnu.cpp.compiler.so.debug.option.optimization.level.1793331028" name="Optimization Level" superClass="gnu.cpp.compiler.so.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.so.debug.option.debugging.level.875337514" name="Debug Level" superClass="gnu.cpp.compiler.so.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.default" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.include.paths.2091765490" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsTools}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CPPLanguageModel/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsTools/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Utility/src}&quot;"/>
@@ -45,7 +46,9 @@
 							<tool command="gcc" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GCCErrorParser" id="cdt.managedbuild.tool.gnu.c.compiler.so.debug.1451282966" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.so.debug">
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.so.debug.option.optimization.level.1385275664" name="Optimization Level" superClass="gnu.c.compiler.so.debug.option.optimization.level" valueType="enumerated"/>
 								<option id="gnu.c.compiler.so.debug.option.debugging.level.1845720202" name="Debug Level" superClass="gnu.c.compiler.so.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.include.paths.841524755" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths"/>
+								<option id="gnu.c.compiler.option.include.paths.841524755" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsTools}&quot;"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1634785189" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.so.debug.1514611048" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.so.debug">
@@ -54,12 +57,12 @@
 							<tool command="${GCC_PATH}" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GLDErrorParser" id="cdt.managedbuild.tool.gnu.cpp.linker.so.debug.781948616" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.so.debug">
 								<option defaultValue="true" id="gnu.cpp.link.so.debug.option.shared.1724855412" name="Shared (-shared)" superClass="gnu.cpp.link.so.debug.option.shared" valueType="boolean"/>
 								<option id="gnu.cpp.link.option.paths.193999228" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CPPLanguageModel/Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsTools/Debug}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CPPLanguageModel/Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Utility/Debug}&quot;"/>
 								</option>
 								<option id="gnu.cpp.link.option.libs.1179043650" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
-									<listOptionValue builtIn="false" value="GCCInternalsTools"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="GCCInternalsTools"/>
 									<listOptionValue builtIn="false" value="CPPLanguageModel"/>
 									<listOptionValue builtIn="false" value="Utility"/>
 								</option>
@@ -70,7 +73,9 @@
 								</inputType>
 							</tool>
 							<tool command="as" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GASErrorParser" id="cdt.managedbuild.tool.gnu.assembler.so.debug.1824356261" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.so.debug">
-								<option id="gnu.both.asm.option.include.paths.2044422584" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths"/>
+								<option id="gnu.both.asm.option.include.paths.2044422584" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsTools}&quot;"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.613977258" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 						</toolChain>
@@ -82,7 +87,13 @@
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings">
-				<externalSettings containerId="GCCInternalsTools;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier"/>
+				<externalSettings containerId="GCCInternalsTools;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+					<externalSetting>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/GCCInternalsTools"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/GCCInternalsTools/Debug"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="GCCInternalsTools" srcPrefixMapping="" srcRootPath=""/>
+					</externalSetting>
+				</externalSettings>
 			</storageModule>
 		</cconfiguration>
 		<cconfiguration id="cdt.managedbuild.config.gnu.so.release.146387369">

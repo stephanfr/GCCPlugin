@@ -20,6 +20,7 @@ Contributors:
 #include <boost/multi_index/identity.hpp>
 #include <boost/multi_index/ordered_index.hpp>
 #include <boost/multi_index/member.hpp>
+#include <boost/multi_index/composite_key.hpp>
 
 #include "ListAliases.h"
 
@@ -30,7 +31,7 @@ Contributors:
 #include "SourceLocation.h"
 #include "Namespace.h"
 #include "Types.h"
-#include "DeclarationBase.h"
+#include "Declarations.h"
 
 #include "GlobalVar.h"
 #include "Function.h"
@@ -391,11 +392,21 @@ namespace CPPModel
 
 	enum class CreateNamespaceResultCodes { SUCCESS, NAMESPACE_ALREADY_EXISTS };
 
-	typedef SEFUtility::Result<CreateNamespaceResultCodes>									CreateNamespaceResult;
+	typedef SEFUtility::Result<CreateNamespaceResultCodes>						CreateNamespaceResult;
 
-	enum class CreateGlobalVarResultCodes { SUCCESS, NAME_ALREADY_EXISTS };
+	enum class CreateGlobalVarResultCodes { SUCCESS,
+											UNRECOGNIZED_TYPE_TO_CREATE,
+											MISMATCH_OF_NHUMBER_OF_INITIAL_VALUES_AND_GLOBAL_VAR,
+											MISMATCH_OF_VAR_TYPE_AND_INITIAL_VALUE,
+											ERROR_ADDING_GLOBAL_TO_DICTIONARY,
+											NAME_ALREADY_EXISTS,
+											WRONG_FUNCTION_FOR_GLOBAL_CREATION,
+											UNABLE_TO_FIND_INITIALIZATION_INSERTION_POINT,
+											UNABLE_TO_FIND_CORRECT_CONSTRUCTOR,
+											INTERNAL_ERROR };
 
-	typedef SEFUtility::ResultWithReturnValue<CreateGlobalVarResultCodes, const UID>		CreateGlobalVarResult;
+	typedef SEFUtility::Result<CreateGlobalVarResultCodes>						CreateGlobalVarResult;
+
 
 
 	class ASTDictionary
@@ -424,12 +435,18 @@ namespace CPPModel
 
 	//	This may look a bit odd, but without the #define for BMI and the typedefs for the indices, the declaration for DictionaryType would be long and
 	//		indecipherable.  Also, the syntax checker in Eclipse has trouble digesting the whole thing when expressed as a single typedef.
+	//
+	//	The namespace index is non-unique so to insure ordering is consistent between runs, we will use a composite key of namespace and entry name.
+	//		Source Location is also non-unique but I don't think ordering there is as critical.
+
 
 	#define BMI boost::multi_index
 
 		typedef BMI::ordered_unique< BMI::tag<Indices::Identity>, BMI::identity<DictionaryEntry> >																		__Identity__;
 		typedef BMI::ordered_unique< BMI::tag<Indices::UID>, BMI::member<DictionaryEntry, const CPPModel::UID, &DictionaryEntry::m_uid> > 								__UID__;
-		typedef BMI::ordered_non_unique< BMI::tag<Indices::Namespace>, BMI::member<DictionaryEntry, const std::string, &DictionaryEntry::m_enclosingNamespaceFQName> >	__Namespace__;
+		typedef BMI::ordered_non_unique< BMI::tag<Indices::Namespace>, BMI::composite_key< DictionaryEntry,
+																		BMI::member<DictionaryEntry, const std::string, &DictionaryEntry::m_enclosingNamespaceFQName>,
+																		BMI::member<DictionaryEntry, const std::string, &DictionaryEntry::m_name> > >					__Namespace__;
 		typedef BMI::ordered_unique< BMI::tag<Indices::FQName>, BMI::member<DictionaryEntry, const std::string, &DictionaryEntry::m_fqName> >							__FQName__;
 		typedef BMI::ordered_non_unique< BMI::tag<Indices::Location>, BMI::member<DictionaryEntry, const SourceLocation, &DictionaryEntry::m_sourceLocation> >			__SourceLocation__;
 
@@ -469,10 +486,9 @@ namespace CPPModel
 
 
 
+		virtual CreateNamespaceResult			CreateNamespace( const std::string&								namespaceToAdd ) = 0;
 
-		virtual CreateNamespaceResult			CreateNamespace( const std::string&							namespaceToAdd ) = 0;
-
-		virtual CreateGlobalVarResult			CreateGlobalVar( const CPPModel::GlobalVarDeclaration&		globalDecl ) = 0;
+		virtual CreateGlobalVarResult			CreateGlobalVar( const CPPModel::GlobalVarDeclaration&			globalDecl ) = 0;
 
 
 
@@ -545,6 +561,24 @@ namespace CPPModel
 		}
 
 
+
+
+
+		enum class XMLOutputOptions : std::int64_t { NONE = 0, PREPEND_NAMESPACES = 1 };
+
+
+
+		void			DumpASTXMLByNamespaces( std::ostream&					outputStream,
+				  	  	  	  	  	  	  	  	std::list<std::string>&			namespacesToDump,
+				  	  	  	  	  	  	  	  	XMLOutputOptions				outputOptions = XMLOutputOptions::NONE ) const;
+
+		void			DumpDictionaryXMLByNamespace( std::ostream&				outputStream,
+													  const std::string&		namespaceToDump ) const;
+
+		void			DumpElementsXMLByNamespace( std::ostream&				outputStream,
+				  	  	  	  	  	  	  	  	   const std::string&			namespaceToDump ) const;
+
+		void			DumpNamespaces( std::ostream&							outputStream ) const;
 
 
 	protected :

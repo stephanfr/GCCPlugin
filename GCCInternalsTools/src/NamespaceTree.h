@@ -25,12 +25,11 @@
 namespace GCCInternalsTools
 {
 
-	class NamespaceTree : public DeclTree
+	class NamespaceTree
 	{
 	public:
 
 		NamespaceTree( const tree&				namespaceNode )
-		: DeclTree( namespaceNode )
 		{
 			for( tree currentContext = (tree&)namespaceNode; ( currentContext != NULL ) && ( TREE_CODE( currentContext ) == NAMESPACE_DECL ) && ( currentContext != global_namespace ); currentContext = DECL_CONTEXT( currentContext ) )
 			{
@@ -44,7 +43,7 @@ namespace GCCInternalsTools
 		virtual ~NamespaceTree() {};
 
 
-		const std::list<tree>		nodes() const
+		const std::list<tree>&		nodes() const
 		{
 			return( m_namespaceNodes );
 		}

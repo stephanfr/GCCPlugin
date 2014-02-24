@@ -56,6 +56,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CPPLanguageModel/Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsTools/Debug}&quot;"/>
 								</option>
+								<option id="gnu.cpp.link.option.flags.2046232303" superClass="gnu.cpp.link.option.flags" value="-Wl,-z,defs" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1112984446" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>

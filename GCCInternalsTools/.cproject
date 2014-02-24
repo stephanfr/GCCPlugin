@@ -3,7 +3,13 @@
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="cdt.managedbuild.config.gnu.so.debug.1291728301">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.so.debug.1291728301" moduleId="org.eclipse.cdt.core.settings" name="Debug">
-				<externalSettings/>
+				<externalSettings>
+					<externalSetting>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/GCCInternalsTools"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/GCCInternalsTools/Debug"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="GCCInternalsTools" srcPrefixMapping="" srcRootPath=""/>
+					</externalSetting>
+				</externalSettings>
 				<extensions>
 					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
@@ -43,9 +49,7 @@
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.so.debug.option.optimization.level.1294388129" name="Optimization Level" superClass="gnu.c.compiler.so.debug.option.optimization.level" valueType="enumerated"/>
 								<option id="gnu.c.compiler.so.debug.option.debugging.level.2143444097" name="Debug Level" superClass="gnu.c.compiler.so.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.36335177" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsTools/CPPLanguageModel/src}&quot;"/>
 									<listOptionValue builtIn="false" value="/usr/gcc-4.8.0/lib/gcc/x86_64-linux-gnu/4.8.0/plugin/include"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsTools/CPPLanguageModel}&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.134245210" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__GXX_EXPERIMENTAL_CXX0X__"/>
@@ -80,7 +84,6 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src|ASTModifiers.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>

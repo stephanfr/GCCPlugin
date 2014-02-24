@@ -42,16 +42,14 @@ namespace GCCInternalsTools
 		tree			namespaceNode;
 
 		//	Functions have to be handled distinctly from other declarations
-		//
-		//	Handle other declarations first
 
-		if( TREE_CODE( m_tree ) == RECORD_TYPE )
+		if(( TREE_CODE( m_tree ) == FUNCTION_DECL ) || ( TREE_CODE( m_tree ) == VAR_DECL ))
 		{
-			namespaceNode = CP_DECL_CONTEXT( TREE_TYPE( m_tree ) );
+			namespaceNode = DECL_CONTEXT( m_tree );
 		}
 		else
 		{
-			namespaceNode = DECL_CONTEXT( m_tree );
+			namespaceNode = CP_DECL_CONTEXT( TREE_TYPE( m_tree ) );
 		}
 
 		return( NamespaceTree( namespaceNode ) );

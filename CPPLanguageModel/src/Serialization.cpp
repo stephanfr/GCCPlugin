@@ -526,7 +526,7 @@ namespace CPPModel
 	//	DeclarationType
 	//
 
-
+/*
 	std::ostream&	DeclarationType::toXML( std::ostream&			outputStream,
 									 	    SerializationOptions	options ) const
 	{
@@ -534,7 +534,7 @@ namespace CPPModel
 
 		return( outputStream );
 	}
-
+*/
 	//
 	//	Function
 	//
@@ -640,6 +640,180 @@ namespace CPPModel
 
 		return( outputStream );
 	}
+
+
+	std::ostream&	FundamentalGlobalVarDeclarationBase::toXML( std::ostream&				outputStream,
+												 	 	 	 	SerializationOptions		options ) const
+	{
+		outputStream << "<global_var_decl>\n";
+
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			NamedEntity::toXML( outputStream, options );
+			NamespaceScoped::toXML( outputStream, options );
+		//		type().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+			attributes().toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+		}
+
+		outputStream << "</global_var_decl>\n";
+
+		return( outputStream );
+	}
+
+
+
+	template<>
+	std::ostream&	BooleanGlobalVarDeclaration::toXML( std::ostream&				outputStream,
+												 	 	SerializationOptions		options ) const
+	{
+		outputStream << "<boolean_global_var_decl>\n";
+
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			NamedEntity::toXML( outputStream, options );
+			NamespaceScoped::toXML( outputStream, options );
+		//		type().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+			attributes().toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+		}
+
+		outputStream << "</boolean_global_var_decl>\n";
+
+		return( outputStream );
+	}
+
+	template<>
+	std::ostream&	CharGlobalVarDeclaration::toXML( std::ostream&				outputStream,
+												 	 SerializationOptions		options ) const
+	{
+		outputStream << "<boolean_global_var_decl>\n";
+
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			NamedEntity::toXML( outputStream, options );
+			NamespaceScoped::toXML( outputStream, options );
+		//		type().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+			attributes().toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+		}
+
+		outputStream << "</boolean_global_var_decl>\n";
+
+		return( outputStream );
+	}
+
+	template<>
+	std::ostream&	StringGlobalVarDeclaration::toXML( std::ostream&			outputStream,
+												 	   SerializationOptions		options ) const
+	{
+		outputStream << "<char_pointer_global_var_decl>\n";
+
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			NamedEntity::toXML( outputStream, options );
+			NamespaceScoped::toXML( outputStream, options );
+		//		type().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+			attributes().toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+		}
+
+		outputStream << "</char_pointer_global_var_decl>\n";
+
+		return( outputStream );
+	}
+
+	template<>
+	std::ostream&	IntGlobalVarDeclaration::toXML( std::ostream&				outputStream,
+												 	 SerializationOptions		options ) const
+	{
+		outputStream << "<int_global_var_decl>\n";
+
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			NamedEntity::toXML( outputStream, options );
+			NamespaceScoped::toXML( outputStream, options );
+		//		type().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+			attributes().toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+		}
+
+		outputStream << "</int_global_var_decl>\n";
+
+		return( outputStream );
+	}
+
+
+	template<>
+	std::ostream&	LongGlobalVarDeclaration::toXML( std::ostream&				outputStream,
+												 	 SerializationOptions		options ) const
+	{
+		outputStream << "<long_global_var_decl>\n";
+
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			NamedEntity::toXML( outputStream, options );
+			NamespaceScoped::toXML( outputStream, options );
+		//		type().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+			attributes().toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+		}
+
+		outputStream << "</long_global_var_decl>\n";
+
+		return( outputStream );
+	}
+
+	template<>
+	std::ostream&	FloatGlobalVarDeclaration::toXML( std::ostream&				outputStream,
+												 	 SerializationOptions		options ) const
+	{
+		outputStream << "<float_global_var_decl>\n";
+
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			NamedEntity::toXML( outputStream, options );
+			NamespaceScoped::toXML( outputStream, options );
+		//		type().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+			attributes().toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+		}
+
+		outputStream << "</float_global_var_decl>\n";
+
+		return( outputStream );
+	}
+
+
+	template<>
+	std::ostream&	DoubleGlobalVarDeclaration::toXML( std::ostream&				outputStream,
+												 	   SerializationOptions		options ) const
+	{
+		outputStream << "<double_global_var_decl>\n";
+
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			NamedEntity::toXML( outputStream, options );
+			NamespaceScoped::toXML( outputStream, options );
+		//		type().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+			attributes().toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+		}
+
+		outputStream << "</double_global_var_decl>\n";
+
+		return( outputStream );
+	}
+
+
 
 
 	std::ostream&	GlobalVarEntry::toXML( std::ostream&			outputStream,

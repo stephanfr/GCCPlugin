@@ -217,6 +217,8 @@ namespace GCCInternalsTools
 		{}
 
 
+		void											Build();
+
 		DecodeNodeResult								DecodeASTNode( const tree&									ASTNode );
 
 		void											FixupNamespaceTree();
@@ -228,18 +230,23 @@ namespace GCCInternalsTools
 	private :
 
 
-		void		collectFunction( const tree&		currentDecl );
+		void									collectFunction( const tree&		currentDecl );
 
-		void							AddFQNamespace( const NamespaceTree&				fqNamespace );
+		void									AddFQNamespace( const NamespaceTree&				fqNamespace );
 
 
-		DecodeNodeResult				DecodeClass( const tree&							classTree );
+		DecodeNodeResult						DecodeClass( const tree&							classTree );
 
-		DecodeNodeResult				DecodeUnion( const tree&							unionNode );
+		DecodeNodeResult						DecodeUnion( const tree&							unionNode );
 
-		DecodeNodeResult				DecodeGlobalVar( const tree&						globalVarNode );
+		DecodeNodeResult						DecodeGlobalVar( const tree&						globalVarNode );
 
-		DecodeNodeResult				DecodeFunction( const tree&							functionNode );
+		DecodeNodeResult						DecodeFunction( const tree&							functionNode );
+
+
+		CPPModel::CreateGlobalVarResult			CreateGlobalFundamentalTypeVar( const CPPModel::FundamentalGlobalVarDeclarationBase&			globalDecl );
+
+		CPPModel::CreateGlobalVarResult			CreateGlobalClassTypeVar( const CPPModel::ClassGlobalVarDeclaration&							globalDecl );
 
 	};
 

@@ -145,12 +145,17 @@ namespace GCCInternalsTools
 		}
 
 
-		iterator begin() const
+		bool		empty() const
+		{
+			return( m_begin == NULL_TREE );
+		}
+
+		iterator 	begin() const
 		{
 			return(  m_begin );
 		}
 
-		iterator end() const
+		iterator 	end() const
 		{
 			return( m_end );
 		}

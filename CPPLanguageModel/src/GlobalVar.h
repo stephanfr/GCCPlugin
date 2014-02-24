@@ -16,7 +16,6 @@ Contributors:
 #define GLOBALVAR_H_
 
 
-#include "DeclarationBase.h"
 #include "Static.h"
 #include "SourceElement.h"
 #include "Attribute.h"
@@ -24,50 +23,9 @@ Contributors:
 
 
 
+
 namespace CPPModel
 {
-
-
-	class GlobalVarDeclaration : public TypedDeclarationBase
-	{
-	public :
-
-		GlobalVarDeclaration() = delete;
-		GlobalVarDeclaration( GlobalVarDeclaration& ) = delete;
-		GlobalVarDeclaration( const GlobalVarDeclaration& ) = delete;
-
-		GlobalVarDeclaration( const std::string&			name,
-							  const Namespace&				namespaceScope,
-							  bool							isStatic,
-							  const Attributes&				attributes,
-							  std::unique_ptr<const Type>	varType )
-			: TypedDeclarationBase( name, namespaceScope, isStatic, attributes, std::move( varType ))
-		{}
-
-		GlobalVarDeclaration( const std::string&			name,
-							  const Namespace&				namespaceScope,
-							  bool							isStatic,
-							  const Attributes&				attributes,
-							  const DictionaryClassEntry&	classType )
-			: TypedDeclarationBase( name, namespaceScope, isStatic, attributes, classType )
-		{}
-
-		GlobalVarDeclaration( const std::string&			name,
-							  const Namespace&				namespaceScope,
-							  bool							isStatic,
-							  const Attributes&				attributes,
-							  const DictionaryUnionEntry&	unionType )
-			: TypedDeclarationBase( name, namespaceScope, isStatic, attributes, unionType )
-		{}
-
-		virtual ~GlobalVarDeclaration() {};
-
-
-
-		std::ostream&	toXML( std::ostream&			outputStream,
-							   SerializationOptions		options ) const;
-
-	};
 
 
 

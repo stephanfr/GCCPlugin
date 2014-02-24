@@ -47,8 +47,11 @@ namespace CPPModel
 		ARRAY,
 		UNION,
 		NULL_POINTER,		//	NULL_POINTER is the last GCC specific type - any after this are not present in GCC AST
-		NO_RETURN
+		NO_RETURN,
+		STRING				//	I added this one to ease parameters and declarations
 	};
+
+
 
 	struct TypeInfo
 	{
@@ -271,6 +274,13 @@ namespace CPPModel
 
 		DerivedType( TypeSpecifier					typeSpec,
 					 ConstListPtr<Attribute>&		attributes,
+					 std::unique_ptr<const Type>	baseType )
+			: Type( typeSpec, attributes ),
+			  m_baseType( std::move( baseType ))
+		{}
+
+		DerivedType( TypeSpecifier					typeSpec,
+					 const Attributes&				attributes,
 					 std::unique_ptr<const Type>	baseType )
 			: Type( typeSpec, attributes ),
 			  m_baseType( std::move( baseType ))

@@ -16,7 +16,7 @@ namespace TestNamespace
 {
 	static int		globalInt;
 
-	double			globaldoubleWithoutStaticKeyword;
+	double			globalDoubleWithoutStaticKeyword;
 }
 
 

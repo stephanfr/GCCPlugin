@@ -19,6 +19,15 @@ Contributors:
 #include "NamespaceTree.h"
 #include "AttributeParser.h"
 
+#include "gimple.h"
+
+#include "rtl.h"
+
+#include "real.h"
+#include "float.h"
+
+#include "gimple-pretty-print.h"
+
 
 
 
@@ -245,10 +254,99 @@ namespace GCCInternalsTools
 			case	CPPModel::TypeSpecifier::NO_RETURN :
 				returnValue = NULL;
 				break;
+
+			case	CPPModel::TypeSpecifier::STRING :
+				returnValue = build_pointer_type( signed_char_type_node );
+				break;
 		}
 
 		return( returnValue );
 	}
+
+
+
+	enum class ConvertParameterResultCodes { SUCCESS, UNSUPPORTED_TYPE };
+
+	typedef SEFUtility::ResultWithReturnValue<ConvertParameterResultCodes,tree>						ConvertParameterValueResult;
+
+
+	ConvertParameterValueResult			ConvertParameterValue( const CPPModel::ParameterValueBase&		value )
+	{
+
+		tree		returnValue;
+
+		switch( value.typeSpecifier() )
+		{
+			case CPPModel::TypeSpecifier::BOOLEAN :
+				returnValue = build_int_cst( boolean_type_node, dynamic_cast<const CPPModel::ParameterBooleanValue&>(value).value() );
+				break;
+
+			case CPPModel::TypeSpecifier::CHAR :
+				returnValue = build_int_cst( char_type_node, dynamic_cast<const CPPModel::ParameterCharValue&>(value).value() );
+				break;
+
+			case CPPModel::TypeSpecifier::INT :
+				returnValue = build_int_cst( integer_type_node, dynamic_cast<const CPPModel::ParameterIntValue&>(value).value() );
+				break;
+
+			case CPPModel::TypeSpecifier::LONG_INT :
+				returnValue = build_int_cst( long_integer_type_node, dynamic_cast<const CPPModel::ParameterLongValue&>(value).value() );
+				break;
+
+			case CPPModel::TypeSpecifier::FLOAT :
+			{
+				//	I don't care for the conversion technique of going to a string and then back into a real_value,
+				//		but I could find no other way to make the conversion for doubles so I replicated it here.
+
+				real_value		r;
+
+				char			buffer[1024];
+
+				sprintf( buffer, "%g", dynamic_cast<const CPPModel::ParameterFloatValue&>(value).value() );
+
+				real_from_string( &r, buffer );
+
+				returnValue = build_real( float_type_node, r );
+			}
+			break;
+
+			case CPPModel::TypeSpecifier::DOUBLE :
+			{
+				//	I could find no other way to convert a double to a real_value - except by going through a string conversion.
+
+				real_value		r;
+
+				char			buffer[1024];
+
+				sprintf( buffer, "%lg", dynamic_cast<const CPPModel::ParameterDoubleValue&>(value).value() );
+
+				real_from_string( &r, buffer );
+
+				returnValue = build_real( double_type_node, r );
+			}
+			break;
+
+			case CPPModel::TypeSpecifier::STRING :
+			{
+			    std::string		stringValue = dynamic_cast<const CPPModel::ParameterStringValue&>(value).value();
+
+			    tree			stringConstant = build_string_literal( stringValue.length() + 1, stringValue.c_str() + '\0' );
+
+			    TREE_STATIC( stringConstant ) = true;
+			    TREE_READONLY( stringConstant ) = true;
+
+				returnValue = stringConstant;
+			}
+			break;
+
+			default :
+				return( ConvertParameterValueResult::Failure( ConvertParameterResultCodes::UNSUPPORTED_TYPE, "Internal Error - Unsupported Type for Parameter Value Conversion" ));
+		}
+
+		return( ConvertParameterValueResult( returnValue ) );
+	}
+
+
 
 
 
@@ -775,8 +873,6 @@ namespace GCCInternalsTools
 		std::function<void (const tree&, const CPPModel::Namespace&)> 		recurseOnNamespace = [&]( const tree&						namespaceNode,
 																		  	  	  	  	  	  	  	  const CPPModel::Namespace&		parentNamespace )
 		{
-//			DeclTree						namespaceTree( namespaceNode );
-
 			NamespaceTree					fqNamespace( namespaceNode );
 
 			std::string						fqNamespaceString = fqNamespace.asString();
@@ -811,6 +907,66 @@ namespace GCCInternalsTools
 		}
 
 	}
+
+
+
+	void	ASTDictionaryImpl::Build()
+	{
+		//	Start by building out the namespace map
+
+		std::function<void (const tree&, const CPPModel::Namespace&)> 		recurseOnNamespace = [&]( const tree&						namespaceNode,
+																		  	  	  	  	  	  	  	  const CPPModel::Namespace&		parentNamespace )
+		{
+			NamespaceTree					fqNamespace( namespaceNode );
+
+			std::string						fqNamespaceString = fqNamespace.asString();
+
+			//	Add this namespace first
+
+			AddFQNamespace( fqNamespace );
+
+			//	Next, traverse all the declarations in the tree
+
+			DeclList		declsInNamespace = NAMESPACE_LEVEL( namespaceNode )->names;
+
+			for( DeclList::iterator itrDecl = declsInNamespace.begin(); itrDecl != declsInNamespace.end(); ++itrDecl )
+			{
+				GCCInternalsTools::DecodeNodeResult			decodedNode = DecodeASTNode( *itrDecl );
+
+				if( decodedNode.Succeeded() )
+				{
+					Insert( decodedNode.ReturnPtr().release() );
+				}
+			}
+
+			//	Recurse over the namespaces
+
+			NamespaceList	nestedNamespaces = NAMESPACE_LEVEL( namespaceNode )->namespaces;
+
+			const CPPModel::Namespace*			newParentNamespace;
+
+			GetNamespace( fqNamespaceString, newParentNamespace );
+
+			for( NamespaceList::iterator itrNested = nestedNamespaces.begin(); itrNested != nestedNamespaces.end(); ++itrNested )
+			{
+				recurseOnNamespace( (const tree&)itrNested, *newParentNamespace );
+			}
+		};
+
+		NamespaceList	nestedNamespaces = NAMESPACE_LEVEL( global_namespace )->namespaces;
+
+		const CPPModel::Namespace*			globalNamespace;
+
+		GetNamespace( CPPModel::SCOPE_RESOLUTION_OPERATOR, globalNamespace );
+
+
+		for( NamespaceList::iterator itrNested = nestedNamespaces.begin(); itrNested != nestedNamespaces.end(); ++itrNested )
+		{
+			recurseOnNamespace( (const tree&)itrNested, *globalNamespace );
+		}
+
+	}
+
 
 
 	//	Function to split a fully qualified namespace into an ordered list of individual scopes
@@ -913,7 +1069,6 @@ namespace GCCInternalsTools
 		{
 			return( DecodeFunction( ASTNode ) );
 		}
-
 
 		return( DecodeNodeResult::Failure( DecodeNodeResultCodes::UNRECOGNIZED_NODE_TYPE, "Unrecognized Node Type" ) );
 	}
@@ -1133,12 +1288,14 @@ namespace GCCInternalsTools
 		{
 			if( UIDIdx().find( functionUID ) == UIDIdx().end() )
 			{
-				std::string				scope = functionTree.fullyQualifiedNamespace().asString();
+				NamespaceTree			fqNamespace = functionTree.fullyQualifiedNamespace();
 
-//				if( !dictionary.ContainsNamespace( scope ) )
-//				{
-//					AddNamespace( scope, dictionary );
-//				}
+				std::string				fqNamespaceString = fqNamespace.asString();
+
+				if( !ContainsNamespace( fqNamespaceString ) )
+				{
+					AddFQNamespace( fqNamespace );
+				}
 
 				const CPPModel::Namespace*		namespaceScope;
 
@@ -1246,24 +1403,180 @@ namespace GCCInternalsTools
 	}
 
 
+
+
 	CPPModel::CreateGlobalVarResult			ASTDictionaryImpl::CreateGlobalVar( const CPPModel::GlobalVarDeclaration&			globalDecl )
 	{
-		tree	declType;
-
-		switch( globalDecl.typeVariant().which() )
+		switch( globalDecl.kind() )
 		{
-			case 0:
-				declType = ASTTreeForType( boost::get<const CPPModel::Type&>( globalDecl.typeVariant() ).typeSpec() );
+			case CPPModel::IDeclarationType::Kind::FUNDAMENTAL_VALUE :
+				return( CreateGlobalFundamentalTypeVar( dynamic_cast<const CPPModel::FundamentalGlobalVarDeclarationBase&>( globalDecl ) ));
 				break;
 
-			case 1:
-				declType = dynamic_cast<const DictionaryClassEntryImpl&>( boost::get<const CPPModel::DictionaryClassEntry&>( globalDecl.typeVariant() )).getTree();
+			case CPPModel::IDeclarationType::Kind::CLASS :
+				return( CreateGlobalClassTypeVar( dynamic_cast<const CPPModel::ClassGlobalVarDeclaration&>( globalDecl )));
 				break;
 
-			case 2:
-				declType = dynamic_cast<const DictionaryUnionEntryImpl&>( boost::get<const CPPModel::DictionaryUnionEntry&>( globalDecl.typeVariant() )).getTree();
-				break;
+//			case 2:
+//				declType = dynamic_cast<const DictionaryUnionEntryImpl&>( boost::get<const CPPModel::DictionaryUnionEntry&>( globalDecl.typeVariant() )).getTree();
+//				break;
 		}
+
+		return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::UNRECOGNIZED_TYPE_TO_CREATE, "Unrecognized type for variable to create" ) );
+	}
+
+
+
+
+	CPPModel::CreateGlobalVarResult			ASTDictionaryImpl::CreateGlobalFundamentalTypeVar( const CPPModel::FundamentalGlobalVarDeclarationBase&			globalDecl )
+	{
+		const tree&								globalType = ASTTreeForType( globalDecl.typeSpecifier() );
+
+		//	Create the global declaration
+
+		tree globalDeclaration = build_decl( UNKNOWN_LOCATION,
+											 VAR_DECL,
+											 get_identifier( globalDecl.name().c_str() ),
+											 globalType );
+
+		//	Set the static, public, addressable and used flags.  Insure the external flag is false.
+
+		TREE_STATIC( globalDeclaration ) = 1;
+		TREE_PUBLIC( globalDeclaration ) = 1;
+		TREE_ADDRESSABLE( globalDeclaration ) = 1;
+		TREE_USED( globalDeclaration ) = 1;
+
+		DECL_EXTERNAL( globalDeclaration ) = 0;
+
+		//	Set the context for the variable, it will be a namespace scope
+
+		DECL_CONTEXT( globalDeclaration ) = (dynamic_cast<const GCCInternalsTools::DictionaryTreeMixin&>( globalDecl.namespaceScope() )).getTree();
+
+		//	Initialize the variable if we have an initializer
+
+		if( globalDecl.hasInitialValue() )
+		{
+			ConvertParameterValueResult			initialValue = ConvertParameterValue( globalDecl.initialValue() );
+
+			if( initialValue.Succeeded() )
+			{
+				DECL_INITIAL( globalDeclaration ) = initialValue.ReturnValue();
+			}
+			else
+			{
+				return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::INTERNAL_ERROR, "Error encountered converting parameter value to a GCC tree.", initialValue ));
+			}
+		}
+
+		//	This is a global so go to the top level scope, create the gimple code and then return to whatever scope we are currently in
+
+		push_to_top_level();
+
+		layout_decl( globalDeclaration, false );
+		rest_of_decl_compilation( globalDeclaration, 1, 0 );
+
+		pop_from_top_level();
+
+		//	Now, add the global to the AST Dictionary
+
+		GCCInternalsTools::DecodeNodeResult			decodedNode = DecodeGlobalVar( globalDeclaration );
+
+		if( decodedNode.Succeeded() )
+		{
+			Insert( decodedNode.ReturnPtr().release() );
+		}
+		else
+		{
+			return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::ERROR_ADDING_GLOBAL_TO_DICTIONARY, "Error Adding Fundamental Typed Global Variable to the AST Dictionary." ) );
+		}
+
+		//	If we are down here, all went well so return SUCCESS
+
+  		return( CPPModel::CreateGlobalVarResult::Success() );
+	}
+
+
+
+	bool				EquivalentTypes( const tree&								type1,
+										 const CPPModel::ParameterValueBase&		type2 )
+	{
+		tree		type1Type = TREE_TYPE( type1 );
+
+		if( type2.typeSpecifier() == CPPModel::TypeSpecifier::STRING )
+		{
+			return( ( TypeSpecifier( type1Type ) == CPPModel::TypeSpecifier::POINTER ) && ( TypeSpecifier( TREE_TYPE( type1Type )) == CPPModel::TypeSpecifier::CHAR ));
+		}
+
+		if(( TypeSpecifier( type1Type ) == CPPModel::TypeSpecifier::POINTER ) && ( type2.typeSpecifier() == CPPModel::TypeSpecifier::POINTER ))
+		{
+			return( EquivalentTypes( TREE_TYPE( type1Type ), dynamic_cast<const CPPModel::ParameterPointer&>( type2 ).value() ) );
+		}
+
+		return( TypeSpecifier( type1Type ) == type2.typeSpecifier() );
+	}
+
+
+
+
+	enum class FindMethodResultCodes { SUCCESS, NO_METHOD_FOUND };
+
+	typedef SEFUtility::ResultWithReturnValue<FindMethodResultCodes,tree>						FindMethodValueResult;
+
+
+
+	FindMethodValueResult			FindMethod( const MethodList&						methods,
+												const char*								methodName,
+												const CPPModel::ParameterValueList&		parameterValues )
+	{
+		tree		currentMethod;
+
+
+		for( MethodList::iterator itrMethod = methods.begin(); itrMethod != methods.end(); ++itrMethod )
+		{
+			currentMethod = (const tree&)*itrMethod;
+
+			if( strcmp( IDENTIFIER_POINTER( DECL_NAME( currentMethod )), methodName ) == 0 )
+			{
+				const ParameterList			methodParams( DECL_ARGUMENTS( currentMethod ));
+
+				ParameterList::iterator 	itrMethodParam = methodParams.begin();
+
+				++itrMethodParam;
+
+				if( itrMethodParam == methodParams.end() )
+				{
+				   if( parameterValues.empty() )
+				   {
+					   return( FindMethodValueResult( currentMethod ));
+				   }
+				}
+				else
+				{
+					CPPModel::ParameterValueList::const_iterator itrParamValue = parameterValues.begin();
+
+					for( ; (itrMethodParam != methodParams.end()) && (itrParamValue != parameterValues.end()); ++itrMethodParam, ++itrParamValue )
+					{
+						if( !EquivalentTypes( (const tree&)itrMethodParam, *itrParamValue ))
+						{
+							break;
+						}
+					}
+
+					if( (itrMethodParam == methodParams.end()) && (itrParamValue == parameterValues.end()) )
+					{
+						return( FindMethodValueResult( currentMethod ));
+					}
+				}
+			}
+		}
+
+		return( FindMethodValueResult::Failure( FindMethodResultCodes::NO_METHOD_FOUND,  "Method with arguments matching parameters not found." ) );
+	}
+
+
+	CPPModel::CreateGlobalVarResult			ASTDictionaryImpl::CreateGlobalClassTypeVar( const CPPModel::ClassGlobalVarDeclaration&			globalDecl )
+	{
+		tree		declType = dynamic_cast<const DictionaryClassEntryImpl&>( globalDecl.classType() ).getTree();
 
 		//	Create the global declaration
 
@@ -1272,32 +1585,110 @@ namespace GCCInternalsTools
 											 get_identifier( globalDecl.name().c_str() ),
 											 declType );
 
-		/* allocate static storage for this variable */
-		TREE_STATIC( globalDeclaration ) = true;
+		//	Set the flags
 
-		/* static: internal linkage */
-		TREE_PUBLIC( globalDeclaration ) = false;
-
-		/* the context of this declaration: namespace scope */
+		TREE_STATIC( globalDeclaration ) = 1;
+		TREE_PUBLIC( globalDeclaration ) = 1;
+		DECL_EXTERNAL( globalDeclaration ) = 0;
+		TREE_ADDRESSABLE( globalDeclaration ) = 1;
+		TREE_USED( globalDeclaration ) = 1;
 
 		DECL_CONTEXT( globalDeclaration ) = (dynamic_cast<const GCCInternalsTools::DictionaryTreeMixin&>( globalDecl.namespaceScope() )).getTree();
 
-		/* this declaration is used in its scope */
-		TREE_USED( globalDeclaration ) = true;
+		//	Pop up the to the global context, compile the declaration, then return to the context where we started
 
-		/* initialization to 0 */
-//		DECL_INITIAL( globalDeclaration ) = build_real_from_int_cst( declType, build_int_cstu(unsigned_type_node, 1));
+		push_to_top_level();
 
 		layout_decl( globalDeclaration, false );
 		rest_of_decl_compilation( globalDeclaration, 1, 0 );
 
+		pop_from_top_level();
+
+		//	Find the correct location in the initializer to enter the initializator for any classes or structs with constructors.
+		//		We want to go past a sequence of cond, label, cond, label, zero or more calls, then finally a goto.
+		//		We will insert before the goto.
+
+		gimple_stmt_iterator		insertionPoint;
+
+		{
+			enum gimple_code			requiredCodes[5] = { GIMPLE_COND, GIMPLE_LABEL, GIMPLE_COND, GIMPLE_LABEL, GIMPLE_GOTO };
+			int							currentGimpleCodeIndex = 0;
+
+			bool						foundInsertionPoint = false;
+
+			gimple_seq					functionBody = gimple_body ( cfun->decl );
+			gimple_stmt_iterator		gsi;
+
+			for( gsi = gsi_start( functionBody ); !gsi_end_p( gsi ); gsi_next( &gsi ) )
+			{
+				debug_gimple_stmt( gsi_stmt( gsi ) );
+
+				if( gimple_code( gsi_stmt( gsi ) ) == requiredCodes[currentGimpleCodeIndex] )
+				{
+					if( ++currentGimpleCodeIndex == 5 )
+					{
+						insertionPoint = gsi;
+						foundInsertionPoint = true;
+						break;
+					}
+				}
+			}
+
+			if( !foundInsertionPoint )
+			{
+				return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::UNABLE_TO_FIND_INITIALIZATION_INSERTION_POINT, "Could not identify global initialization code insertion point" ));
+			}
+		}
+
+		//	Find the correct constructor based on th parameter types
+
+		FindMethodValueResult		ctorMethod = FindMethod( MethodList( TYPE_METHODS( declType ) ), "__comp_ctor ", globalDecl.initialValues() );
+
+		if( !ctorMethod.Succeeded() )
+		{
+			return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::UNABLE_TO_FIND_CORRECT_CONSTRUCTOR, "Could not find correct constructor for given parameters.", ctorMethod ));
+		}
+
+		TREE_USED( ctorMethod.ReturnValue() ) = 1;			//	Mark the constructor as used just in case it has not bee nreferenced elsewhere in the source code
+
+		//	Build the call to the constructor
+
+		gimple			initializationStatement;
+
+		vec<tree>		callParams;
+
+		callParams.create( globalDecl.initialValues().size() + 1 );
+
+		callParams.quick_push( build_fold_addr_expr( globalDeclaration ) );
+
+
+		for( const CPPModel::ParameterValueBase&	currentParam : globalDecl.initialValues() )
+		{
+			ConvertParameterValueResult			initialValue = ConvertParameterValue( currentParam );
+
+			callParams.quick_push( initialValue.ReturnValue() );
+		}
+
+		initializationStatement = gimple_build_call_vec( ctorMethod.ReturnValue(), callParams );
+
+//		debug_gimple_stmt( initializationStatement );
+
+		//	Insert the constructor call into the initialization function
+
+		gsi_insert_before( &insertionPoint, initializationStatement, GSI_SAME_STMT );
+
 		//	TODO fix root namespace
 
-		DecodeGlobalVar( globalDeclaration );
+		GCCInternalsTools::DecodeNodeResult			decodedNode = DecodeGlobalVar( globalDeclaration );
+
+		if( decodedNode.Succeeded() )
+		{
+			Insert( decodedNode.ReturnPtr().release() );
+		}
 
 		//	If we are down here, all went well so return SUCCESS
 
-  		return( CPPModel::CreateGlobalVarResult( DeclTree( globalDeclaration ).uid() ));
+  		return( CPPModel::CreateGlobalVarResult::Success() );
 	}
 
 }
