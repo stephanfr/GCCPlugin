@@ -20,15 +20,17 @@
 
 
 
-extern bool testBoolVar;
-extern char testCharVar;
-extern int testIntVar;
-extern long testLongVar;
-extern float testFloatVar;
-extern double testDoubleVar;
+namespace TestCreatedNamespace
+{
+	extern bool testBoolVar;
+	extern char testCharVar;
+	extern int testIntVar;
+	extern long testLongVar;
+	extern float testFloatVar;
+	extern double testDoubleVar;
 
-extern char* testCharPointerVar;
-
+	extern char* testCharPointerVar;
+}
 
 
 
@@ -79,18 +81,20 @@ LocalTestNamespace::CTestClass		sourceCodeGlobalTestClassWithAllValues( "All Val
 
 
 
+
+
 int main()
 {
-	std::cout << "Value of testBoolVar:   " << testBoolVar << "Should be: true" << std::endl;
+	std::cout << "Value of testBoolVar:        " << TestCreatedNamespace::testBoolVar << "                      Should be: 1" << std::endl;
 
-	std::cout << "Value of testCharVar:   " << testCharVar << std::endl;
+	std::cout << "Value of testCharVar:        " << TestCreatedNamespace::testCharVar << "                      Should be: 'a'" << std::endl;
 
-	std::cout << "Value of testIntVar:    " << testIntVar << " Should be: " << INT_MAX << std::endl;
-	std::cout << "Value of testLongVar:   " << testLongVar << " Should be: " << LONG_MAX << std::endl;
-	std::cout << "Value of testFloatVar:  " << testFloatVar << " Should be: " << FLT_MAX << std::endl;
-	std::cout << "Value of testDoubleVar: " << testDoubleVar << " Should be: " << DBL_MAX << std::endl;
+	std::cout << "Value of testCharPointerVar: " << TestCreatedNamespace::testCharPointerVar << "            Should be: 'Test String'" << std::endl;
 
-	std::cout << "Value of testCharPointerVar: " << testCharPointerVar << std::endl;
+	std::cout << "Value of testIntVar:         " << TestCreatedNamespace::testIntVar << "             Should be: " << INT_MAX << std::endl;
+	std::cout << "Value of testLongVar:        " << TestCreatedNamespace::testLongVar << "    Should be: " << LONG_MAX << std::endl;
+	std::cout << "Value of testFloatVar:       " << TestCreatedNamespace::testFloatVar << "            Should be: " << FLT_MAX << std::endl;
+	std::cout << "Value of testDoubleVar:      " << TestCreatedNamespace::testDoubleVar << "           Should be: " << DBL_MAX << std::endl;
 
     return( 1 );
 }

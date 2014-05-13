@@ -275,7 +275,7 @@ namespace GCCInternalsTools
 
 		tree		returnValue;
 
-		switch( value.typeSpecifier() )
+		switch( value.type().at( value.type().size() - 1 ) )
 		{
 			case CPPModel::TypeSpecifier::BOOLEAN :
 				returnValue = build_int_cst( boolean_type_node, dynamic_cast<const CPPModel::ParameterBooleanValue&>(value).value() );
@@ -1495,24 +1495,31 @@ namespace GCCInternalsTools
   		return( CPPModel::CreateGlobalVarResult::Success() );
 	}
 
-
-
-	bool				EquivalentTypes( const tree&								type1,
-										 const CPPModel::ParameterValueBase&		type2 )
+	bool				EquivalentTypesWithIndex( const tree&						type1,
+										 	 	  const CPPModel::ParameterType&	type2,
+										 	 	  const int 						paramTypeIndex )
 	{
 		tree		type1Type = TREE_TYPE( type1 );
 
-		if( type2.typeSpecifier() == CPPModel::TypeSpecifier::STRING )
+		if( type2.at( paramTypeIndex ) == CPPModel::TypeSpecifier::STRING )
 		{
 			return( ( TypeSpecifier( type1Type ) == CPPModel::TypeSpecifier::POINTER ) && ( TypeSpecifier( TREE_TYPE( type1Type )) == CPPModel::TypeSpecifier::CHAR ));
 		}
 
-		if(( TypeSpecifier( type1Type ) == CPPModel::TypeSpecifier::POINTER ) && ( type2.typeSpecifier() == CPPModel::TypeSpecifier::POINTER ))
-		{
-			return( EquivalentTypes( TREE_TYPE( type1Type ), dynamic_cast<const CPPModel::ParameterPointer&>( type2 ).value() ) );
-		}
+//			if(( TypeSpecifier( type1Type ) == CPPModel::TypeSpecifier::POINTER ) && ( type2.typeSpecifier() == CPPModel::ParameterTypeSpecifier::POINTER ))
+//			{
+//				return( EquivalentTypes( TREE_TYPE( type1Type ), dynamic_cast<const CPPModel::ParameterPointer&>( type2 ).value() ) );
+//			}
 
-		return( TypeSpecifier( type1Type ) == type2.typeSpecifier() );
+		return( TypeSpecifier( type1Type ) == type2.at( paramTypeIndex ) );
+	}
+
+
+	bool				EquivalentTypes( const tree&						type1,
+										 const CPPModel::ParameterType&		type2 )
+	{
+
+		return( EquivalentTypesWithIndex( type1, type2, 0 ) );
 	}
 
 
@@ -1556,7 +1563,7 @@ namespace GCCInternalsTools
 
 					for( ; (itrMethodParam != methodParams.end()) && (itrParamValue != parameterValues.end()); ++itrMethodParam, ++itrParamValue )
 					{
-						if( !EquivalentTypes( (const tree&)itrMethodParam, *itrParamValue ))
+						if( !EquivalentTypes( (const tree&)itrMethodParam, itrParamValue->type() ))
 						{
 							break;
 						}

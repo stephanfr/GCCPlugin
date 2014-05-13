@@ -29,25 +29,21 @@ extern "C"
 
 bool	AddStringGlobalVarTest( CPPModel::ASTDictionary*		astDictionary )
 {
-	//	Start by getting the global namespace
+	//	Start by getting the test namespace namespace
 
-	const CPPModel::Namespace		*globalNamespace;
+	const CPPModel::Namespace		*testCreatedNamespace;
 
-	if( !astDictionary->GetNamespace( "::", globalNamespace ))
+	if( !astDictionary->GetNamespace( "TestCreatedNamespace::", testCreatedNamespace ))
 	{
-		std::cerr << "In AddGlobalVarsTest: Get global Namesapce failed." << std::endl;
+		std::cerr << "In AddGlobalVarsTest: Get TestCreatedNamesapce failed." << std::endl;
 		return( false );
 	}
-
-	//	Create an empty attribute list
-
-//	CPPModel::Attributes				emptyAttributeList;
 
 	//	Declare and create a global boolean
 
 	{
 		CPPModel::BooleanGlobalVarDeclaration		globalVarDec( "testBoolVar",
-														  	  	  *globalNamespace,
+														  	  	  *testCreatedNamespace,
 														  	  	   true );
 
 		CPPModel::CreateGlobalVarResult		gvResult = astDictionary->CreateGlobalVar( globalVarDec );
@@ -64,7 +60,7 @@ bool	AddStringGlobalVarTest( CPPModel::ASTDictionary*		astDictionary )
 
 	{
 		CPPModel::CharGlobalVarDeclaration		globalVarDec( "testCharVar",
-														  	  *globalNamespace,
+														  	  *testCreatedNamespace,
 														  	   'a' );
 
 		CPPModel::CreateGlobalVarResult		gvResult = astDictionary->CreateGlobalVar( globalVarDec );
@@ -80,7 +76,7 @@ bool	AddStringGlobalVarTest( CPPModel::ASTDictionary*		astDictionary )
 
 	{
 		CPPModel::StringGlobalVarDeclaration		globalVarDec( "testCharPointerVar",
-														  	  	  *globalNamespace,
+														  	  	  *testCreatedNamespace,
 														  	  	  "Test String" );
 
 		CPPModel::CreateGlobalVarResult		gvResult = astDictionary->CreateGlobalVar( globalVarDec );
@@ -96,7 +92,7 @@ bool	AddStringGlobalVarTest( CPPModel::ASTDictionary*		astDictionary )
 
 	{
 		CPPModel::IntGlobalVarDeclaration		globalVarDec( "testIntVar",
-														  	  *globalNamespace,
+														  	  *testCreatedNamespace,
 														  	  INT_MAX );
 
 		CPPModel::CreateGlobalVarResult		gvResult = astDictionary->CreateGlobalVar( globalVarDec );
@@ -112,7 +108,7 @@ bool	AddStringGlobalVarTest( CPPModel::ASTDictionary*		astDictionary )
 
 	{
 		CPPModel::LongGlobalVarDeclaration		globalVarDec( "testLongVar",
-														  	  *globalNamespace,
+														  	  *testCreatedNamespace,
 														  	  LONG_MAX );
 
 		CPPModel::CreateGlobalVarResult		gvResult = astDictionary->CreateGlobalVar( globalVarDec );
@@ -128,7 +124,7 @@ bool	AddStringGlobalVarTest( CPPModel::ASTDictionary*		astDictionary )
 
 	{
 		CPPModel::FloatGlobalVarDeclaration		globalVarDec( "testFloatVar",
-														  	  *globalNamespace,
+														  	  *testCreatedNamespace,
 														  	  FLT_MAX );
 
 		CPPModel::CreateGlobalVarResult		gvResult = astDictionary->CreateGlobalVar( globalVarDec );
@@ -144,7 +140,7 @@ bool	AddStringGlobalVarTest( CPPModel::ASTDictionary*		astDictionary )
 
 	{
 		CPPModel::DoubleGlobalVarDeclaration		globalVarDec( "testDoubleVar",
-														  	  	  *globalNamespace,
+														  	  	  *testCreatedNamespace,
 														  	  	  DBL_MAX );
 
 		CPPModel::CreateGlobalVarResult		gvResult = astDictionary->CreateGlobalVar( globalVarDec );
@@ -178,7 +174,7 @@ bool	AddStringGlobalVarTest( CPPModel::ASTDictionary*		astDictionary )
 		CPPModel::CreateGlobalVarResult		gvResult2 = astDictionary->CreateGlobalVar( globalStringVarDec );
 	}
 */
-	//	Next for an class type
+	//	Next for a class type - no parameters passed to the constructor
 
 	{
 		CPPModel::ASTDictionary::FQNameIndexConstIterator		itrTestClassType = astDictionary->FQNameIdx().find( "LocalTestNamespace::CTestClass" );
@@ -191,21 +187,24 @@ bool	AddStringGlobalVarTest( CPPModel::ASTDictionary*		astDictionary )
 
 		const CPPModel::DictionaryClassEntry&			testClassEntry = dynamic_cast<const CPPModel::DictionaryClassEntry&>( **itrTestClassType );
 
-		const CPPModel::Namespace		*localNamespace;
+//		const CPPModel::Namespace		*localNamespace;
 
-		if( !astDictionary->GetNamespace( "::", localNamespace ))
-		{
-			std::cerr << "In AddGlobalVarsTest: Get LocalTestNamesapce failed." << std::endl;
-			return( false );
-		}
+//		if( !astDictionary->GetNamespace( "LocalTestNamespace::", localNamespace ))
+//		{
+//			std::cerr << "In AddGlobalVarsTest: Get LocalTestNamesapce failed." << std::endl;
+//			return( false );
+//		}
 
 		CPPModel::ClassGlobalVarDeclaration		globalTestClassVarDec( testClassEntry,
 																	   std::string( "testCTestClassVar" ),
-																   	   *localNamespace );
+																   	   *testCreatedNamespace );
 
 		CPPModel::CreateGlobalVarResult		gvResult2 = astDictionary->CreateGlobalVar( globalTestClassVarDec );
 	}
 
+
+	//	Class type again - string passed to the constructor
+
 	{
 		CPPModel::ASTDictionary::FQNameIndexConstIterator		itrTestClassType = astDictionary->FQNameIdx().find( "LocalTestNamespace::CTestClass" );
 
@@ -217,13 +216,13 @@ bool	AddStringGlobalVarTest( CPPModel::ASTDictionary*		astDictionary )
 
 		const CPPModel::DictionaryClassEntry&			testClassEntry = dynamic_cast<const CPPModel::DictionaryClassEntry&>( **itrTestClassType );
 
-		const CPPModel::Namespace		*localNamespace;
-
-		if( !astDictionary->GetNamespace( "::", localNamespace ))
-		{
-			std::cerr << "In AddGlobalVarsTest: Get LocalTestNamesapce failed." << std::endl;
-			return( false );
-		}
+//		const CPPModel::Namespace		*localNamespace;
+//
+//		if( !astDictionary->GetNamespace( "LocalTestNamespace::", localNamespace ))
+//		{
+//			std::cerr << "In AddGlobalVarsTest: Get LocalTestNamesapce failed." << std::endl;
+//			return( false );
+//		}
 
 		CPPModel::ParameterValueList		paramValues;
 
@@ -231,11 +230,13 @@ bool	AddStringGlobalVarTest( CPPModel::ASTDictionary*		astDictionary )
 
 		CPPModel::ClassGlobalVarDeclaration		globalTestClassVarDec( testClassEntry,
 																	   std::string( "testCTestClassVarWithStringInit" ),
-																   	   *localNamespace,
+																   	   *testCreatedNamespace,
 																   	   paramValues );
 
 		CPPModel::CreateGlobalVarResult		gvResult2 = astDictionary->CreateGlobalVar( globalTestClassVarDec );
 	}
+
+	//	Class type one last time - a full set of parameters passed
 
 	{
 		CPPModel::ASTDictionary::FQNameIndexConstIterator		itrTestClassType = astDictionary->FQNameIdx().find( "LocalTestNamespace::CTestClass" );
@@ -248,13 +249,13 @@ bool	AddStringGlobalVarTest( CPPModel::ASTDictionary*		astDictionary )
 
 		const CPPModel::DictionaryClassEntry&			testClassEntry = dynamic_cast<const CPPModel::DictionaryClassEntry&>( **itrTestClassType );
 
-		const CPPModel::Namespace		*localNamespace;
-
-		if( !astDictionary->GetNamespace( "::", localNamespace ))
-		{
-			std::cerr << "In AddGlobalVarsTest: Get LocalTestNamesapce failed." << std::endl;
-			return( false );
-		}
+//		const CPPModel::Namespace		*localNamespace;
+//
+//		if( !astDictionary->GetNamespace( "::", localNamespace ))
+//		{
+//			std::cerr << "In AddGlobalVarsTest: Get LocalTestNamesapce failed." << std::endl;
+//			return( false );
+//		}
 
 		CPPModel::ParameterValueList		paramValues;
 
@@ -268,11 +269,12 @@ bool	AddStringGlobalVarTest( CPPModel::ASTDictionary*		astDictionary )
 
 		CPPModel::ClassGlobalVarDeclaration		globalTestClassVarDec( testClassEntry,
 																	   std::string( "testCTestClassVarWithAllValuesInit" ),
-																   	   *localNamespace,
+																   	   *testCreatedNamespace,
 																   	   paramValues );
 
 		CPPModel::CreateGlobalVarResult		gvResult2 = astDictionary->CreateGlobalVar( globalTestClassVarDec );
 	}
+
 
 	//	Finished with success
 
