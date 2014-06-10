@@ -865,7 +865,7 @@ namespace GCCInternalsTools
 
 
 
-
+/*
 	void	ASTDictionaryImpl::FixupNamespaceTree()
 	{
 		//	Start by building out the namespace map
@@ -907,6 +907,7 @@ namespace GCCInternalsTools
 		}
 
 	}
+*/
 
 
 
@@ -1325,7 +1326,45 @@ namespace GCCInternalsTools
 
 
 
-	CPPModel::CreateNamespaceResult			ASTDictionaryImpl::CreateNamespace( const std::string&				namespaceToAdd )
+	class CreateNamespaceEvent : public ASTDictionaryImpl::ASTModificationEvent
+	{
+	public :
+
+		CreateNamespaceEvent( const std::string&				namespaceToAdd  )
+			: m_namespaceToAdd( namespaceToAdd )
+		{}
+
+
+		ASTDictionaryImpl::ASTModificationEvent::EventType				Type() const
+		{
+			return( ASTModificationEvent::EventType::CREATE_NAMESPACE );
+		}
+
+
+		void		Execute( ASTDictionaryImpl&		astDictionary )
+		{
+			m_result = astDictionary.CreateNamespaceInternal( m_namespaceToAdd );
+		}
+
+
+
+	private :
+
+		const std::string										m_namespaceToAdd;
+
+		boost::optional<CPPModel::CreateNamespaceResult>		m_result;
+	};
+
+
+
+	void		ASTDictionaryImpl::CreateNamespace( const std::string&				namespaceToAdd )
+	{
+		m_namespaceCreationEventList.push_back( new CreateNamespaceEvent( namespaceToAdd ) );
+	}
+
+
+
+	CPPModel::CreateNamespaceResult		ASTDictionaryImpl::CreateNamespaceInternal( const std::string&				namespaceToAdd )
 	{
 		//	Return an error now if the namespace already exists
 
@@ -1404,25 +1443,100 @@ namespace GCCInternalsTools
 
 
 
-
-	CPPModel::CreateGlobalVarResult			ASTDictionaryImpl::CreateGlobalVar( const CPPModel::GlobalVarDeclaration&			globalDecl )
+	class CreateFundamentalGlobalVarEvent : public ASTDictionaryImpl::ASTModificationEvent
 	{
-		switch( globalDecl.kind() )
+	public :
+
+		CreateFundamentalGlobalVarEvent( std::unique_ptr<const CPPModel::FundamentalGlobalVarDeclarationBase>		globalVarToAdd  )
+			: m_globalVarToAdd( std::move( globalVarToAdd ))
+		{}
+
+
+		ASTDictionaryImpl::ASTModificationEvent::EventType				Type() const
+		{
+			return( ASTModificationEvent::EventType::CREATE_NAMESPACE );
+		}
+
+
+		void		Execute( ASTDictionaryImpl&		astDictionary )
+		{
+			m_result = astDictionary.CreateGlobalFundamentalTypeVar( *m_globalVarToAdd );
+		}
+
+
+
+	private :
+
+		std::unique_ptr<const CPPModel::FundamentalGlobalVarDeclarationBase>		m_globalVarToAdd;
+
+		boost::optional<CPPModel::CreateGlobalVarResult>							m_result;
+	};
+
+
+
+	class CreateClassInstanceGlobalVarEvent : public ASTDictionaryImpl::ASTModificationEvent
+	{
+	public :
+
+		CreateClassInstanceGlobalVarEvent( std::unique_ptr<const CPPModel::ClassGlobalVarDeclaration>		globalVarToAdd  )
+			: m_globalVarToAdd( std::move( globalVarToAdd ))
+		{}
+
+
+		ASTDictionaryImpl::ASTModificationEvent::EventType				Type() const
+		{
+			return( ASTModificationEvent::EventType::CREATE_NAMESPACE );
+		}
+
+
+		void		Execute( ASTDictionaryImpl&		astDictionary )
+		{
+			m_result = astDictionary.CreateGlobalClassInstanceVar( *m_globalVarToAdd );
+		}
+
+
+
+	private :
+
+		std::unique_ptr<const CPPModel::ClassGlobalVarDeclaration>			m_globalVarToAdd;
+
+		boost::optional<CPPModel::CreateGlobalVarResult>					m_result;
+	};
+
+
+
+	void			ASTDictionaryImpl::DeclareGlobals()
+	{
+		for( ASTDictionaryImpl::ASTModificationEvent& currentEvent : m_globalVarDeclarationEventList )
+		{
+			currentEvent.Execute( *this );
+		}
+	}
+
+
+
+	void			ASTDictionaryImpl::CreateGlobalVar( std::unique_ptr<const CPPModel::GlobalVarDeclaration>&			globalDecl )
+	{
+
+  		switch( globalDecl->kind() )
 		{
 			case CPPModel::IDeclarationType::Kind::FUNDAMENTAL_VALUE :
-				return( CreateGlobalFundamentalTypeVar( dynamic_cast<const CPPModel::FundamentalGlobalVarDeclarationBase&>( globalDecl ) ));
+				m_globalVarDeclarationEventList.push_back( new CreateFundamentalGlobalVarEvent( std::unique_ptr<const CPPModel::FundamentalGlobalVarDeclarationBase>( dynamic_cast<const CPPModel::FundamentalGlobalVarDeclarationBase*>( globalDecl.release() )) ) );
+//				return( CreateGlobalFundamentalTypeVar( dynamic_cast<const CPPModel::FundamentalGlobalVarDeclarationBase&>( globalDecl ) ));
 				break;
 
 			case CPPModel::IDeclarationType::Kind::CLASS :
-				return( CreateGlobalClassTypeVar( dynamic_cast<const CPPModel::ClassGlobalVarDeclaration&>( globalDecl )));
-				break;
+				m_globalVarDeclarationEventList.push_back( new CreateClassInstanceGlobalVarEvent( std::unique_ptr<const CPPModel::ClassGlobalVarDeclaration>( dynamic_cast<const CPPModel::ClassGlobalVarDeclaration*>( globalDecl.release() )) ) );
+//				return( CreateGlobalClassTypeVar( dynamic_cast<const CPPModel::ClassGlobalVarDeclaration&>( globalDecl )));
+//				break;
 
 //			case 2:
 //				declType = dynamic_cast<const DictionaryUnionEntryImpl&>( boost::get<const CPPModel::DictionaryUnionEntry&>( globalDecl.typeVariant() )).getTree();
 //				break;
 		}
 
-		return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::UNRECOGNIZED_TYPE_TO_CREATE, "Unrecognized type for variable to create" ) );
+//		return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::UNRECOGNIZED_TYPE_TO_CREATE, "Unrecognized type for variable to create" ) );
+
 	}
 
 
@@ -1581,7 +1695,7 @@ namespace GCCInternalsTools
 	}
 
 
-	CPPModel::CreateGlobalVarResult			ASTDictionaryImpl::CreateGlobalClassTypeVar( const CPPModel::ClassGlobalVarDeclaration&			globalDecl )
+	CPPModel::CreateGlobalVarResult			ASTDictionaryImpl::CreateGlobalClassInstanceVar( const CPPModel::ClassGlobalVarDeclaration&			globalDecl )
 	{
 		tree		declType = dynamic_cast<const DictionaryClassEntryImpl&>( globalDecl.classType() ).getTree();
 

@@ -10,8 +10,8 @@
 
 
 //#include "NamespaceTests.cpp"
-#include "GlobalVarTests.cpp"
-//#include "FunctionTests.cpp"
+//#include "GlobalVarTests.cpp"
+#include "FunctionTests.cpp"
 
 
 

@@ -102,7 +102,7 @@ namespace CPPModel
 
 		GlobalVarDeclaration() = delete;
 		GlobalVarDeclaration( GlobalVarDeclaration& ) = delete;
-		GlobalVarDeclaration( const GlobalVarDeclaration& ) = delete;
+		GlobalVarDeclaration( const GlobalVarDeclaration& 	declToCopy ) = delete;
 
 		GlobalVarDeclaration( const Kind					kind,
 							  const TypeSpecifier 			typeSpec,

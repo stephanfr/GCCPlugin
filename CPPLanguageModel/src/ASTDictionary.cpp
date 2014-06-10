@@ -27,7 +27,7 @@ namespace CPPModel
 	{
 		outputStream << "<ast>\n";
 
-		if( (std::int64_t)outputOptions && (std::int64_t)XMLOutputOptions::PREPEND_NAMESPACES )
+		if( (std::int64_t)outputOptions && (std::int64_t)XMLOutputOptions::LIST_NAMESPACES )
 		{
 			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
 
@@ -81,6 +81,13 @@ namespace CPPModel
 	void			ASTDictionary::DumpDictionaryXMLByNamespace( std::ostream&				outputStream,
 			  	  	  	  	  	  	  	  	  	  	  	  	     const std::string&			namespaceToDump ) const
 	{
+		//	Return immediately if the namespace does not exist
+
+		if( !ContainsNamespace( namespaceToDump ) )
+		{
+			return;
+		}
+
 		outputStream << "<namespace name=\"" << namespaceToDump << "\">\n";
 
 		{
@@ -100,6 +107,13 @@ namespace CPPModel
 	void			ASTDictionary::DumpElementsXMLByNamespace( std::ostream&				outputStream,
 			  	  	  	  	  	  	  	  	  	   	   	       const std::string&			namespaceToDump ) const
 	{
+		//	Return immediately if the namespace does not exist
+
+		if( !ContainsNamespace( namespaceToDump ) )
+		{
+			return;
+		}
+
 		outputStream << "<namespace name=\"" << namespaceToDump << "\">\n";
 
 		{

@@ -486,9 +486,9 @@ namespace CPPModel
 
 
 
-		virtual CreateNamespaceResult			CreateNamespace( const std::string&								namespaceToAdd ) = 0;
+		virtual void							CreateNamespace( const std::string&												namespaceToAdd ) = 0;
 
-		virtual CreateGlobalVarResult			CreateGlobalVar( const CPPModel::GlobalVarDeclaration&			globalDecl ) = 0;
+		virtual void							CreateGlobalVar( std::unique_ptr<const CPPModel::GlobalVarDeclaration>&			globalDeclToAdd ) = 0;
 
 
 
@@ -564,7 +564,7 @@ namespace CPPModel
 
 
 
-		enum class XMLOutputOptions : std::int64_t { NONE = 0, PREPEND_NAMESPACES = 1 };
+		enum class XMLOutputOptions : std::int64_t { NONE = 0, LIST_NAMESPACES = 1 };
 
 
 

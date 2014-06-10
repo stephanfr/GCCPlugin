@@ -7,6 +7,7 @@
 //============================================================================
 
 
+#include "PluginManager.h"
 
 #include "GCCInternalsTools.h"
 #include "DeclOrTypeBaseTree.h"
@@ -88,10 +89,10 @@ static void RegisterAttributes( void*		eventData,
 }
 
 
-std::unique_ptr<GCCInternalsTools::ASTDictionaryImpl>	astDict( new GCCInternalsTools::ASTDictionaryImpl() );
+//std::unique_ptr<GCCInternalsTools::ASTDictionaryImpl>	astDict( new GCCInternalsTools::ASTDictionaryImpl() );
 
 
-
+/*
 static void DeclFinishedGateCallback( void*		eventData,
 		  	   	   	      	  	  	  void*		userData )
 {
@@ -216,12 +217,12 @@ static void TypeFinishedGateCallback( void*		eventData,
 		}
 	}
 }
+*/
 
 
+//bool	dictionaryBuilt = false;
 
-bool	dictionaryBuilt = false;
-
-
+/*
 static void PreGenericizeGateCallback( void*		eventData,
 		  	   	   	      	  	  	   void*		userData )
 {
@@ -281,7 +282,8 @@ static void PreGenericizeGateCallback( void*		eventData,
 	{
 		if( !dictionaryBuilt )
 		{
-			astDict->Build();
+			CPPModel::GetPluginManager().GetASTDictionary().Build();
+//			astDict->Build();
 
 			dictionaryBuilt = true;
 
@@ -310,7 +312,7 @@ static void PreGenericizeGateCallback( void*		eventData,
 //	}
 }
 
-
+*/
 
 static void GateCallback( void*		eventData,
 		  	   	   	      void*		userData )
@@ -367,14 +369,15 @@ static void GateCallback( void*		eventData,
 //		}
 //	}
 
-	astDict->DumpASTXMLByNamespaces( resultsFile, namespacesToScan, CPPModel::ASTDictionary::XMLOutputOptions::PREPEND_NAMESPACES );
+	CPPModel::GetPluginManager().GetASTDictionary().DumpASTXMLByNamespaces( resultsFile, namespacesToScan, CPPModel::ASTDictionary::XMLOutputOptions::LIST_NAMESPACES );
+//	astDict->DumpASTXMLByNamespaces( resultsFile, namespacesToScan, CPPModel::ASTDictionary::XMLOutputOptions::PREPEND_NAMESPACES );
 
 	resultsFile.flush();
 	resultsFile.close();
 }
 
 
-
+/*
 static void OverrideGateCallback( void*		eventData,
 		  	   	   	      	  	  void*		userData )
 {
@@ -426,7 +429,7 @@ static unsigned int CodeInjectionCallback( void )
 
 	return( 0 );
 }
-
+*/
 
 
 /*
@@ -436,7 +439,7 @@ static unsigned int IPAPassCallback( void )
 
 	return( 0 );
 }
-*/
+
 
 
 
@@ -462,6 +465,8 @@ static struct gimple_opt_pass code_injection_pass =
        0
    }
 };
+
+*/
 
 
 /*
@@ -563,14 +568,14 @@ int plugin_init( plugin_name_args*		info,
 
 
 
-	struct register_pass_info replace_pass_info;
-
-	   replace_pass_info.pass = &code_injection_pass.pass;
-	   replace_pass_info.reference_pass_name = "cfg";
-	   replace_pass_info.ref_pass_instance_number = 0;
-	   replace_pass_info.pos_op = PASS_POS_INSERT_BEFORE;
-
-	register_callback ( info->base_name, PLUGIN_PASS_MANAGER_SETUP, NULL, &replace_pass_info);
+//	struct register_pass_info replace_pass_info;
+//
+//	   replace_pass_info.pass = &code_injection_pass.pass;
+//	   replace_pass_info.reference_pass_name = "cfg";
+//	   replace_pass_info.ref_pass_instance_number = 0;
+//	   replace_pass_info.pos_op = PASS_POS_INSERT_BEFORE;
+//
+//	register_callback ( info->base_name, PLUGIN_PASS_MANAGER_SETUP, NULL, &replace_pass_info);
 
 //	struct register_pass_info ipa_pass_info;
 //
@@ -581,6 +586,8 @@ int plugin_init( plugin_name_args*		info,
 
 //	register_callback ( info->base_name, PLUGIN_PASS_MANAGER_SETUP, NULL, &ipa_pass_info);
 
+	CPPModel::GetPluginManager().Initialize( info->base_name );
+
 
 
 	register_callback( info->base_name, PLUGIN_ATTRIBUTES, &RegisterAttributes, NULL );
@@ -589,7 +596,7 @@ int plugin_init( plugin_name_args*		info,
 
 //	register_callback( info->base_name, PLUGIN_FINISH_TYPE, &TypeFinishedGateCallback, NULL );
 
-	register_callback( info->base_name, PLUGIN_OVERRIDE_GATE, &OverrideGateCallback, NULL );
+//	register_callback( info->base_name, PLUGIN_OVERRIDE_GATE, &OverrideGateCallback, NULL );
 
 //	register_callback( info->base_name, PLUGIN_PRE_GENERICIZE, &PreGenericizeGateCallback, NULL );
 
