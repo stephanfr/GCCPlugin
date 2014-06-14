@@ -486,9 +486,9 @@ namespace CPPModel
 
 
 
-		virtual void							CreateNamespace( const std::string&												namespaceToAdd ) = 0;
+		virtual CPPModel::CreateNamespaceResult			CreateNamespace( const std::string&								namespaceToAdd ) = 0;
 
-		virtual void							CreateGlobalVar( std::unique_ptr<const CPPModel::GlobalVarDeclaration>&			globalDeclToAdd ) = 0;
+		virtual CPPModel::CreateGlobalVarResult			CreateGlobalVar( const CPPModel::GlobalVarDeclaration&			globalDeclToAdd ) = 0;
 
 
 

@@ -1,39 +1,67 @@
-<namespace>
-    <name>::</name>
-</namespace>
-<namespace>
-    <name>NestedNamespaceBase::</name>
-</namespace>
-<namespace>
-    <name>NestedNamespaceBase::FirstNestedNamespace::</name>
-</namespace>
-<namespace>
-    <name>NestedNamespaceBase::FirstNestedNamespace::SecondNestedNamespace::</name>
-</namespace>
-<namespace>
-    <name>NestedNamespaceBase::FirstNestedNamespace::SecondNestedNamespace::ThirdNestedNamespace::</name>
-</namespace>
-<namespace>
-    <name>NestedNamespaceBase::FirstNestedNamespace::SecondNestedNamespace::ThirdNestedNamespace::FourthNestedNamespace::</name>
-</namespace>
-<namespace>
-    <name>NestedNamespaceBase::FirstNestedNamespace::SecondNestedNamespace::ThirdNestedNamespace::FourthNestedNamespacePeer::</name>
-</namespace>
-<namespace>
-    <name>NestedNamespaceBase::FirstNestedNamespace::SecondNestedNamespacePeer::</name>
-</namespace>
-<namespace>
-    <name>SimpleNamespace::</name>
-</namespace>
-<namespace>
-    <name>__cxxabiv1::</name>
-    <compiler_specific>
-        </built_in>
-    </compiler_specific>
-</namespace>
-<namespace>
-    <name>std::</name>
-    <compiler_specific>
-        </built_in>
-    </compiler_specific>
-</namespace>
+<ast>
+    <namespaces>
+        <namespace>
+            <name>::</name>
+        </namespace>
+        <namespace>
+            <name>NestedNamespaceBase::</name>
+        </namespace>
+        <namespace>
+            <name>NestedNamespaceBase::FirstNestedNamespace::</name>
+        </namespace>
+        <namespace>
+            <name>NestedNamespaceBase::FirstNestedNamespace::SecondNestedNamespace::</name>
+        </namespace>
+        <namespace>
+            <name>NestedNamespaceBase::FirstNestedNamespace::SecondNestedNamespace::ThirdNestedNamespace::</name>
+        </namespace>
+        <namespace>
+            <name>NestedNamespaceBase::FirstNestedNamespace::SecondNestedNamespace::ThirdNestedNamespace::FourthNestedNamespace::</name>
+        </namespace>
+        <namespace>
+            <name>NestedNamespaceBase::FirstNestedNamespace::SecondNestedNamespace::ThirdNestedNamespace::FourthNestedNamespacePeer::</name>
+        </namespace>
+        <namespace>
+            <name>NestedNamespaceBase::FirstNestedNamespace::SecondNestedNamespacePeer::</name>
+        </namespace>
+        <namespace>
+            <name>SimpleNamespace::</name>
+        </namespace>
+        <namespace>
+            <name>__cxxabiv1::</name>
+            <compiler_specific>
+                </built_in>
+            </compiler_specific>
+        </namespace>
+        <namespace>
+            <name>__gnu_cxx::</name>
+        </namespace>
+        <namespace>
+            <name>__gnu_debug::</name>
+        </namespace>
+        <namespace>
+            <name>std::</name>
+            <compiler_specific>
+                </built_in>
+            </compiler_specific>
+        </namespace>
+        <namespace>
+            <name>std::__debug::</name>
+        </namespace>
+        <namespace>
+            <name>std::__exception_ptr::</name>
+        </namespace>
+    </namespaces>
+    <dictionary>
+        <namespace name="SimpleNamespace::">
+        </namespace>
+        <namespace name="NestedNamespaceBase::">
+        </namespace>
+    </dictionary>
+    <elements>
+        <namespace name="SimpleNamespace::">
+        </namespace>
+        <namespace name="NestedNamespaceBase::">
+        </namespace>
+    </elements>
+</ast>

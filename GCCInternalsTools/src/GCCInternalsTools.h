@@ -222,9 +222,9 @@ namespace GCCInternalsTools
 		//	Overrides of ASTDictionary
 
 
-		void									CreateNamespace( const std::string&											namespaceToAdd );
+		CPPModel::CreateNamespaceResult			CreateNamespace( const std::string&							namespaceToAdd );
 
-		void									CreateGlobalVar( std::unique_ptr<const CPPModel::GlobalVarDeclaration>&		globalDeclToAdd );
+		CPPModel::CreateGlobalVarResult			CreateGlobalVar( const CPPModel::GlobalVarDeclaration&		globalDeclToAdd );
 
 
 
@@ -236,33 +236,6 @@ namespace GCCInternalsTools
 		DecodeNodeResult						DecodeASTNode( const tree&													ASTNode );
 
 
-		void									DeclareGlobals();
-
-		CPPModel::CreateNamespaceResult			CreateNamespaceInternal( const std::string&														namespaceToAdd );
-
-		CPPModel::CreateGlobalVarResult			CreateGlobalFundamentalTypeVar( const CPPModel::FundamentalGlobalVarDeclarationBase&			globalDecl );
-
-		CPPModel::CreateGlobalVarResult			CreateGlobalClassInstanceVar( const CPPModel::ClassGlobalVarDeclaration&						globalDecl );
-
-
-
-
-
-		class ASTModificationEvent
-		{
-		public :
-
-			enum class EventType { CREATE_NAMESPACE };
-
-			virtual ~ASTModificationEvent()
-			{}
-
-
-			virtual EventType			Type() const= 0;
-
-
-			virtual void				Execute( ASTDictionaryImpl&		astDictionary ) = 0;
-		};
 
 
 	private :
@@ -284,8 +257,9 @@ namespace GCCInternalsTools
 
 
 
-		boost::ptr_list<ASTModificationEvent>	m_namespaceCreationEventList;
-		boost::ptr_list<ASTModificationEvent>	m_globalVarDeclarationEventList;
+		CPPModel::CreateGlobalVarResult			CreateGlobalFundamentalTypeVar( const CPPModel::FundamentalGlobalVarDeclarationBase&			globalDecl );
+
+		CPPModel::CreateGlobalVarResult			CreateGlobalClassInstanceVar( const CPPModel::ClassGlobalVarDeclaration&						globalDecl );
 
 	};
 

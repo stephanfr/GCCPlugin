@@ -12,6 +12,9 @@
 #define _GLIBCXX_GTHREAD_USE_WEAK 0
 
 
+#include <iostream>
+
+
 
 namespace SimpleNamespace
 {
@@ -47,6 +50,8 @@ namespace NestedNamespaceBase
 
 int main()
 {
+	std::cout << "NamespaceBasicTestCase Successful" << std::endl;
+
 	return( 0 );
 }
 

@@ -36,7 +36,12 @@ std::list<std::string>			namespacesToScan;
 
 void*							testExtensionHandle = NULL;
 
-typedef							 bool (*EntryPointPtr)(CPPModel::ASTDictionary *);
+
+#define AST_READY				1
+#define DECLARE_NAMESPACES		2
+#define INJECT_CODE				3
+
+typedef							bool (*EntryPointPtr)( int, CPPModel::ASTDictionary * );
 
 typedef struct EntryPointRecord
 {
@@ -493,6 +498,60 @@ static struct simple_ipa_opt_pass ipa_pass =
 */
 
 
+class Callbacks : public CPPModel::CallbackIfx
+{
+public :
+
+	Callbacks()
+	{}
+
+	virtual ~Callbacks()
+	{}
+
+
+	void		ASTReady()
+	{
+		for( EntryPointRecord currentEntryPoint : entryPointsToCall )
+		{
+			if( !(*currentEntryPoint.entryPoint)( AST_READY, &CPPModel::GetPluginManager().GetASTDictionary() ) )
+			{
+				std::cerr << "Error calling entry point: " << currentEntryPoint.name << std::endl;
+				exit( 3 );
+			}
+		}
+	};
+
+	void		CreateNamespaces()
+	{
+		for( EntryPointRecord currentEntryPoint : entryPointsToCall )
+		{
+			if( !(*currentEntryPoint.entryPoint)( DECLARE_NAMESPACES, &CPPModel::GetPluginManager().GetASTDictionary() ) )
+			{
+				std::cerr << "Error calling entry point: " << currentEntryPoint.name << std::endl;
+				exit( 3 );
+			}
+		}
+	};
+
+	void		InjectCode()
+	{
+		for( EntryPointRecord currentEntryPoint : entryPointsToCall )
+		{
+			if( !(*currentEntryPoint.entryPoint)( INJECT_CODE, &CPPModel::GetPluginManager().GetASTDictionary() ) )
+			{
+				std::cerr << "Error calling entry point: " << currentEntryPoint.name << std::endl;
+				exit( 3 );
+			}
+		}
+	};
+
+};
+
+
+
+Callbacks		g_pluginCallbacks;
+
+
 
 
 int plugin_init( plugin_name_args*		info,
@@ -586,7 +645,12 @@ int plugin_init( plugin_name_args*		info,
 
 //	register_callback ( info->base_name, PLUGIN_PASS_MANAGER_SETUP, NULL, &ipa_pass_info);
 
-	CPPModel::GetPluginManager().Initialize( info->base_name );
+
+	CPPModel::PluginManager*		pluginMgr = &CPPModel::GetPluginManager();
+
+//	CPPModel::GetPluginManager().Initialize( info->base_name, &g_pluginCallbacks );
+
+	pluginMgr->Initialize( info->base_name, &g_pluginCallbacks );
 
 
 

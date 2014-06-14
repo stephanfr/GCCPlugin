@@ -21,13 +21,17 @@ Contributors:
 
 extern "C"
 {
-	bool 	AddStringGlobalVarTest( CPPModel::ASTDictionary*				astDictionary );
-	bool	AddGlobalVarClassInstanceTest( CPPModel::ASTDictionary*		astDictionary );
+	bool 	AddStringGlobalVarTest( int									callbackType,
+			  	  	  	  	  	  	CPPModel::ASTDictionary*			astDictionary );
+
+	bool	AddGlobalVarClassInstanceTest( int							callbackType,
+			  	  	  	  	  	  	  	   CPPModel::ASTDictionary*		astDictionary );
 }
 
 
 
-bool	AddStringGlobalVarTest( CPPModel::ASTDictionary*		astDictionary )
+bool	AddStringGlobalVarTest( int								callbackType,
+		  	  	  	  	  	    CPPModel::ASTDictionary*		astDictionary )
 {
 	//	Start by getting the test namespace namespace
 /*
@@ -278,7 +282,8 @@ bool	AddStringGlobalVarTest( CPPModel::ASTDictionary*		astDictionary )
 
 
 
-bool	AddGlobalVarClassInstanceTest( CPPModel::ASTDictionary*		astDictionary )
+bool	AddGlobalVarClassInstanceTest( int							callbackType,
+		  	  	  	  	  	  	  	   CPPModel::ASTDictionary*		astDictionary )
 {
 	std::cerr << "In Extension" << std::endl;
 /*

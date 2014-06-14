@@ -33,9 +33,6 @@ namespace GCCInternalsTools
 
 
 
-		void							Initialize( const char* 		pluginName );
-
-
 		bool							dictionaryBuilt() const
 		{
 			return( m_ASTBuilt );
@@ -47,25 +44,27 @@ namespace GCCInternalsTools
 		}
 
 
+		void					Initialize( const char* 				pluginName,
+				   	   	   	   	   	   	    CPPModel::CallbackIfx*		callbacks );
 
-		bool							BuildASTGate( void );
-		unsigned int 					BuildASTCallback( void );
+		bool					BuildASTGate( void );
+		unsigned int 			BuildASTCallback( void );
 
-		unsigned int 					GlobalDeclarationCallback( void );
+		unsigned int 			GlobalDeclarationCallback( void );
 
 	private :
 
 
-		ASTDictionaryImpl				m_ASTDictionary;
+		ASTDictionaryImpl			m_ASTDictionary;
 
-		bool							m_ASTBuilt = false;
+		bool						m_ASTBuilt = false;
 
-		bool 							m_globalsGenerated;
+		bool 						m_globalsGenerated;
+
+		CPPModel::CallbackIfx*		m_userCallbacks;
 
 
-		void							RegisterCallbacks( const char* 		pluginName );
-
-
+		void					RegisterCallbacks( const char* 		pluginName );
 	};
 
 } /* namespace GCCInternalsTools */

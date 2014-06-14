@@ -5,7 +5,15 @@
  *      Author: steve
  */
 
-//	This is just an empty file so that the created code will be created in a 'clean' translation unit.
+
+#include <iostream>
 
 
+
+int main()
+{
+	std::cout << "CreateNamespaceTest Successful" << std::endl;
+
+	return( 0 );
+}
 

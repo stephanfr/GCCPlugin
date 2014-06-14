@@ -82,17 +82,22 @@ namespace GCCInternalsTools
 
 
 	PluginManagerImpl::PluginManagerImpl()
-	{
-		m_globalsGenerated = false;
-	}
+		: m_globalsGenerated( false ),
+		  m_userCallbacks( NULL )
+	{}
+
 
 	PluginManagerImpl::~PluginManagerImpl()
 	{}
 
 
 
-	void		PluginManagerImpl::Initialize( const char* 		pluginName )
+
+	void		PluginManagerImpl::Initialize( const char* 					pluginName,
+			   	   	   	   	   	   	  	  	   CPPModel::CallbackIfx*		callbacks )
 	{
+		m_userCallbacks = callbacks;
+
 		RegisterCallbacks( pluginName );
 	}
 
@@ -131,9 +136,19 @@ namespace GCCInternalsTools
 
 	unsigned int PluginManagerImpl::BuildASTCallback( void )
 	{
+		//	Build the dictionary
+
 		m_ASTDictionary.Build();
 
 		m_ASTBuilt = true;
+
+		//	Let the user program know the AST is ready
+
+		m_userCallbacks->ASTReady();
+
+		//	Now is the time to add namespaces
+
+		m_userCallbacks->CreateNamespaces();
 
 		return( 0 );
 	}
@@ -159,11 +174,10 @@ namespace GCCInternalsTools
 
 		std::cerr << "Declaring Globals" << std::endl;
 
-		m_ASTDictionary.DeclareGlobals();
+		m_userCallbacks->InjectCode();
 
 		return( 0 );
 	}
-
 
 } /* namespace GCCInternalsTools */
 

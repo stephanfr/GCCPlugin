@@ -15,6 +15,23 @@
 
 namespace CPPModel
 {
+
+	class CallbackIfx
+	{
+	public :
+
+		virtual ~CallbackIfx()
+		{}
+
+		virtual void		ASTReady() = 0;
+
+		virtual void		CreateNamespaces() = 0;
+
+		virtual void		InjectCode() = 0;
+	};
+
+
+
 	class PluginManager
 	{
 	public :
@@ -23,8 +40,9 @@ namespace CPPModel
 		{}
 
 
-		virtual void				Initialize( const char* 		pluginName ) = 0;
 
+		virtual void				Initialize( const char* 		pluginName,
+				   	   	   	   	   	   	   	    CallbackIfx*		callbacks ) = 0;
 
 		virtual ASTDictionary&		GetASTDictionary() = 0;
 
