@@ -1416,6 +1416,7 @@ namespace GCCInternalsTools
   		switch( globalDecl.kind() )
 		{
 			case CPPModel::IDeclarationType::Kind::FUNDAMENTAL_VALUE :
+			case CPPModel::IDeclarationType::Kind::FUNDAMENTAL_POINTER :
 				return( CreateGlobalFundamentalTypeVar( dynamic_cast<const CPPModel::FundamentalGlobalVarDeclarationBase&>( globalDecl ) ));
 				break;
 
@@ -1436,7 +1437,7 @@ namespace GCCInternalsTools
 
 	CPPModel::CreateGlobalVarResult			ASTDictionaryImpl::CreateGlobalFundamentalTypeVar( const CPPModel::FundamentalGlobalVarDeclarationBase&			globalDecl )
 	{
-		const tree&								globalType = ASTTreeForType( globalDecl.typeSpecifier() );
+		const tree			globalType = ( globalDecl.kind() == CPPModel::IDeclarationType::Kind::FUNDAMENTAL_POINTER ) ? build_pointer_type( ASTTreeForType( globalDecl.typeSpecifier() )) : ASTTreeForType( globalDecl.typeSpecifier() );
 
 		//	Create the global declaration
 
@@ -1460,17 +1461,20 @@ namespace GCCInternalsTools
 
 		//	Initialize the variable if we have an initializer
 
-		if( globalDecl.hasInitialValue() )
+		if( globalDecl.kind() == CPPModel::IDeclarationType::Kind::FUNDAMENTAL_VALUE )
 		{
-			ConvertParameterValueResult			initialValue = ConvertParameterValue( globalDecl.initialValue() );
+			if( globalDecl.hasInitialValue() )
+			{
+				ConvertParameterValueResult			initialValue = ConvertParameterValue( globalDecl.initialValue() );
 
-			if( initialValue.Succeeded() )
-			{
-				DECL_INITIAL( globalDeclaration ) = initialValue.ReturnValue();
-			}
-			else
-			{
-				return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::INTERNAL_ERROR, "Error encountered converting parameter value to a GCC tree.", initialValue ));
+				if( initialValue.Succeeded() )
+				{
+					DECL_INITIAL( globalDeclaration ) = initialValue.ReturnValue();
+				}
+				else
+				{
+					return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::INTERNAL_ERROR, "Error encountered converting parameter value to a GCC tree.", initialValue ));
+				}
 			}
 		}
 
@@ -1500,6 +1504,9 @@ namespace GCCInternalsTools
 
   		return( CPPModel::CreateGlobalVarResult::Success() );
 	}
+
+
+
 
 	bool				EquivalentTypesWithIndex( const tree&						type1,
 										 	 	  const CPPModel::ParameterType&	type2,
@@ -1591,6 +1598,8 @@ namespace GCCInternalsTools
 	{
 		tree		declType = dynamic_cast<const DictionaryClassEntryImpl&>( globalDecl.classType() ).getTree();
 
+		TREE_USED( declType ) = 1;
+
 		//	Create the global declaration
 
 		tree globalDeclaration = build_decl( UNKNOWN_LOCATION,
@@ -1634,7 +1643,7 @@ namespace GCCInternalsTools
 
 			for( gsi = gsi_start( functionBody ); !gsi_end_p( gsi ); gsi_next( &gsi ) )
 			{
-				debug_gimple_stmt( gsi_stmt( gsi ) );
+//				debug_gimple_stmt( gsi_stmt( gsi ) );
 
 				if( gimple_code( gsi_stmt( gsi ) ) == requiredCodes[currentGimpleCodeIndex] )
 				{

@@ -14,7 +14,8 @@
 
 
 
-static void ForkGCCTestCaseInternal( const char*	testDirectoryName,
+static void ForkGCCTestCaseInternal( const char*	gccOptions,
+		  	  	  	  	  	  	  	 const char*	testDirectoryName,
 		  	  	  	  	  	 	     const char*	testCaseName,
 		  	  	  	  	  	 	     int			numOptions,
 		  	  	  	  	  	 	     ... )
@@ -27,6 +28,7 @@ static void ForkGCCTestCaseInternal( const char*	testDirectoryName,
 	int				argIndex = 0;
 
 	execvArgArray[argIndex++] = (char*)"./gcc_wrapper.sh";
+	execvArgArray[argIndex++] = (char*)gccOptions;
 	execvArgArray[argIndex++] = (char*)testDirectoryName;
 	execvArgArray[argIndex++] = (char*)testCaseName;
 
@@ -67,48 +69,53 @@ static void ForkGCCTestCaseInternal( const char*	testDirectoryName,
 }
 
 
-void ForkGCCTestCase( const char*	testDirectoryName,
+void ForkGCCTestCase( const char*	gccOptions,
+	  	  	  	 	  const char*	testDirectoryName,
 		  	  	  	  const char*	testCaseName )
 {
-	ForkGCCTestCaseInternal( testDirectoryName, testCaseName, 0 );
+	ForkGCCTestCaseInternal( gccOptions, testDirectoryName, testCaseName, 0 );
 }
 
 
-void ForkGCCTestCase( const char*	testDirectoryName,
+void ForkGCCTestCase( const char*	gccOptions,
+	  	  	  	 	  const char*	testDirectoryName,
 		  	  	  	  const char*	testCaseName,
 		  	  	  	  const char*	option1 )
 {
-	ForkGCCTestCaseInternal( testDirectoryName, testCaseName, 1, option1 );
+	ForkGCCTestCaseInternal( gccOptions, testDirectoryName, testCaseName, 1, option1 );
 }
 
 
-void ForkGCCTestCase( const char*	testDirectoryName,
+void ForkGCCTestCase( const char*	gccOptions,
+	  	  	  	 	  const char*	testDirectoryName,
 		  	  	  	  const char*	testCaseName,
 		  	  	  	  const char*	option1,
 		  	  	  	  const char*	option2 )
 {
-	ForkGCCTestCaseInternal( testDirectoryName, testCaseName, 2, option1, option2 );
+	ForkGCCTestCaseInternal( gccOptions, testDirectoryName, testCaseName, 2, option1, option2 );
 }
 
 
-void ForkGCCTestCase( const char*	testDirectoryName,
+void ForkGCCTestCase( const char*	gccOptions,
+	  	  	  	 	  const char*	testDirectoryName,
 		  	  	  	  const char*	testCaseName,
 		  	  	  	  const char*	option1,
 		  	  	  	  const char*	option2,
 		  	  	  	  const char*	option3 )
 {
-	ForkGCCTestCaseInternal( testDirectoryName, testCaseName, 3, option1, option2, option3 );
+	ForkGCCTestCaseInternal( gccOptions, testDirectoryName, testCaseName, 3, option1, option2, option3 );
 }
 
 
-void ForkGCCTestCase( const char*	testDirectoryName,
+void ForkGCCTestCase( const char*	gccOptions,
+	  	  	  	 	  const char*	testDirectoryName,
 		  	  	  	  const char*	testCaseName,
 		  	  	  	  const char*	option1,
 		  	  	  	  const char*	option2,
 		  	  	  	  const char*	option3,
 		  	  	  	  const char*	option4 )
 {
-	ForkGCCTestCaseInternal( testDirectoryName, testCaseName, 4, option1, option2, option3, option4 );
+	ForkGCCTestCaseInternal( gccOptions, testDirectoryName, testCaseName, 4, option1, option2, option3, option4 );
 }
 
 

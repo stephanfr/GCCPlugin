@@ -1,21 +1,5 @@
-Test Class Initialized.
-Message: Source Code Message.
-Message: All Values Source Code Message.
-Boolean Value: 1
-Char Value: a
-Integer Value: 1
-Long Value: 2
-Float Value: 3
-Double Value: 4
-Test Class Initialized.
-Message: Injected String Value.
-Message: Second Injected String Value.
-Boolean Value: 0
-Char Value: b
-Integer Value: 30
-Long Value: 40
-Float Value: 50
-Double Value: 60
+AddFundamentalValueGlobalVarTest
+
 Value of testBoolVar:        1                      Should be: 1
 Value of testCharVar:        a                      Should be: 'a'
 Value of testCharPointerVar: Test String            Should be: 'Test String'

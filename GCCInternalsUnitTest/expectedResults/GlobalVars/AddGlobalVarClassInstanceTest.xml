@@ -40,21 +40,8 @@
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
-                <name>testBoolVar</name>
-                <uid>28419</uid>
-                <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/CreateGlobalVarsTestCase.cpp</file>
-                    <line>25</line>
-                    <char-count>1</char-count>
-                    <location>6650559</location>
-                </source-info>
-            </dictionary_entry>
-            <dictionary_entry>
-                <namespace>
-                    <name>TestCreatedNamespace::</name>
-                </namespace>
                 <name>testCTestClassVar</name>
-                <uid>30573</uid>
+                <uid>30464</uid>
                 <source-info>
                     <unknown>true</unknown>
                 </source-info>
@@ -65,7 +52,7 @@
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testCTestClassVarWithAllValuesInit</name>
-                <uid>30575</uid>
+                <uid>30466</uid>
                 <source-info>
                     <unknown>true</unknown>
                 </source-info>
@@ -76,89 +63,11 @@
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testCTestClassVarWithStringInit</name>
-                <uid>30574</uid>
+                <uid>30465</uid>
                 <source-info>
                     <unknown>true</unknown>
                 </source-info>
                 <static>true</static>
-            </dictionary_entry>
-            <dictionary_entry>
-                <namespace>
-                    <name>TestCreatedNamespace::</name>
-                </namespace>
-                <name>testCharPointerVar</name>
-                <uid>28425</uid>
-                <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/CreateGlobalVarsTestCase.cpp</file>
-                    <line>32</line>
-                    <char-count>1</char-count>
-                    <location>6651456</location>
-                </source-info>
-            </dictionary_entry>
-            <dictionary_entry>
-                <namespace>
-                    <name>TestCreatedNamespace::</name>
-                </namespace>
-                <name>testCharVar</name>
-                <uid>28420</uid>
-                <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/CreateGlobalVarsTestCase.cpp</file>
-                    <line>26</line>
-                    <char-count>1</char-count>
-                    <location>6650687</location>
-                </source-info>
-            </dictionary_entry>
-            <dictionary_entry>
-                <namespace>
-                    <name>TestCreatedNamespace::</name>
-                </namespace>
-                <name>testDoubleVar</name>
-                <uid>28424</uid>
-                <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/CreateGlobalVarsTestCase.cpp</file>
-                    <line>30</line>
-                    <char-count>1</char-count>
-                    <location>6651201</location>
-                </source-info>
-            </dictionary_entry>
-            <dictionary_entry>
-                <namespace>
-                    <name>TestCreatedNamespace::</name>
-                </namespace>
-                <name>testFloatVar</name>
-                <uid>28423</uid>
-                <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/CreateGlobalVarsTestCase.cpp</file>
-                    <line>29</line>
-                    <char-count>1</char-count>
-                    <location>6651072</location>
-                </source-info>
-            </dictionary_entry>
-            <dictionary_entry>
-                <namespace>
-                    <name>TestCreatedNamespace::</name>
-                </namespace>
-                <name>testIntVar</name>
-                <uid>28421</uid>
-                <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/CreateGlobalVarsTestCase.cpp</file>
-                    <line>27</line>
-                    <char-count>1</char-count>
-                    <location>6650814</location>
-                </source-info>
-            </dictionary_entry>
-            <dictionary_entry>
-                <namespace>
-                    <name>TestCreatedNamespace::</name>
-                </namespace>
-                <name>testLongVar</name>
-                <uid>28422</uid>
-                <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/CreateGlobalVarsTestCase.cpp</file>
-                    <line>28</line>
-                    <char-count>1</char-count>
-                    <location>6650943</location>
-                </source-info>
             </dictionary_entry>
         </namespace>
         <namespace name="LocalTestNamespace::">
@@ -169,10 +78,10 @@
                 <name>CTestClass</name>
                 <uid>20258</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/CreateGlobalVarsTestCase.cpp</file>
-                    <line>39</line>
+                    <file>../testCaseSourceCode/GlobalVars/AddGlobalVarClassInstanceTest.cpp</file>
+                    <line>21</line>
                     <char-count>1</char-count>
-                    <location>6652345</location>
+                    <location>6478500</location>
                 </source-info>
             </dictionary_entry>
         </namespace>
@@ -183,26 +92,8 @@
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
-                <name>testBoolVar</name>
-                <uid>28419</uid>
-                <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/CreateGlobalVarsTestCase.cpp</file>
-                    <line>25</line>
-                    <char-count>1</char-count>
-                    <location>6650559</location>
-                </source-info>
-                <static>false</static>
-                <type>
-                    <kind>fundamental</kind>
-                    <declaration>boolean</declaration>
-                </type>
-            </global_var_entry>
-            <global_var_entry>
-                <namespace>
-                    <name>TestCreatedNamespace::</name>
-                </namespace>
                 <name>testCTestClassVar</name>
-                <uid>30573</uid>
+                <uid>30464</uid>
                 <source-info>
                     <unknown>true</unknown>
                 </source-info>
@@ -220,7 +111,7 @@
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testCTestClassVarWithAllValuesInit</name>
-                <uid>30575</uid>
+                <uid>30466</uid>
                 <source-info>
                     <unknown>true</unknown>
                 </source-info>
@@ -238,7 +129,7 @@
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testCTestClassVarWithStringInit</name>
-                <uid>30574</uid>
+                <uid>30465</uid>
                 <source-info>
                     <unknown>true</unknown>
                 </source-info>
@@ -251,130 +142,16 @@
                     </namespace>
                 </type>
             </global_var_entry>
-            <global_var_entry>
-                <namespace>
-                    <name>TestCreatedNamespace::</name>
-                </namespace>
-                <name>testCharPointerVar</name>
-                <uid>28425</uid>
-                <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/CreateGlobalVarsTestCase.cpp</file>
-                    <line>32</line>
-                    <char-count>1</char-count>
-                    <location>6651456</location>
-                </source-info>
-                <static>false</static>
-                <type>
-                    <kind>derived</kind>
-                    <declaration>
-                        <operator>pointer</operator>
-                        <type>
-                            <kind>fundamental</kind>
-                            <declaration>char</declaration>
-                        </type>
-                    </declaration>
-                </type>
-            </global_var_entry>
-            <global_var_entry>
-                <namespace>
-                    <name>TestCreatedNamespace::</name>
-                </namespace>
-                <name>testCharVar</name>
-                <uid>28420</uid>
-                <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/CreateGlobalVarsTestCase.cpp</file>
-                    <line>26</line>
-                    <char-count>1</char-count>
-                    <location>6650687</location>
-                </source-info>
-                <static>false</static>
-                <type>
-                    <kind>fundamental</kind>
-                    <declaration>char</declaration>
-                </type>
-            </global_var_entry>
-            <global_var_entry>
-                <namespace>
-                    <name>TestCreatedNamespace::</name>
-                </namespace>
-                <name>testDoubleVar</name>
-                <uid>28424</uid>
-                <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/CreateGlobalVarsTestCase.cpp</file>
-                    <line>30</line>
-                    <char-count>1</char-count>
-                    <location>6651201</location>
-                </source-info>
-                <static>false</static>
-                <type>
-                    <kind>fundamental</kind>
-                    <declaration>double</declaration>
-                </type>
-            </global_var_entry>
-            <global_var_entry>
-                <namespace>
-                    <name>TestCreatedNamespace::</name>
-                </namespace>
-                <name>testFloatVar</name>
-                <uid>28423</uid>
-                <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/CreateGlobalVarsTestCase.cpp</file>
-                    <line>29</line>
-                    <char-count>1</char-count>
-                    <location>6651072</location>
-                </source-info>
-                <static>false</static>
-                <type>
-                    <kind>fundamental</kind>
-                    <declaration>float</declaration>
-                </type>
-            </global_var_entry>
-            <global_var_entry>
-                <namespace>
-                    <name>TestCreatedNamespace::</name>
-                </namespace>
-                <name>testIntVar</name>
-                <uid>28421</uid>
-                <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/CreateGlobalVarsTestCase.cpp</file>
-                    <line>27</line>
-                    <char-count>1</char-count>
-                    <location>6650814</location>
-                </source-info>
-                <static>false</static>
-                <type>
-                    <kind>fundamental</kind>
-                    <declaration>int</declaration>
-                </type>
-            </global_var_entry>
-            <global_var_entry>
-                <namespace>
-                    <name>TestCreatedNamespace::</name>
-                </namespace>
-                <name>testLongVar</name>
-                <uid>28422</uid>
-                <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/CreateGlobalVarsTestCase.cpp</file>
-                    <line>28</line>
-                    <char-count>1</char-count>
-                    <location>6650943</location>
-                </source-info>
-                <static>false</static>
-                <type>
-                    <kind>fundamental</kind>
-                    <declaration>long int</declaration>
-                </type>
-            </global_var_entry>
         </namespace>
         <namespace name="LocalTestNamespace::">
             <class type="class">
                 <name>CTestClass</name>
                 <uid>20258</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/CreateGlobalVarsTestCase.cpp</file>
-                    <line>39</line>
+                    <file>../testCaseSourceCode/GlobalVars/AddGlobalVarClassInstanceTest.cpp</file>
+                    <line>21</line>
                     <char-count>1</char-count>
-                    <location>6652345</location>
+                    <location>6478500</location>
                 </source-info>
                 <namespace>
                     <name>LocalTestNamespace::</name>
@@ -391,12 +168,12 @@
                 <methods>
                     <method>
                         <name>CTestClass</name>
-                        <uid>28429</uid>
+                        <uid>28421</uid>
                         <source-info>
-                            <file>../testCaseSourceCode/GlobalVars/CreateGlobalVarsTestCase.cpp</file>
-                            <line>43</line>
+                            <file>../testCaseSourceCode/GlobalVars/AddGlobalVarClassInstanceTest.cpp</file>
+                            <line>25</line>
                             <char-count>1</char-count>
-                            <location>6652853</location>
+                            <location>6479008</location>
                         </source-info>
                         <access>PUBLIC</access>
                         <static>false</static>
@@ -430,12 +207,12 @@
                     </method>
                     <method>
                         <name>CTestClass</name>
-                        <uid>28432</uid>
+                        <uid>28424</uid>
                         <source-info>
-                            <file>../testCaseSourceCode/GlobalVars/CreateGlobalVarsTestCase.cpp</file>
-                            <line>49</line>
+                            <file>../testCaseSourceCode/GlobalVars/AddGlobalVarClassInstanceTest.cpp</file>
+                            <line>31</line>
                             <char-count>1</char-count>
-                            <location>6653621</location>
+                            <location>6479776</location>
                         </source-info>
                         <access>PUBLIC</access>
                         <static>false</static>
@@ -482,12 +259,12 @@
                     </method>
                     <method>
                         <name>CTestClass</name>
-                        <uid>28441</uid>
+                        <uid>28433</uid>
                         <source-info>
-                            <file>../testCaseSourceCode/GlobalVars/CreateGlobalVarsTestCase.cpp</file>
-                            <line>54</line>
+                            <file>../testCaseSourceCode/GlobalVars/AddGlobalVarClassInstanceTest.cpp</file>
+                            <line>36</line>
                             <char-count>1</char-count>
-                            <location>6654261</location>
+                            <location>6480416</location>
                         </source-info>
                         <access>PUBLIC</access>
                         <static>false</static>

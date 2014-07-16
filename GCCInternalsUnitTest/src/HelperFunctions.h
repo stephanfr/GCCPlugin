@@ -9,25 +9,30 @@
 #define HELPERFUNCTIONS_H_
 
 
-void ForkGCCTestCase( const char*	testDirectoryName,
+void ForkGCCTestCase( const char*	gccOptions,
+					  const char*	testDirectoryName,
 					  const char*	testCaseName );
 
-void ForkGCCTestCase( const char*	testDirectoryName,
+void ForkGCCTestCase( const char*	gccOptions,
+		  	  	  	  const char*	testDirectoryName,
 					  const char*	testCaseName,
 					  const char*	option1 );
 
-void ForkGCCTestCase( const char*	testDirectoryName,
+void ForkGCCTestCase( const char*	gccOptions,
+		  	  	  	  const char*	testDirectoryName,
 					  const char*	testCaseName,
 					  const char*	option1,
 					  const char*	option2 );
 
-void ForkGCCTestCase( const char*	testDirectoryName,
+void ForkGCCTestCase( const char*	gccOptions,
+		  	  	  	  const char*	testDirectoryName,
 					  const char*	testCaseName,
 					  const char*	option1,
 					  const char*	option2,
 					  const char*	option3 );
 
-void ForkGCCTestCase( const char*	testDirectoryName,
+void ForkGCCTestCase( const char*	gccOptions,
+		  	  	  	  const char*	testDirectoryName,
 					  const char*	testCaseName,
 					  const char*	option1,
 					  const char*	option2,

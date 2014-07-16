@@ -259,6 +259,8 @@ namespace GCCInternalsTools
 
 		CPPModel::CreateGlobalVarResult			CreateGlobalFundamentalTypeVar( const CPPModel::FundamentalGlobalVarDeclarationBase&			globalDecl );
 
+		CPPModel::CreateGlobalVarResult			CreateGlobalFundamentalPointerVar( const CPPModel::FundamentalGlobalVarDeclarationBase&			globalDecl );
+
 		CPPModel::CreateGlobalVarResult			CreateGlobalClassInstanceVar( const CPPModel::ClassGlobalVarDeclaration&						globalDecl );
 
 	};

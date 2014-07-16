@@ -9,9 +9,9 @@
 #include "gtest/gtest.h"
 
 
-#include "NamespaceTests.cpp"
-//#include "GlobalVarTests.cpp"
-#include "FunctionTests.cpp"
+//#include "NamespaceTests.cpp"
+#include "GlobalVarTests.cpp"
+//#include "FunctionTests.cpp"
 
 
 

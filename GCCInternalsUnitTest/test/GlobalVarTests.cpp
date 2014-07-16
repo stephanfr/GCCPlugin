@@ -16,16 +16,24 @@ namespace
 {
 	TEST(TestGlobalVariables, BasicTests)
 	{
-//		ForkGCCTestCase( "GlobalVars", "IntrinsicTestCase", "namespaces=TestNamespace::" );
-//		ForkGCCTestCase( "GlobalVars", "NonIntrinsicTestCase", "namespaces=TestNamespace::" );
-//		ForkGCCTestCase( "GlobalVars", "LocallyUserDefinedClassTestCase", "namespaces=LocalNamespace::,TestNamespace::" );
-//		ForkGCCTestCase( "GlobalVars", "DerivedTypesTestCase", "namespaces=TestNamespace::" );
-//		ForkGCCTestCase( "GlobalVars", "AttributesTestCase", "namespaces=TestNamespace::" );
+		ForkGCCTestCase( "-c", "GlobalVars", "IntrinsicTestCase", "namespaces=TestNamespace::" );
+		ForkGCCTestCase( "-c", "GlobalVars", "NonIntrinsicTestCase", "namespaces=TestNamespace::" );
+		ForkGCCTestCase( "-c", "GlobalVars", "LocallyUserDefinedClassTestCase", "namespaces=LocalNamespace::,TestNamespace::" );
+		ForkGCCTestCase( "-c", "GlobalVars", "DerivedTypesTestCase", "namespaces=TestNamespace::" );
+		ForkGCCTestCase( "-c", "GlobalVars", "AttributesTestCase", "namespaces=TestNamespace::" );
 
-		ForkGCCTestCase( "GlobalVars",
-						 "CreateGlobalVarsTestCase",
+		ForkGCCTestCase( "",
+					     "GlobalVars",
+						 "AddFundamentalValueGlobalVarTest",
 						 "namespaces=TestCreatedNamespace::,LocalTestNamespace::",
-						 "test-extension=libTestExtensions.so:AddStringGlobalVarTest" );
+						 "test-extension=libTestExtensions.so:AddFundamentalValueGlobalVarTest" );
+
+		ForkGCCTestCase( "",
+				 	  	 "GlobalVars",
+						 "AddGlobalVarClassInstanceTest",
+						 "namespaces=TestCreatedNamespace::,LocalTestNamespace::",
+						 "test-extension=libTestExtensions.so:AddGlobalVarClassInstanceTest" );
+
 	}
 }
 

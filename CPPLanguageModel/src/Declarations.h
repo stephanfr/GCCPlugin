@@ -82,7 +82,7 @@ namespace CPPModel
 	{
 	public :
 
-		enum class Kind { FUNDAMENTAL_VALUE, FUNDAMENTAL_POINTER, CLASS, UNION };
+		enum class Kind { FUNDAMENTAL_VALUE, FUNDAMENTAL_POINTER, CLASS, UNION, ARRAY };
 
 		virtual ~IDeclarationType() {};
 
@@ -266,12 +266,12 @@ namespace CPPModel
 	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Kind::FUNDAMENTAL_VALUE, CPPModel::TypeSpecifier::FLOAT, float, ParameterFloatValue> FloatGlobalVarDeclaration;
 	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Kind::FUNDAMENTAL_VALUE, CPPModel::TypeSpecifier::DOUBLE, double, ParameterDoubleValue> DoubleGlobalVarDeclaration;
 
-//	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Kind::FUNDAMENTAL_POINTER, CPPModel::TypeSpecifier::BOOLEAN, bool, ParameterBooleanValue> BooleanPointerGlobalVarDeclaration;
+	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Kind::FUNDAMENTAL_POINTER, CPPModel::TypeSpecifier::BOOLEAN, bool, ParameterBooleanValue> BooleanPointerGlobalVarDeclaration;
 //	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Kind::FUNDAMENTAL_POINTER, CPPModel::TypeSpecifier::CHAR, char*, ParameterCharPointerConstValue> CharPointerConstGlobalVarDeclaration;
-//	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Kind::FUNDAMENTAL_POINTER, CPPModel::TypeSpecifier::INT, int, ParameterIntValue> IntPointerGlobalVarDeclaration;
-//	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Kind::FUNDAMENTAL_POINTER, CPPModel::TypeSpecifier::LONG_INT, long, ParameterLongValue> LongPointerGlobalVarDeclaration;
-//	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Kind::FUNDAMENTAL_POINTER, CPPModel::TypeSpecifier::FLOAT, float, ParameterFloatValue> FloatPointerGlobalVarDeclaration;
-//	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Kind::FUNDAMENTAL_POINTER, CPPModel::TypeSpecifier::DOUBLE, double, ParameterDoubleValue> DoublePointerGlobalVarDeclaration;
+	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Kind::FUNDAMENTAL_POINTER, CPPModel::TypeSpecifier::INT, int, ParameterIntValue> IntPointerGlobalVarDeclaration;
+	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Kind::FUNDAMENTAL_POINTER, CPPModel::TypeSpecifier::LONG_INT, long, ParameterLongValue> LongPointerGlobalVarDeclaration;
+	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Kind::FUNDAMENTAL_POINTER, CPPModel::TypeSpecifier::FLOAT, float, ParameterFloatValue> FloatPointerGlobalVarDeclaration;
+	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Kind::FUNDAMENTAL_POINTER, CPPModel::TypeSpecifier::DOUBLE, double, ParameterDoubleValue> DoublePointerGlobalVarDeclaration;
 
 
 
