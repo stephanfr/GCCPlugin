@@ -35,9 +35,4 @@ namespace TestNamespace
 
 
 
-int main()
-{
-	std::cout << "Test Successful." << std::endl;
-}
-
 

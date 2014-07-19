@@ -9,11 +9,3 @@
 #include <iostream>
 
 
-
-int main()
-{
-	std::cout << "CreateNamespaceTest Successful" << std::endl;
-
-	return( 0 );
-}
-

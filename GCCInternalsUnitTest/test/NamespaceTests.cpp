@@ -17,12 +17,14 @@ namespace
 {
 	TEST(TestNamespaces, BasicTests)
 	{
-		ForkGCCTestCase( "Namespaces",
+		ForkGCCTestCase( "-c",
+						 "Namespaces",
 					     "NamespaceBasicTestCase",
 					     "namespaces=SimpleNamespace::,NestedNamespaceBase::",
 					     "list-all-namespaces" );
 
-		ForkGCCTestCase( "Namespaces",
+		ForkGCCTestCase( "-c",
+						 "Namespaces",
 					     "CreateNamespaceTest",
 					     "namespaces=NestedNamespaceBase::",
 					     "test-extension=libTestExtensions.so:AddNamespaceTest",

@@ -47,11 +47,3 @@ namespace NestedNamespaceBase
 }
 
 
-
-int main()
-{
-	std::cout << "NamespaceBasicTestCase Successful" << std::endl;
-
-	return( 0 );
-}
-
