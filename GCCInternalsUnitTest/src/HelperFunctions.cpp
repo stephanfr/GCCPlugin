@@ -24,7 +24,7 @@ static void ForkGCCTestCaseInternal( const char*	gccOptions,
 	//		The list must end with an empty string.
 
 	va_list			arguments;
-	char* 			execvArgArray[256];
+	char* 			execvArgArray[1024];
 	int				argIndex = 0;
 
 	execvArgArray[argIndex++] = (char*)"./gcc_wrapper.sh";

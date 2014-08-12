@@ -29,6 +29,12 @@ namespace
 						 "test-extension=libTestExtensions.so:AddFundamentalValueGlobalVarTest" );
 
 		ForkGCCTestCase( "",
+					     "GlobalVars",
+						 "AddFundamentalArrayValueGlobalVarTest",
+						 "namespaces=TestCreatedNamespace::,LocalTestNamespace::",
+						 "test-extension=libTestExtensions.so:AddFundamentalArrayValueGlobalVarTest" );
+
+		ForkGCCTestCase( "",
 				 	  	 "GlobalVars",
 						 "AddGlobalVarClassInstanceTest",
 						 "namespaces=TestCreatedNamespace::,LocalTestNamespace::",

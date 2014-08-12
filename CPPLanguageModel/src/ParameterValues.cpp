@@ -21,4 +21,14 @@ namespace CPPModel
 	const ParameterType		DOUBLE_PARAM = { TypeSpecifier::DOUBLE };
 	const ParameterType		CLASS_PARAM = { TypeSpecifier::CLASS };
 
+	const ParameterType		ARRAY_PARAM = { TypeSpecifier::ARRAY };
+
+
+
+	TypeSpecifier	AsTypeSpecifier( const ParameterType&	paramType )
+	{
+//		return( paramType.at( paramType.size() - 1 ));
+		return( paramType.at( 0 ));
+	}
+
 }

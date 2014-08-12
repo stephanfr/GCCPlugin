@@ -42,8 +42,8 @@ int main()
 	std::cout << "Value of testBoolVar:        " << TestCreatedNamespace::testBoolVar << "                      Should be: 1" << std::endl;
 	std::cout << "Value of testCharVar:        " << TestCreatedNamespace::testCharVar << "                      Should be: 'a'" << std::endl;
 	std::cout << "Value of testCharPointerVar: " << TestCreatedNamespace::testCharPointerVar << "            Should be: 'Test String'" << std::endl;
-	std::cout << "Value of testIntVar:         " << TestCreatedNamespace::testIntVar << "             Should be: " << INT_MAX << std::endl;
-	std::cout << "Value of testLongVar:        " << TestCreatedNamespace::testLongVar << "    Should be: " << LONG_MAX << std::endl;
+	std::cout << "Value of testIntVar:         " << TestCreatedNamespace::testIntVar << "             Should be: " << __INT_MAX__ << std::endl;
+	std::cout << "Value of testLongVar:        " << TestCreatedNamespace::testLongVar << "    Should be: " << __LONG_MAX__ << std::endl;
 	std::cout << "Value of testFloatVar:       " << TestCreatedNamespace::testFloatVar << "            Should be: " << FLT_MAX << std::endl;
 	std::cout << "Value of testDoubleVar:      " << TestCreatedNamespace::testDoubleVar << "           Should be: " << DBL_MAX << std::endl;
 

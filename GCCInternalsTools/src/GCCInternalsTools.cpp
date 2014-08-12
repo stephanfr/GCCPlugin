@@ -265,6 +265,70 @@ namespace GCCInternalsTools
 
 
 
+	tree			AsTree( bool		booleanValue )
+	{
+		return( build_int_cst( boolean_type_node, booleanValue ));
+	}
+
+	tree			AsTree( char		charValue )
+	{
+		return( build_int_cst( char_type_node, charValue ));
+	}
+
+	tree			AsTree( int			intValue )
+	{
+		return( build_int_cst( integer_type_node, intValue ));
+	}
+
+	tree			AsTree( long			longValue )
+	{
+		return( build_int_cst( long_integer_type_node, longValue ));
+	}
+
+	tree			AsTree( float			floatValue )
+	{
+		//	I don't care for the conversion technique of going to a string and then back into a real_value,
+		//		but I could find no other way to make the conversion for doubles so I replicated it here.
+
+		real_value		r;
+
+		char			buffer[256];
+
+		sprintf( buffer, "%g", floatValue );
+
+		real_from_string( &r, buffer );
+
+		return( build_real( float_type_node, r ));
+	}
+
+	tree			AsTree( double			doubleValue )
+	{
+		//	I could find no other way to convert a double to a real_value - except by going through a string conversion.
+
+		real_value		r;
+
+		char			buffer[256];
+
+		sprintf( buffer, "%lg", doubleValue );
+
+		real_from_string( &r, buffer );
+
+		return( build_real( double_type_node, r ));
+	}
+
+	tree			AsTree( std::string		stringValue )
+	{
+	    tree			stringConstant = build_string_literal( stringValue.length() + 1, stringValue.c_str() + '\0' );
+
+	    TREE_STATIC( stringConstant ) = true;
+	    TREE_READONLY( stringConstant ) = true;
+
+		return( stringConstant );
+	}
+
+
+
+
 	enum class ConvertParameterResultCodes { SUCCESS, UNSUPPORTED_TYPE };
 
 	typedef SEFUtility::ResultWithReturnValue<ConvertParameterResultCodes,tree>						ConvertParameterValueResult;
@@ -275,69 +339,35 @@ namespace GCCInternalsTools
 
 		tree		returnValue;
 
-		switch( value.type().at( value.type().size() - 1 ) )
+		switch( CPPModel::AsTypeSpecifier( value.type() ))
 		{
 			case CPPModel::TypeSpecifier::BOOLEAN :
-				returnValue = build_int_cst( boolean_type_node, dynamic_cast<const CPPModel::ParameterBooleanValue&>(value).value() );
+				returnValue = AsTree( dynamic_cast<const CPPModel::ParameterBooleanValue&>(value).value() );
 				break;
 
 			case CPPModel::TypeSpecifier::CHAR :
-				returnValue = build_int_cst( char_type_node, dynamic_cast<const CPPModel::ParameterCharValue&>(value).value() );
+				returnValue = AsTree( dynamic_cast<const CPPModel::ParameterCharValue&>(value).value() );
 				break;
 
 			case CPPModel::TypeSpecifier::INT :
-				returnValue = build_int_cst( integer_type_node, dynamic_cast<const CPPModel::ParameterIntValue&>(value).value() );
+				returnValue = AsTree( dynamic_cast<const CPPModel::ParameterIntValue&>(value).value() );
 				break;
 
 			case CPPModel::TypeSpecifier::LONG_INT :
-				returnValue = build_int_cst( long_integer_type_node, dynamic_cast<const CPPModel::ParameterLongValue&>(value).value() );
+				returnValue = AsTree( dynamic_cast<const CPPModel::ParameterLongValue&>(value).value() );
 				break;
 
 			case CPPModel::TypeSpecifier::FLOAT :
-			{
-				//	I don't care for the conversion technique of going to a string and then back into a real_value,
-				//		but I could find no other way to make the conversion for doubles so I replicated it here.
-
-				real_value		r;
-
-				char			buffer[1024];
-
-				sprintf( buffer, "%g", dynamic_cast<const CPPModel::ParameterFloatValue&>(value).value() );
-
-				real_from_string( &r, buffer );
-
-				returnValue = build_real( float_type_node, r );
-			}
-			break;
+				returnValue = AsTree( dynamic_cast<const CPPModel::ParameterFloatValue&>(value).value() );
+				break;
 
 			case CPPModel::TypeSpecifier::DOUBLE :
-			{
-				//	I could find no other way to convert a double to a real_value - except by going through a string conversion.
-
-				real_value		r;
-
-				char			buffer[1024];
-
-				sprintf( buffer, "%lg", dynamic_cast<const CPPModel::ParameterDoubleValue&>(value).value() );
-
-				real_from_string( &r, buffer );
-
-				returnValue = build_real( double_type_node, r );
-			}
-			break;
+				returnValue = AsTree( dynamic_cast<const CPPModel::ParameterDoubleValue&>(value).value() );
+				break;
 
 			case CPPModel::TypeSpecifier::STRING :
-			{
-			    std::string		stringValue = dynamic_cast<const CPPModel::ParameterStringValue&>(value).value();
-
-			    tree			stringConstant = build_string_literal( stringValue.length() + 1, stringValue.c_str() + '\0' );
-
-			    TREE_STATIC( stringConstant ) = true;
-			    TREE_READONLY( stringConstant ) = true;
-
-				returnValue = stringConstant;
-			}
-			break;
+				returnValue = AsTree( dynamic_cast<const CPPModel::ParameterStringValue&>(value).value() );
+				break;
 
 			default :
 				return( ConvertParameterValueResult::Failure( ConvertParameterResultCodes::UNSUPPORTED_TYPE, "Internal Error - Unsupported Type for Parameter Value Conversion" ));
@@ -1415,8 +1445,7 @@ namespace GCCInternalsTools
 
   		switch( globalDecl.kind() )
 		{
-			case CPPModel::IDeclarationType::Kind::FUNDAMENTAL_VALUE :
-			case CPPModel::IDeclarationType::Kind::FUNDAMENTAL_POINTER :
+			case CPPModel::IDeclarationType::Kind::FUNDAMENTAL :
 				return( CreateGlobalFundamentalTypeVar( dynamic_cast<const CPPModel::FundamentalGlobalVarDeclarationBase&>( globalDecl ) ));
 				break;
 
@@ -1434,10 +1463,120 @@ namespace GCCInternalsTools
 
 
 
+	static const tree			GetGlobalType( const CPPModel::FundamentalGlobalVarDeclarationBase&			globalDecl )
+	{
+		tree			globalType;
+
+
+		switch( globalDecl.modifier() )
+		{
+		case CPPModel::IDeclarationType::Modifier::VALUE :
+			globalType = ASTTreeForType( globalDecl.typeSpecifier() );
+			break;
+
+		case CPPModel::IDeclarationType::Modifier::POINTER :
+			globalType = build_pointer_type( ASTTreeForType( globalDecl.typeSpecifier() ));
+			break;
+
+		case CPPModel::IDeclarationType::Modifier::ARRAY :
+			globalType = build_array_type( ASTTreeForType( globalDecl.typeSpecifier() ), build_index_type( build_int_cst( NULL_TREE, globalDecl.arrayDimensions().dimensions() )) );
+			break;
+		}
+
+		return( globalType );
+	}
+
+
+
+
+
+	enum class AsInitialValueResultCodes { SUCCESS, ERROR_CONVERTING_TYPE };
+
+	typedef SEFUtility::ResultWithReturnValue<AsInitialValueResultCodes, tree>						AsInitialValueResult;
+
+
+	AsInitialValueResult			AsInitialValue( const tree								globalType,
+													const CPPModel::ParameterValueBase&		value )
+	{
+		tree		initValue;
+
+		if( CPPModel::AsTypeSpecifier( value.type() ) != CPPModel::TypeSpecifier::ARRAY )
+		{
+			ConvertParameterValueResult			initialValue = ConvertParameterValue( value );
+
+			if( initialValue.Succeeded() )
+			{
+				initValue = initialValue.ReturnValue();
+			}
+			else
+			{
+				return( AsInitialValueResult::Failure( AsInitialValueResultCodes::ERROR_CONVERTING_TYPE, "Error converting initial value to a tree value.", initialValue ) );
+			}
+		}
+		else
+		{
+			const CPPModel::ParameterArrayValueBase&		initialValueArray = dynamic_cast<const CPPModel::ParameterArrayValueBase&>( value );
+
+			vec<constructor_elt, va_gc> *v;
+
+			vec_alloc ( v, initialValueArray.size() );
+
+			for( int i = 0; i < initialValueArray.size(); ++i )
+			{
+				tree		value;
+
+				switch( CPPModel::AsTypeSpecifier( initialValueArray.elementType() ))
+				{
+					case CPPModel::TypeSpecifier::BOOLEAN :
+						value = AsTree( dynamic_cast<const CPPModel::ParameterBoolArrayValue&>( initialValueArray ).value()[i] );
+						break;
+
+					case CPPModel::TypeSpecifier::CHAR :
+						value = AsTree( dynamic_cast<const CPPModel::ParameterCharArrayValue&>( initialValueArray ).value()[i] );
+						break;
+
+					case CPPModel::TypeSpecifier::INT :
+						value = AsTree( dynamic_cast<const CPPModel::ParameterIntArrayValue&>( initialValueArray ).value()[i] );
+						break;
+
+					case CPPModel::TypeSpecifier::LONG_INT :
+						value = AsTree( dynamic_cast<const CPPModel::ParameterLongArrayValue&>( initialValueArray ).value()[i] );
+						break;
+
+					case CPPModel::TypeSpecifier::FLOAT :
+						value = AsTree( dynamic_cast<const CPPModel::ParameterFloatArrayValue&>( initialValueArray ).value()[i] );
+						break;
+
+					case CPPModel::TypeSpecifier::DOUBLE :
+						value = AsTree( dynamic_cast<const CPPModel::ParameterDoubleArrayValue&>( initialValueArray ).value()[i] );
+						break;
+
+					case CPPModel::TypeSpecifier::STRING :
+						value = AsTree( dynamic_cast<const CPPModel::ParameterStringArrayValue&>( initialValueArray ).value()[i] );
+						break;
+
+					default :
+						vec_free( v );
+						return( AsInitialValueResult::Failure( AsInitialValueResultCodes::ERROR_CONVERTING_TYPE, "Internal Error - Unsupported Type for Initialization Parameter Value Conversion" ));
+				}
+
+				constructor_elt elt = { build_int_cst( integer_type_node, i ), value };
+				v->quick_push (elt);
+			}
+
+			initValue = build_constructor( globalType, v );
+
+			vec_free( v );
+		}
+
+		return( AsInitialValueResult( initValue ));
+	}
+
+
 
 	CPPModel::CreateGlobalVarResult			ASTDictionaryImpl::CreateGlobalFundamentalTypeVar( const CPPModel::FundamentalGlobalVarDeclarationBase&			globalDecl )
 	{
-		const tree			globalType = ( globalDecl.kind() == CPPModel::IDeclarationType::Kind::FUNDAMENTAL_POINTER ) ? build_pointer_type( ASTTreeForType( globalDecl.typeSpecifier() )) : ASTTreeForType( globalDecl.typeSpecifier() );
+		const tree			globalType = GetGlobalType( globalDecl );
 
 		//	Create the global declaration
 
@@ -1461,20 +1600,19 @@ namespace GCCInternalsTools
 
 		//	Initialize the variable if we have an initializer
 
-		if( globalDecl.kind() == CPPModel::IDeclarationType::Kind::FUNDAMENTAL_VALUE )
+		if( globalDecl.hasInitialValue() )
 		{
-			if( globalDecl.hasInitialValue() )
-			{
-				ConvertParameterValueResult			initialValue = ConvertParameterValue( globalDecl.initialValue() );
+			const CPPModel::ParameterValueBase&			paramValue = globalDecl.initialValue();
 
-				if( initialValue.Succeeded() )
-				{
-					DECL_INITIAL( globalDeclaration ) = initialValue.ReturnValue();
-				}
-				else
-				{
-					return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::INTERNAL_ERROR, "Error encountered converting parameter value to a GCC tree.", initialValue ));
-				}
+			AsInitialValueResult						initialValue = AsInitialValue( globalType, paramValue );
+
+			if( initialValue.Succeeded() )
+			{
+				DECL_INITIAL( globalDeclaration ) = initialValue.ReturnValue();
+			}
+			else
+			{
+				return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::INTERNAL_ERROR, "Error encountered converting parameter value to a GCC tree.", initialValue ));
 			}
 		}
 
@@ -1662,7 +1800,7 @@ namespace GCCInternalsTools
 			}
 		}
 
-		//	Find the correct constructor based on th parameter types
+		//	Find the correct constructor based on the parameter types
 
 		FindMethodValueResult		ctorMethod = FindMethod( MethodList( TYPE_METHODS( declType ) ), "__comp_ctor ", globalDecl.initialValues() );
 
