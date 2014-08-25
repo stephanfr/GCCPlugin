@@ -51,6 +51,18 @@ namespace LocalTestNamespace
 			}
 
 	};
+
+
+	class CTestClassTakingPointer
+	{
+	public :
+
+		CTestClassTakingPointer( int*		intPointer )
+		{
+			std::cout << "Int pointed to by argument: " << *intPointer << std::endl;
+		}
+
+	};
 }
 
 

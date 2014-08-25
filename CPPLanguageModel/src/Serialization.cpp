@@ -816,8 +816,8 @@ namespace CPPModel
 
 
 	template<>
-	std::ostream&	FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::BOOLEAN, std::vector<bool>, ParameterBoolArrayValue>::toXML( std::ostream&				outputStream,
-												 	     	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	      SerializationOptions		options ) const
+	std::ostream&	FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::BOOLEAN, std::vector<bool>, BooleanArrayParameter>::toXML( std::ostream&				outputStream,
+												 	     	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	         SerializationOptions		options ) const
 	{
 		outputStream << "<bool_array_global_var_decl>\n";
 
@@ -835,6 +835,7 @@ namespace CPPModel
 
 		return( outputStream );
 	}
+
 
 	template<>
 	std::ostream&	BoolArrayGlobalVarDeclaration::toXML( std::ostream&				outputStream,
@@ -859,7 +860,7 @@ namespace CPPModel
 
 
 	template<>
-	std::ostream&	FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::CHAR, std::vector<char>, ParameterCharArrayValue>::toXML( std::ostream&				outputStream,
+	std::ostream&	FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::CHAR, std::vector<char>, CharArrayParameter>::toXML( std::ostream&				outputStream,
 												 	     	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	   SerializationOptions			options ) const
 	{
 		outputStream << "<char_array_global_var_decl>\n";
@@ -901,7 +902,7 @@ namespace CPPModel
 	}
 
 	template<>
-	std::ostream&	FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::INT, std::vector<int>, ParameterIntArrayValue>::toXML( std::ostream&				outputStream,
+	std::ostream&	FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::INT, std::vector<int>, IntArrayParameter>::toXML( std::ostream&				outputStream,
 												 	     	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	SerializationOptions		options ) const
 	{
 		outputStream << "<int_array_global_var_decl>\n";
@@ -944,7 +945,7 @@ namespace CPPModel
 
 
 	template<>
-	std::ostream&	FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::LONG_INT, std::vector<long>, ParameterLongArrayValue>::toXML( std::ostream&				outputStream,
+	std::ostream&	FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::LONG_INT, std::vector<long>, LongArrayParameter>::toXML( std::ostream&				outputStream,
 												 	     	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	SerializationOptions		options ) const
 	{
 		outputStream << "<long_array_global_var_decl>\n";
@@ -986,7 +987,7 @@ namespace CPPModel
 	}
 
 	template<>
-	std::ostream&	FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::FLOAT, std::vector<float>, ParameterFloatArrayValue>::toXML( std::ostream&				outputStream,
+	std::ostream&	FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::FLOAT, std::vector<float>, FloatArrayParameter>::toXML( std::ostream&				outputStream,
 												 	     	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	SerializationOptions		options ) const
 	{
 		outputStream << "<float_array_global_var_decl>\n";
@@ -1028,7 +1029,7 @@ namespace CPPModel
 	}
 
 	template<>
-	std::ostream&	FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::DOUBLE, std::vector<double>, ParameterDoubleArrayValue>::toXML( std::ostream&				outputStream,
+	std::ostream&	FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::DOUBLE, std::vector<double>, DoubleArrayParameter>::toXML( std::ostream&				outputStream,
 												 	     	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	SerializationOptions		options ) const
 	{
 		outputStream << "<double_array_global_var_decl>\n";
@@ -1070,7 +1071,7 @@ namespace CPPModel
 	}
 
 	template<>
-	std::ostream&	FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::STRING, std::vector<std::string>, ParameterStringArrayValue>::toXML( std::ostream&				outputStream,
+	std::ostream&	FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::STRING, std::vector<std::string>, StringArrayParameter>::toXML( std::ostream&				outputStream,
 												 	     	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	SerializationOptions		options ) const
 	{
 		outputStream << "<string_array_global_var_decl>\n";
@@ -1110,6 +1111,167 @@ namespace CPPModel
 
 		return( outputStream );
 	}
+
+
+	template<>
+	std::ostream&	BooleanPointerGlobalVarDeclaration::toXML( std::ostream&				outputStream,
+												 		 	   SerializationOptions		options ) const
+	{
+		outputStream << "<bool_pointer_global_var_decl>\n";
+
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			NamedEntity::toXML( outputStream, options );
+			NamespaceScoped::toXML( outputStream, options );
+		//		type().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+			attributes().toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+		}
+
+		outputStream << "</bool_pointer_global_var_decl>\n";
+
+		return( outputStream );
+	}
+
+
+
+	template<>
+	std::ostream&	CharPointerGlobalVarDeclaration::toXML( std::ostream&				outputStream,
+												 		    SerializationOptions		options ) const
+	{
+		outputStream << "<char_pointer_global_var_decl>\n";
+
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			NamedEntity::toXML( outputStream, options );
+			NamespaceScoped::toXML( outputStream, options );
+		//		type().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+			attributes().toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+		}
+
+		outputStream << "</char_pointer_global_var_decl>\n";
+
+		return( outputStream );
+	}
+
+
+
+	template<>
+	std::ostream&	StringPointerGlobalVarDeclaration::toXML( std::ostream&				outputStream,
+												 		      SerializationOptions		options ) const
+	{
+		outputStream << "<string_pointer_global_var_decl>\n";
+
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			NamedEntity::toXML( outputStream, options );
+			NamespaceScoped::toXML( outputStream, options );
+		//		type().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+			attributes().toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+		}
+
+		outputStream << "</string_pointer_global_var_decl>\n";
+
+		return( outputStream );
+	}
+
+
+
+
+	template<>
+	std::ostream&	IntPointerGlobalVarDeclaration::toXML( std::ostream&				outputStream,
+												 		 SerializationOptions		options ) const
+	{
+		outputStream << "<int_pointer_global_var_decl>\n";
+
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			NamedEntity::toXML( outputStream, options );
+			NamespaceScoped::toXML( outputStream, options );
+		//		type().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+			attributes().toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+		}
+
+		outputStream << "</int_pointer_global_var_decl>\n";
+
+		return( outputStream );
+	}
+
+
+
+	template<>
+	std::ostream&	LongPointerGlobalVarDeclaration::toXML( std::ostream&				outputStream,
+												 		 	SerializationOptions		options ) const
+	{
+		outputStream << "<long_pointer_global_var_decl>\n";
+
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			NamedEntity::toXML( outputStream, options );
+			NamespaceScoped::toXML( outputStream, options );
+		//		type().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+			attributes().toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+		}
+
+		outputStream << "</long_pointer_global_var_decl>\n";
+
+		return( outputStream );
+	}
+
+
+	template<>
+	std::ostream&	FloatPointerGlobalVarDeclaration::toXML( std::ostream&				outputStream,
+												 		 	 SerializationOptions		options ) const
+	{
+		outputStream << "<float_pointer_global_var_decl>\n";
+
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			NamedEntity::toXML( outputStream, options );
+			NamespaceScoped::toXML( outputStream, options );
+		//		type().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+			attributes().toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+		}
+
+		outputStream << "</float_pointer_global_var_decl>\n";
+
+		return( outputStream );
+	}
+
+
+
+	template<>
+	std::ostream&	DoublePointerGlobalVarDeclaration::toXML( std::ostream&				outputStream,
+												 		 	  SerializationOptions		options ) const
+	{
+		outputStream << "<double_pointer_global_var_decl>\n";
+
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			NamedEntity::toXML( outputStream, options );
+			NamespaceScoped::toXML( outputStream, options );
+		//		type().toXML( outputStream, AddOption( options, SerializationOptions::NO_ATTRIBUTES ));
+			attributes().toXML( outputStream, options );
+			Static::toXML( outputStream, options );
+		}
+
+		outputStream << "</double_pointer_global_var_decl>\n";
+
+		return( outputStream );
+	}
+
 
 
 

@@ -70,20 +70,10 @@ namespace CPPModel
 				   	     const std::string&				name,
 				   	     const Namespace&				enclosingNamespace,
 				   	     bool							isStatic,
+				   	     bool							isExtern,
 				   	     const SourceLocation&			sourceLocation,
 				   	     const CompilerSpecific&		compilerSpecific,
-				   	     ConstListPtr<Attribute>&		attributes )
-			: m_dictionary( dictionary ),
-			  m_uid( uid ),
-			  m_name( name ),
-		  	  m_sourceLocation( sourceLocation ),
-		  	  m_compilerSpecific( compilerSpecific ),
-		  	  m_attributes( attributes ),
-		  	  m_static( isStatic ),
-			  m_enclosingNamespace( enclosingNamespace ),
-		  	  m_enclosingNamespaceFQName( enclosingNamespace.fqName() ),
-		  	  m_fqName( enclosingNamespace.fqName() + std::string( name ) )
-			{}
+				   	     ConstListPtr<Attribute>&		attributes );
 
 
 		virtual ~DictionaryEntry()
@@ -121,6 +111,11 @@ namespace CPPModel
 		const bool						isStatic() const
 		{
 			return( m_static );
+		}
+
+		const bool						isExtern() const
+		{
+			return( m_extern );
 		}
 
 		const SourceLocation&			sourceLocation() const
@@ -164,6 +159,8 @@ namespace CPPModel
 
 		const bool						m_static;
 
+		const bool						m_extern;
+
 		const Namespace&				m_enclosingNamespace;
 		const std::string				m_enclosingNamespaceFQName;
 
@@ -181,11 +178,12 @@ namespace CPPModel
 				   	    	  const UID&						uid,
 				   	    	  const std::string&				name,
 				   	    	  const Namespace&					enclosingNamespace,
+						   	  bool								isExtern,
 				   	    	  const SourceLocation&				sourceLocation,
 						   	  const CompilerSpecific&			compilerSpecific,
 				   	    	  ConstListPtr<Attribute>&			attributeList,
 				   	    	  TypeSpecifier						typeSpec )
-			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, false, sourceLocation, compilerSpecific, attributeList ),
+			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, false, isExtern, sourceLocation, compilerSpecific, attributeList ),
 			  m_typeSpec( typeSpec )
 			{}
 
@@ -244,11 +242,12 @@ namespace CPPModel
 				   	    	  const std::string&			name,
 				   	    	  const Namespace&				enclosingNamespace,
 						   	  bool							isStatic,
+						   	  bool							isExtern,
 				   	    	  const SourceLocation&			sourceLocation,
 						   	  const CompilerSpecific&		compilerSpecific,
 				   	    	  ConstListPtr<Attribute>&		attributeList,
 				   	    	  TypeSpecifier					typeSpec )
-			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, compilerSpecific, attributeList ),
+			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, isStatic, isExtern, sourceLocation, compilerSpecific, attributeList ),
 			  m_typeSpec( typeSpec )
 			{}
 
@@ -303,12 +302,13 @@ namespace CPPModel
 				   	    		 const std::string&				name,
 				   	    		 const Namespace&				enclosingNamespace,
 						   	     bool							isStatic,
+						   	     bool							isExtern,
 				   	    		 const SourceLocation&			sourceLocation,
 						   	     const CompilerSpecific&		compilerSpecific,
 				   	    		 ConstListPtr<Attribute>&		attributeList,
 				   	    		 TypeSpecifier					returnTypeSpec,
 				   	    		 const bool						hiddenFriend )
-			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, compilerSpecific, attributeList ),
+			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, isStatic, isExtern, sourceLocation, compilerSpecific, attributeList ),
 			  m_returnTypeSpec( returnTypeSpec ),
 			  m_hiddenFriend( hiddenFriend )
 			{}
@@ -356,11 +356,12 @@ namespace CPPModel
 				   	    		  const std::string&			name,
 				   	    		  const Namespace&				enclosingNamespace,
 				   	    		  bool							isStatic,
+							   	  bool							isExtern,
 				   	    		  const SourceLocation&			sourceLocation,
 							   	  const CompilerSpecific&		compilerSpecific,
 				   	    		  ConstListPtr<Attribute>&		attributes,
 				   	    		  TypeSpecifier					typeSpec )
-			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, compilerSpecific, attributes ),
+			: DictionaryEntry( dictionary, uid, name, enclosingNamespace, isStatic, isExtern, sourceLocation, compilerSpecific, attributes ),
 			  m_typeSpec( typeSpec )
 			{}
 
@@ -405,7 +406,7 @@ namespace CPPModel
 											UNABLE_TO_FIND_CORRECT_CONSTRUCTOR,
 											INTERNAL_ERROR };
 
-	typedef SEFUtility::Result<CreateGlobalVarResultCodes>						CreateGlobalVarResult;
+	typedef SEFUtility::ResultWithReturnValue<CreateGlobalVarResultCodes,CPPModel::UID>						CreateGlobalVarResult;
 
 
 
@@ -431,7 +432,7 @@ namespace CPPModel
 
 		typedef std::shared_ptr<DictionaryEntry>	DictionaryEntryPtr;
 
-	private :
+	protected :
 
 	//	This may look a bit odd, but without the #define for BMI and the typedefs for the indices, the declaration for DictionaryType would be long and
 	//		indecipherable.  Also, the syntax checker in Eclipse has trouble digesting the whole thing when expressed as a single typedef.
@@ -518,12 +519,7 @@ namespace CPPModel
 		}
 
 
-		bool		Insert( DictionaryEntry*		entryToAdd )
-		{
-			std::pair<CPPModel::ASTDictionary::constIterator,bool> insertResult = m_dictionary->insert( std::shared_ptr<CPPModel::DictionaryEntry>( entryToAdd ) );
-
-			return( insertResult.second );
-		}
+		bool		Insert( std::shared_ptr<DictionaryEntry>&		entryToAdd );
 
 
 		bool		AddNamespace( Namespace*	namespaceToAdd )

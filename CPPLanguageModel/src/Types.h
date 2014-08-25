@@ -48,7 +48,7 @@ namespace CPPModel
 		UNION,
 		NULL_POINTER,		//	NULL_POINTER is the last GCC specific type - any after this are not present in GCC AST
 		NO_RETURN,
-		STRING				//	I added this one to ease parameters and declarations
+		STRING
 	};
 
 

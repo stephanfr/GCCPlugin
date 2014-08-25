@@ -63,6 +63,18 @@ bool	AddFundamentalValueGlobalVarTest( int								callbackType,
 				return( false );
 			}
 
+
+			CPPModel::BooleanPointerGlobalVarDeclaration		globalPointerVarDec( "testBoolPointerVar",
+																  	  	  	  	 	 *testCreatedNamespace,
+																  	  	  	  	 	 gvResult.ReturnValue() );
+
+			gvResult = astDictionary->CreateGlobalVar( globalPointerVarDec );
+
+			if( !gvResult.Succeeded() )
+			{
+				std::cerr << "In AddGlobalVarsTest: Bool Pointer CreateGlobalVar failed." << std::endl;
+				return( false );
+			}
 		}
 
 
@@ -80,12 +92,24 @@ bool	AddFundamentalValueGlobalVarTest( int								callbackType,
 				std::cerr << "In AddGlobalVarsTest: Char CreateGlobalVar failed." << std::endl;
 				return( false );
 			}
+
+			CPPModel::CharPointerGlobalVarDeclaration		globalPointerVarDec( "testCharPointerVar",
+																  	  	  	  	 *testCreatedNamespace,
+																  	  	  	  	 gvResult.ReturnValue() );
+
+			gvResult = astDictionary->CreateGlobalVar( globalPointerVarDec );
+
+			if( !gvResult.Succeeded() )
+			{
+				std::cerr << "In AddGlobalVarsTest: Char Pointer CreateGlobalVar failed." << std::endl;
+				return( false );
+			}
 		}
 
 		//	Declare and create a global char*
 
 		{
-			CPPModel::StringGlobalVarDeclaration		globalVarDec( "testCharPointerVar",
+			CPPModel::StringGlobalVarDeclaration		globalVarDec( "testStringVar",
 																	  *testCreatedNamespace,
 																	  "Test String" );
 
@@ -93,7 +117,19 @@ bool	AddFundamentalValueGlobalVarTest( int								callbackType,
 
 			if( !gvResult.Succeeded() )
 			{
-				std::cerr << "In AddGlobalVarsTest: Char CreateGlobalVar failed." << std::endl;
+				std::cerr << "In AddGlobalVarsTest: String CreateGlobalVar failed." << std::endl;
+				return( false );
+			}
+
+			CPPModel::StringPointerGlobalVarDeclaration		globalPointerVarDec( "testStringPointerVar",
+																  	  	  	  	 *testCreatedNamespace,
+																  	  	  	  	 gvResult.ReturnValue() );
+
+			gvResult = astDictionary->CreateGlobalVar( globalPointerVarDec );
+
+			if( !gvResult.Succeeded() )
+			{
+				std::cerr << "In AddGlobalVarsTest: String Pointer CreateGlobalVar failed." << std::endl;
 				return( false );
 			}
 		}
@@ -112,6 +148,18 @@ bool	AddFundamentalValueGlobalVarTest( int								callbackType,
 				std::cerr << "In AddGlobalVarsTest: Int CreateGlobalVar failed." << std::endl;
 				return( false );
 			}
+
+			CPPModel::IntPointerGlobalVarDeclaration		globalPointerVarDec( "testIntPointerVar",
+																  	  	  	  	 *testCreatedNamespace,
+																  	  	  	  	 gvResult.ReturnValue() );
+
+			gvResult = astDictionary->CreateGlobalVar( globalPointerVarDec );
+
+			if( !gvResult.Succeeded() )
+			{
+				std::cerr << "In AddGlobalVarsTest: Int Pointer CreateGlobalVar failed." << std::endl;
+				return( false );
+			}
 		}
 
 		//	Now, declare and create a global long
@@ -126,6 +174,18 @@ bool	AddFundamentalValueGlobalVarTest( int								callbackType,
 			if( !gvResult.Succeeded() )
 			{
 				std::cerr << "In AddGlobalVarsTest: Long CreateGlobalVar failed." << std::endl;
+				return( false );
+			}
+
+			CPPModel::LongPointerGlobalVarDeclaration		globalPointerVarDec( "testLongPointerVar",
+																  	  	  	  	 *testCreatedNamespace,
+																  	  	  	  	 gvResult.ReturnValue() );
+
+			gvResult = astDictionary->CreateGlobalVar( globalPointerVarDec );
+
+			if( !gvResult.Succeeded() )
+			{
+				std::cerr << "In AddGlobalVarsTest: Long Pointer CreateGlobalVar failed." << std::endl;
 				return( false );
 			}
 		}
@@ -144,6 +204,18 @@ bool	AddFundamentalValueGlobalVarTest( int								callbackType,
 				std::cerr << "In AddGlobalVarsTest: Float CreateGlobalVar failed." << std::endl;
 				return( false );
 			}
+
+			CPPModel::FloatPointerGlobalVarDeclaration		globalPointerVarDec( "testFloatPointerVar",
+																  	  	  	  	 *testCreatedNamespace,
+																  	  	  	  	 gvResult.ReturnValue() );
+
+			gvResult = astDictionary->CreateGlobalVar( globalPointerVarDec );
+
+			if( !gvResult.Succeeded() )
+			{
+				std::cerr << "In AddGlobalVarsTest: Float Pointer CreateGlobalVar failed." << std::endl;
+				return( false );
+			}
 		}
 
 		//	Now, declare and create a global double
@@ -158,6 +230,18 @@ bool	AddFundamentalValueGlobalVarTest( int								callbackType,
 			if( !gvResult.Succeeded() )
 			{
 				std::cerr << "In AddGlobalVarsTest: Double CreateGlobalVar failed." << std::endl;
+				return( false );
+			}
+
+			CPPModel::DoublePointerGlobalVarDeclaration		globalPointerVarDec( "testDoublePointerVar",
+																  	  	  	  	 *testCreatedNamespace,
+																  	  	  	  	 gvResult.ReturnValue() );
+
+			gvResult = astDictionary->CreateGlobalVar( globalPointerVarDec );
+
+			if( !gvResult.Succeeded() )
+			{
+				std::cerr << "In AddGlobalVarsTest: Double Pointer CreateGlobalVar failed." << std::endl;
 				return( false );
 			}
 		}
@@ -336,6 +420,7 @@ bool 	AddFundamentalArrayValueGlobalVarTest( int							callbackType,
 				return( false );
 			}
 		}
+
 	}
 
 	//	Finished with success
@@ -394,7 +479,7 @@ bool	AddGlobalVarClassInstanceTest( int							callbackType,
 		//		}
 
 				CPPModel::ClassGlobalVarDeclaration		globalTestClassVarDec( testClassEntry,
-																			   std::string( "testCTestClassVar" ),
+																			   "testCTestClassVar",
 																			   *testCreatedNamespace );
 
 				CPPModel::CreateGlobalVarResult		gvResult2 = astDictionary->CreateGlobalVar( globalTestClassVarDec );
@@ -424,10 +509,10 @@ bool	AddGlobalVarClassInstanceTest( int							callbackType,
 
 				CPPModel::ParameterValueList		paramValues;
 
-				paramValues.push_back ( new CPPModel::ParameterStringValue( "Injected String Value." ) );
+				paramValues.push_back ( new CPPModel::StringConstantParameter( "Injected String Value." ) );
 
 				CPPModel::ClassGlobalVarDeclaration		globalTestClassVarDec( testClassEntry,
-																			   std::string( "testCTestClassVarWithStringInit" ),
+																			   "testCTestClassVarWithStringInit",
 																			   *testCreatedNamespace,
 																			   paramValues );
 
@@ -457,21 +542,63 @@ bool	AddGlobalVarClassInstanceTest( int							callbackType,
 
 				CPPModel::ParameterValueList		paramValues;
 
-				paramValues.push_back ( new CPPModel::ParameterStringValue( "Second Injected String Value." ) );
-				paramValues.push_back ( new CPPModel::ParameterBooleanValue( false ) );
-				paramValues.push_back ( new CPPModel::ParameterCharValue( 'b' ) );
-				paramValues.push_back ( new CPPModel::ParameterIntValue( 30 ) );
-				paramValues.push_back ( new CPPModel::ParameterLongValue( 40 ) );
-				paramValues.push_back ( new CPPModel::ParameterFloatValue( 50.0 ) );
-				paramValues.push_back ( new CPPModel::ParameterDoubleValue( 60.0 ) );
+				paramValues.push_back ( new CPPModel::StringConstantParameter( "Second Injected String Value." ) );
+				paramValues.push_back ( new CPPModel::BooleanConstantParameter( false ) );
+				paramValues.push_back ( new CPPModel::CharConstantParameter( 'b' ) );
+				paramValues.push_back ( new CPPModel::IntConstantParameter( 30 ) );
+				paramValues.push_back ( new CPPModel::LongConstantParameter( 40 ) );
+				paramValues.push_back ( new CPPModel::FloatConstantParameter( 50.0 ) );
+				paramValues.push_back ( new CPPModel::DoubleConstantParameter( 60.0 ) );
 
 				CPPModel::ClassGlobalVarDeclaration		globalTestClassVarDec( testClassEntry,
-																			   std::string( "testCTestClassVarWithAllValuesInit" ),
+																			   "testCTestClassVarWithAllValuesInit",
 																			   *testCreatedNamespace,
 																			   paramValues );
 
 				CPPModel::CreateGlobalVarResult		gvResult2 = astDictionary->CreateGlobalVar( globalTestClassVarDec );
 			}
+
+			//	Now for the class taking arrays
+
+/*
+			{
+				CPPModel::ASTDictionary::FQNameIndexConstIterator		itrTestClassType = astDictionary->FQNameIdx().find( "LocalTestNamespace::CTestClassTakingPointer" );
+
+				if( itrTestClassType == astDictionary->FQNameIdx().end() )
+				{
+					std::cerr << "Could not find CTestClass type" << std::endl;
+					return( false );
+				}
+
+				const CPPModel::DictionaryClassEntry&			testClassEntry = dynamic_cast<const CPPModel::DictionaryClassEntry&>( **itrTestClassType );
+
+
+				const CPPModel::Namespace		*testCreatedNamespace;
+
+				if( !astDictionary->GetNamespace( "LocalTestNamespace::", testCreatedNamespace ))
+				{
+					std::cerr << "In AddGlobalVarsTest: Get LocalTestNamespace failed." << std::endl;
+					return( false );
+				}
+
+				//	Now, declare and create a global int
+
+				CPPModel::IntGlobalVarDeclaration		globalVarDec( "testIntVar",
+																	  *testCreatedNamespace,
+																	  INT_MAX );
+
+				CPPModel::CreateGlobalVarResult		gvResult = astDictionary->CreateGlobalVar( globalVarDec );
+
+				if( !gvResult.Succeeded() )
+				{
+					std::cerr << "In AddGlobalVarsTest: Int CreateGlobalVar failed." << std::endl;
+					return( false );
+				}
+
+
+			}
+*/
+
 		}
 
 

@@ -20,6 +20,37 @@
 namespace CPPModel
 {
 
+	DictionaryEntry::DictionaryEntry( const ASTDictionary&			dictionary,
+									  const UID&					uid,
+									  const std::string&			name,
+									  const Namespace&				enclosingNamespace,
+									  bool							isStatic,
+								   	  bool							isExtern,
+									  const SourceLocation&			sourceLocation,
+									  const CompilerSpecific&		compilerSpecific,
+									  ConstListPtr<Attribute>&		attributes )
+		: m_dictionary( dictionary ),
+		  m_uid( uid ),
+		  m_name( name ),
+		  m_sourceLocation( sourceLocation ),
+		  m_compilerSpecific( compilerSpecific ),
+		  m_attributes( attributes ),
+		  m_static( isStatic ),
+		  m_extern( isExtern ),
+		  m_enclosingNamespace( enclosingNamespace ),
+		  m_enclosingNamespaceFQName( enclosingNamespace.fqName() ),
+		  m_fqName( enclosingNamespace.fqName() + name )
+	{}
+
+
+	bool		ASTDictionary::Insert( std::shared_ptr<DictionaryEntry>&		entryToAdd )
+	{
+		std::pair<CPPModel::ASTDictionary::constIterator,bool> insertResult = m_dictionary->insert( std::shared_ptr<CPPModel::DictionaryEntry>( entryToAdd ) );
+
+		return( insertResult.second );
+	}
+
+
 
 	void			ASTDictionary::DumpASTXMLByNamespaces( std::ostream&					outputStream,
 		  	  	  	  	  	  	  	  					   std::list<std::string>&			namespacesToDump,

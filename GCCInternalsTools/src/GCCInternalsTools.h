@@ -68,12 +68,13 @@ namespace GCCInternalsTools
 			 	 	   	     	  const CPPModel::UID&							uid,
 			 	 	   	     	  const std::string&							name,
 			 	 	   	     	  const CPPModel::Namespace&					enclosingNamespace,
+							   	  bool											isExtern,
 			 	 	   	     	  const CPPModel::SourceLocation&				sourceLocation,
 			 	 	   	     	  const CPPModel::CompilerSpecific&				compilerSpecific,
 			 	 	   	     	  CPPModel::ConstListPtr<CPPModel::Attribute>	attributeList,
 			 	 	   	     	  CPPModel::TypeSpecifier						typeSpec,
 			 	 	   	     	  const tree&									treeNode )
-				: CPPModel::DictionaryClassEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, sourceLocation, compilerSpecific, attributeList, typeSpec ),
+				: CPPModel::DictionaryClassEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, isExtern, sourceLocation, compilerSpecific, attributeList, typeSpec ),
 				  DictionaryTreeMixin( treeNode )
 			{}
 
@@ -92,12 +93,13 @@ namespace GCCInternalsTools
 			 	 	   	     	  const CPPModel::UID&							uid,
 			 	 	   	     	  const std::string&							name,
 			 	 	   	     	  const CPPModel::Namespace&					enclosingNamespace,
+							   	  bool											isExtern,
 			 	 	   	     	  const CPPModel::SourceLocation&				sourceLocation,
 			 	 	   	     	  const CPPModel::CompilerSpecific&				compilerSpecific,
 			 	 	   	     	  CPPModel::ConstListPtr<CPPModel::Attribute>	attributes,
 			 	 	   	     	  CPPModel::TypeSpecifier						typeSpec,
 			 	 	   	     	  const tree&									treeNode )
-				: CPPModel::DictionaryUnionEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, false, sourceLocation, compilerSpecific, attributes, typeSpec ),
+				: CPPModel::DictionaryUnionEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, false, isExtern, sourceLocation, compilerSpecific, attributes, typeSpec ),
 				  DictionaryTreeMixin( treeNode )
 			{}
 
@@ -117,13 +119,14 @@ namespace GCCInternalsTools
 			 	 	   	     	     const CPPModel::UID&							uid,
 			 	 	   	     	     const std::string&								name,
 			 	 	   	     	     const CPPModel::Namespace&						enclosingNamespace,
+							   	     bool											isExtern,
 			 	 	   	     	     const CPPModel::SourceLocation&				sourceLocation,
-				 	 	   	     	  const CPPModel::CompilerSpecific&				compilerSpecific,
+				 	 	   	     	 const CPPModel::CompilerSpecific&				compilerSpecific,
 			 	 	   	     	     CPPModel::ConstListPtr<CPPModel::Attribute>	attributes,
 			 	 	   	     	     CPPModel::TypeSpecifier						returnTypeSpec,
 			 	 	   	     	     const bool										hiddenFriend,
 			 	 	   	     	     const tree&									treeNode )
-				: CPPModel::DictionaryFunctionEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, false, sourceLocation, compilerSpecific, attributes, returnTypeSpec, hiddenFriend ),
+				: CPPModel::DictionaryFunctionEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, false, isExtern, sourceLocation, compilerSpecific, attributes, returnTypeSpec, hiddenFriend ),
 				  DictionaryTreeMixin( treeNode )
 			{}
 
@@ -143,14 +146,18 @@ namespace GCCInternalsTools
 			 	 	   	     	      const std::string&							name,
 			 	 	   	     	      const CPPModel::Namespace&					enclosingNamespace,
 			 	 	   	     	      bool											isStatic,
+			 				   	      bool											isExtern,
 			 	 	   	     	      const CPPModel::SourceLocation&				sourceLocation,
 				 	 	   	     	  const CPPModel::CompilerSpecific&				compilerSpecific,
 			 	 	   	     	      CPPModel::ConstListPtr<CPPModel::Attribute>	attributes,
 			 	 	   	     	      CPPModel::TypeSpecifier						typeSpec,
 			 	 	   	     	      const tree&									treeNode )
-				: CPPModel::DictionaryGlobalVarEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, isStatic, sourceLocation, compilerSpecific, attributes, typeSpec ),
+				: CPPModel::DictionaryGlobalVarEntry( (CPPModel::ASTDictionary&)dictionary, uid, name, enclosingNamespace, isStatic, isExtern, sourceLocation, compilerSpecific, attributes, typeSpec ),
 				  DictionaryTreeMixin( treeNode )
 			{}
+
+		virtual ~DictionaryGlobalVarEntryImpl()
+		{};
 
 
 		bool		GetGlobalVarEntry( const CPPModel::ParseOptions&							options,
@@ -203,8 +210,17 @@ namespace GCCInternalsTools
 									   ARTIFICIAL_OR_BUILTIN_FUNCTION,
 									   ERROR_DECODING_FUNCTION };
 
-	typedef SEFUtility::ResultWithReturnPtr<DecodeNodeResultCodes, CPPModel::DictionaryEntry>		DecodeNodeResult;
+	typedef SEFUtility::ResultWithSharedReturnPtr<DecodeNodeResultCodes, CPPModel::DictionaryEntry>		DecodeNodeResult;
 
+
+
+	enum class AsInitialValueResultCodes { SUCCESS,
+										   DICTIONARY_ENTRY_NOT_FOUND_FOR_POINTER,
+										   CAN_ONLY_MAKE_POINTER_TO_GLOBAL_VARIABLE,
+										   ERROR_CONVERTING_TYPE,
+										   UNSUPPORTED_TYPE };
+
+	typedef SEFUtility::ResultWithReturnValue<AsInitialValueResultCodes, tree>						AsInitialValueResult;
 
 
 
@@ -241,6 +257,21 @@ namespace GCCInternalsTools
 	private :
 
 
+		bool									deleteEntry( const CPPModel::UID&					uidToDelete )
+		{
+			DictionaryType::index<Indices::UID>::type::iterator		itrEntry = m_dictionary->get<Indices::UID>().find( uidToDelete );
+
+			if( itrEntry == UIDIdx().end() )
+			{
+				return( false );
+			}
+
+			m_dictionary->get<Indices::UID>().erase( itrEntry );
+
+			return( true );
+		}
+
+
 		void									collectFunction( const tree&						currentDecl );
 
 
@@ -262,6 +293,11 @@ namespace GCCInternalsTools
 		CPPModel::CreateGlobalVarResult			CreateGlobalFundamentalPointerVar( const CPPModel::FundamentalGlobalVarDeclarationBase&			globalDecl );
 
 		CPPModel::CreateGlobalVarResult			CreateGlobalClassInstanceVar( const CPPModel::ClassGlobalVarDeclaration&						globalDecl );
+
+
+		AsInitialValueResult					AsInitialValue( const tree								globalType,
+																const CPPModel::ParameterValueBase&		value );
+
 
 	};
 

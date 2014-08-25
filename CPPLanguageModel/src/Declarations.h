@@ -75,7 +75,7 @@ namespace CPPModel
 		DeclarationBase( DeclarationBase& ) = delete;
 		DeclarationBase( const DeclarationBase& ) = delete;
 
-		DeclarationBase( const std::string&			name,
+		DeclarationBase( const char*				name,
 					     const Namespace&			namespaceScope,
 					     bool						isStatic )
 			: NamedEntity( name ),
@@ -83,7 +83,7 @@ namespace CPPModel
 			  Static( isStatic )
 		{}
 
-		DeclarationBase( const std::string&			name,
+		DeclarationBase( const char*				name,
 					     const Namespace&			namespaceScope,
 					     bool						isStatic,
 					     const Attributes&			attributes )
@@ -139,7 +139,7 @@ namespace CPPModel
 		GlobalVarDeclaration( const Kind					kind,
 							  const Modifier				modifier,
 							  const TypeSpecifier 			typeSpec,
-							  const std::string&			name,
+							  const char*					name,
 							  const Namespace&				namespaceScope )
 			: DeclarationBase( name, namespaceScope, true ),
 			  m_kind( kind ),
@@ -150,7 +150,7 @@ namespace CPPModel
 		GlobalVarDeclaration( const Kind					kind,
 				  	  	  	  const Modifier				modifier,
 				  	  	  	  const TypeSpecifier 			typeSpec,
-				  	  	  	  const std::string&			name,
+				  	  	  	  const char*					name,
 				  	  	  	  const Namespace&				namespaceScope,
 				  	  	  	  const Attributes&				attributes )
 			: DeclarationBase( name, namespaceScope, true, attributes ),
@@ -207,14 +207,14 @@ namespace CPPModel
 
 		FundamentalGlobalVarDeclarationBase( const Modifier				modifier,
 											 const TypeSpecifier 		typeSpec,
-											 const std::string&			name,
+											 const char*				name,
 											 const Namespace&			namespaceScope )
 			: GlobalVarDeclaration(  IDeclarationType::Kind::FUNDAMENTAL, modifier, typeSpec, name, namespaceScope )
 		{}
 
 		FundamentalGlobalVarDeclarationBase( const Modifier				modifier,
 											 const TypeSpecifier 		typeSpec,
-											 const std::string&			name,
+											 const char*				name,
 											 const Namespace&			namespaceScope,
 											 const Attributes&			attributes )
 			: GlobalVarDeclaration(  IDeclarationType::Kind::FUNDAMENTAL, modifier, typeSpec, name, namespaceScope, attributes )
@@ -249,20 +249,20 @@ namespace CPPModel
 		FundamentalGlobalVarDeclaration( const FundamentalGlobalVarDeclaration< typeModifier, typeSpec,I,F>& ) = delete;
 
 
-		FundamentalGlobalVarDeclaration( const std::string&				name,
+		FundamentalGlobalVarDeclaration( const char*					name,
 							  	  	     const Namespace&				namespaceScope )
 			: FundamentalGlobalVarDeclarationBase( typeModifier, typeSpec, name, namespaceScope ),
 			  m_arrayDimensions()
 		{}
 
-		FundamentalGlobalVarDeclaration( const std::string&				name,
+		FundamentalGlobalVarDeclaration( const char*					name,
 							  	  	     const Namespace&				namespaceScope,
 							  	  	     const Attributes&				attributes )
 			: FundamentalGlobalVarDeclarationBase( typeModifier, typeSpec, name, namespaceScope, attributes ),
 			  m_arrayDimensions()
 		{}
 
-		FundamentalGlobalVarDeclaration( const std::string&				name,
+		FundamentalGlobalVarDeclaration( const char*					name,
 							  	  	     const Namespace&				namespaceScope,
 							  	  	     I								initialValue )
 			: FundamentalGlobalVarDeclarationBase( typeModifier, typeSpec, name, namespaceScope ),
@@ -270,7 +270,7 @@ namespace CPPModel
 			  m_initialValue( new F( initialValue ))
 		{}
 
-		FundamentalGlobalVarDeclaration( const std::string&				name,
+		FundamentalGlobalVarDeclaration( const char*					name,
 							  	  	     const Namespace&				namespaceScope,
 							  	  	     const Attributes&				attributes,
 							  	  	     I								initialValue )
@@ -310,14 +310,14 @@ namespace CPPModel
 
 	protected :
 
-		FundamentalGlobalVarDeclaration( const std::string&				name,
+		FundamentalGlobalVarDeclaration( const char*					name,
 							  	  	     const Namespace&				namespaceScope,
 							  	  	     const ArrayDimensions&			arrayDimensions )
 			: FundamentalGlobalVarDeclarationBase( typeModifier, typeSpec, name, namespaceScope ),
 			  m_arrayDimensions( arrayDimensions )
 		{}
 
-		FundamentalGlobalVarDeclaration( const std::string&				name,
+		FundamentalGlobalVarDeclaration( const char*					name,
 							  	  	     const Namespace&				namespaceScope,
 							  	  	     const ArrayDimensions&			arrayDimensions,
 							  	  	     const Attributes&				attributes )
@@ -325,7 +325,7 @@ namespace CPPModel
 			  m_arrayDimensions( arrayDimensions )
 		{}
 
-		FundamentalGlobalVarDeclaration( const std::string&				name,
+		FundamentalGlobalVarDeclaration( const char*					name,
 							  	  	     const Namespace&				namespaceScope,
 							  	  	     const ArrayDimensions&			arrayDimensions,
 							  	  	     I								initialValue )
@@ -334,7 +334,7 @@ namespace CPPModel
 			  m_initialValue( new F( initialValue ))
 		{}
 
-		FundamentalGlobalVarDeclaration( const std::string&				name,
+		FundamentalGlobalVarDeclaration( const char*					name,
 							  	  	     const Namespace&				namespaceScope,
 							  	  	     const ArrayDimensions&			arrayDimensions,
 							  	  	     const Attributes&				attributes,
@@ -364,27 +364,27 @@ namespace CPPModel
 		FundamentalGlobalArrayVarDeclaration( const FundamentalGlobalArrayVarDeclaration< typeModifier, typeSpec,I,F>& ) = delete;
 
 
-		FundamentalGlobalArrayVarDeclaration( const std::string&			name,
+		FundamentalGlobalArrayVarDeclaration( const char*					name,
 							  	  	     	  const Namespace&				namespaceScope,
 							  	  	     	  const ArrayDimensions&		arrayDimensions )
 			: FundamentalGlobalVarDeclaration<typeModifier, typeSpec, I, F>( name, namespaceScope, arrayDimensions )
 		{}
 
-		FundamentalGlobalArrayVarDeclaration( const std::string&			name,
+		FundamentalGlobalArrayVarDeclaration( const char*					name,
 							  	  	     	  const Namespace&				namespaceScope,
 							  	  	     	  const ArrayDimensions&		arrayDimensions,
 							  	  	     	  const Attributes&				attributes )
 			: FundamentalGlobalVarDeclaration<typeModifier, typeSpec, I, F>( name, namespaceScope, arrayDimensions, attributes )
 		{}
 
-		FundamentalGlobalArrayVarDeclaration( const std::string&			name,
+		FundamentalGlobalArrayVarDeclaration( const char*					name,
 							  	  	     	  const Namespace&				namespaceScope,
 //							  	  	     	  const ArrayDimensions&		arrayDimensions,
 							  	  	     	  I								initialValue )
 			: FundamentalGlobalVarDeclaration<typeModifier, typeSpec, I, F>( name, namespaceScope, ArrayDimensions( initialValue.size() ), initialValue )
 		{}
 
-		FundamentalGlobalArrayVarDeclaration( const std::string&			name,
+		FundamentalGlobalArrayVarDeclaration( const char*					name,
 							  	  	     	  const Namespace&				namespaceScope,
 //							  	  	     	  const ArrayDimensions&		arrayDimensions,
 							  	  	     	  const Attributes&				attributes,
@@ -406,29 +406,29 @@ namespace CPPModel
 
 
 
-	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::VALUE, CPPModel::TypeSpecifier::BOOLEAN, bool, ParameterBooleanValue> BooleanGlobalVarDeclaration;
-	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::VALUE, CPPModel::TypeSpecifier::CHAR, char, ParameterCharValue> CharGlobalVarDeclaration;
-	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::VALUE, CPPModel::TypeSpecifier::STRING, char*, ParameterStringValue> StringGlobalVarDeclaration;
-	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::VALUE, CPPModel::TypeSpecifier::INT, int, ParameterIntValue> IntGlobalVarDeclaration;
-	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::VALUE, CPPModel::TypeSpecifier::LONG_INT, long, ParameterLongValue> LongGlobalVarDeclaration;
-	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::VALUE, CPPModel::TypeSpecifier::FLOAT, float, ParameterFloatValue> FloatGlobalVarDeclaration;
-	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::VALUE, CPPModel::TypeSpecifier::DOUBLE, double, ParameterDoubleValue> DoubleGlobalVarDeclaration;
+	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::VALUE, CPPModel::TypeSpecifier::BOOLEAN, bool, BooleanConstantParameter> BooleanGlobalVarDeclaration;
+	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::VALUE, CPPModel::TypeSpecifier::CHAR, char, CharConstantParameter> CharGlobalVarDeclaration;
+	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::VALUE, CPPModel::TypeSpecifier::STRING, char*, StringConstantParameter> StringGlobalVarDeclaration;
+	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::VALUE, CPPModel::TypeSpecifier::INT, int, IntConstantParameter> IntGlobalVarDeclaration;
+	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::VALUE, CPPModel::TypeSpecifier::LONG_INT, long, LongConstantParameter> LongGlobalVarDeclaration;
+	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::VALUE, CPPModel::TypeSpecifier::FLOAT, float, FloatConstantParameter> FloatGlobalVarDeclaration;
+	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::VALUE, CPPModel::TypeSpecifier::DOUBLE, double, DoubleConstantParameter> DoubleGlobalVarDeclaration;
 
-	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::POINTER, CPPModel::TypeSpecifier::BOOLEAN, bool, ParameterBooleanValue> BooleanPointerGlobalVarDeclaration;
-//	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::POINTER, CPPModel::TypeSpecifier::CHAR, char*, ParameterCharPointerConstValue> CharPointerConstGlobalVarDeclaration;
-	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::POINTER, CPPModel::TypeSpecifier::INT, int, ParameterIntValue> IntPointerGlobalVarDeclaration;
-	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::POINTER, CPPModel::TypeSpecifier::LONG_INT, long, ParameterLongValue> LongPointerGlobalVarDeclaration;
-	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::POINTER, CPPModel::TypeSpecifier::FLOAT, float, ParameterFloatValue> FloatPointerGlobalVarDeclaration;
-	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::POINTER, CPPModel::TypeSpecifier::DOUBLE, double, ParameterDoubleValue> DoublePointerGlobalVarDeclaration;
+	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::POINTER, CPPModel::TypeSpecifier::BOOLEAN, UID&, BooleanPointerParameter> BooleanPointerGlobalVarDeclaration;
+	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::POINTER, CPPModel::TypeSpecifier::CHAR, UID&, CharPointerParameter> CharPointerGlobalVarDeclaration;
+	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::POINTER, CPPModel::TypeSpecifier::STRING, UID&, StringPointerParameter> StringPointerGlobalVarDeclaration;
+	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::POINTER, CPPModel::TypeSpecifier::INT, UID&, IntPointerParameter> IntPointerGlobalVarDeclaration;
+	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::POINTER, CPPModel::TypeSpecifier::LONG_INT, UID&, LongPointerParameter> LongPointerGlobalVarDeclaration;
+	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::POINTER, CPPModel::TypeSpecifier::FLOAT, UID&, FloatPointerParameter> FloatPointerGlobalVarDeclaration;
+	typedef FundamentalGlobalVarDeclaration< IDeclarationType::Modifier::POINTER, CPPModel::TypeSpecifier::DOUBLE, UID&, DoublePointerParameter> DoublePointerGlobalVarDeclaration;
 
-	typedef FundamentalGlobalArrayVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::BOOLEAN, std::vector<bool>, ParameterBoolArrayValue> BoolArrayGlobalVarDeclaration;
-	typedef FundamentalGlobalArrayVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::CHAR, std::vector<char>, ParameterCharArrayValue> CharArrayGlobalVarDeclaration;
-	typedef FundamentalGlobalArrayVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::INT, std::vector<int>, ParameterIntArrayValue> IntArrayGlobalVarDeclaration;
-	typedef FundamentalGlobalArrayVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::LONG_INT, std::vector<long>, ParameterLongArrayValue> LongArrayGlobalVarDeclaration;
-	typedef FundamentalGlobalArrayVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::FLOAT, std::vector<float>, ParameterFloatArrayValue> FloatArrayGlobalVarDeclaration;
-	typedef FundamentalGlobalArrayVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::DOUBLE, std::vector<double>, ParameterDoubleArrayValue> DoubleArrayGlobalVarDeclaration;
-	typedef FundamentalGlobalArrayVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::STRING, std::vector<std::string>, ParameterStringArrayValue> StringArrayGlobalVarDeclaration;
-
+	typedef FundamentalGlobalArrayVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::BOOLEAN, std::vector<bool>, BooleanArrayParameter> BoolArrayGlobalVarDeclaration;
+	typedef FundamentalGlobalArrayVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::CHAR, std::vector<char>, CharArrayParameter> CharArrayGlobalVarDeclaration;
+	typedef FundamentalGlobalArrayVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::STRING, std::vector<std::string>, StringArrayParameter> StringArrayGlobalVarDeclaration;
+	typedef FundamentalGlobalArrayVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::INT, std::vector<int>, IntArrayParameter> IntArrayGlobalVarDeclaration;
+	typedef FundamentalGlobalArrayVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::LONG_INT, std::vector<long>, LongArrayParameter> LongArrayGlobalVarDeclaration;
+	typedef FundamentalGlobalArrayVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::FLOAT, std::vector<float>, FloatArrayParameter> FloatArrayGlobalVarDeclaration;
+	typedef FundamentalGlobalArrayVarDeclaration< IDeclarationType::Modifier::ARRAY, CPPModel::TypeSpecifier::DOUBLE, std::vector<double>, DoubleArrayParameter> DoubleArrayGlobalVarDeclaration;
 
 
 
@@ -442,14 +442,14 @@ namespace CPPModel
 		ClassGlobalVarDeclaration( const ClassGlobalVarDeclaration& ) = delete;
 
 		ClassGlobalVarDeclaration( const DictionaryClassEntry&		classType,
-							  	   const std::string&				name,
+							  	   const char*						name,
 							  	   const Namespace&					namespaceScope )
 			: GlobalVarDeclaration( Kind::CLASS, IDeclarationType::Modifier::VALUE, TypeSpecifier::CLASS, name, namespaceScope ),
 			  m_classType( classType )
 		{}
 
 		ClassGlobalVarDeclaration( const DictionaryClassEntry&		classType,
-							  	   const std::string&				name,
+							  	   const char*						name,
 							  	   const Namespace&					namespaceScope,
 							  	   const Attributes&				attributes )
 			: GlobalVarDeclaration( Kind::CLASS, IDeclarationType::Modifier::VALUE, TypeSpecifier::CLASS, name, namespaceScope, attributes ),
@@ -457,7 +457,7 @@ namespace CPPModel
 		{}
 
 		ClassGlobalVarDeclaration( const DictionaryClassEntry&		classType,
-							  	   const std::string&				name,
+							  	   const char*						name,
 							  	   const Namespace&					namespaceScope,
 							  	   const Attributes&				attributes,
 							  	   const ParameterValueList&		initialValues )
@@ -467,7 +467,7 @@ namespace CPPModel
 		{}
 
 		ClassGlobalVarDeclaration( const DictionaryClassEntry&		classType,
-							  	   const std::string&				name,
+							  	   const char*						name,
 							  	   const Namespace&					namespaceScope,
 							  	   const ParameterValueList&		initialValues )
 			: GlobalVarDeclaration( Kind::CLASS, IDeclarationType::Modifier::VALUE, TypeSpecifier::CLASS, name, namespaceScope ),

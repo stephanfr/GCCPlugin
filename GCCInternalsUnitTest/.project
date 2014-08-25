@@ -7,6 +7,7 @@
 		<project>GCCInternalsTools</project>
 		<project>GCCInternalsUTFixture</project>
 		<project>TestExtensions</project>
+		<project>Utility</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

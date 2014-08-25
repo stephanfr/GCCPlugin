@@ -309,7 +309,7 @@ namespace GCCInternalsTools
 
 		char			buffer[256];
 
-		sprintf( buffer, "%lg", doubleValue );
+		sprintf( buffer, "%g", doubleValue );
 
 		real_from_string( &r, buffer );
 
@@ -342,31 +342,31 @@ namespace GCCInternalsTools
 		switch( CPPModel::AsTypeSpecifier( value.type() ))
 		{
 			case CPPModel::TypeSpecifier::BOOLEAN :
-				returnValue = AsTree( dynamic_cast<const CPPModel::ParameterBooleanValue&>(value).value() );
+				returnValue = AsTree( dynamic_cast<const CPPModel::BooleanConstantParameter&>(value).value() );
 				break;
 
 			case CPPModel::TypeSpecifier::CHAR :
-				returnValue = AsTree( dynamic_cast<const CPPModel::ParameterCharValue&>(value).value() );
+				returnValue = AsTree( dynamic_cast<const CPPModel::CharConstantParameter&>(value).value() );
 				break;
 
 			case CPPModel::TypeSpecifier::INT :
-				returnValue = AsTree( dynamic_cast<const CPPModel::ParameterIntValue&>(value).value() );
+				returnValue = AsTree( dynamic_cast<const CPPModel::IntConstantParameter&>(value).value() );
 				break;
 
 			case CPPModel::TypeSpecifier::LONG_INT :
-				returnValue = AsTree( dynamic_cast<const CPPModel::ParameterLongValue&>(value).value() );
+				returnValue = AsTree( dynamic_cast<const CPPModel::LongConstantParameter&>(value).value() );
 				break;
 
 			case CPPModel::TypeSpecifier::FLOAT :
-				returnValue = AsTree( dynamic_cast<const CPPModel::ParameterFloatValue&>(value).value() );
+				returnValue = AsTree( dynamic_cast<const CPPModel::FloatConstantParameter&>(value).value() );
 				break;
 
 			case CPPModel::TypeSpecifier::DOUBLE :
-				returnValue = AsTree( dynamic_cast<const CPPModel::ParameterDoubleValue&>(value).value() );
+				returnValue = AsTree( dynamic_cast<const CPPModel::DoubleConstantParameter&>(value).value() );
 				break;
 
 			case CPPModel::TypeSpecifier::STRING :
-				returnValue = AsTree( dynamic_cast<const CPPModel::ParameterStringValue&>(value).value() );
+				returnValue = AsTree( dynamic_cast<const CPPModel::StringConstantParameter&>(value).value() );
 				break;
 
 			default :
@@ -966,7 +966,7 @@ namespace GCCInternalsTools
 
 				if( decodedNode.Succeeded() )
 				{
-					Insert( decodedNode.ReturnPtr().release() );
+					Insert( decodedNode.ReturnPtr() );
 				}
 			}
 
@@ -1151,6 +1151,7 @@ namespace GCCInternalsTools
 																		  typeDeclared.uid(),
 																		  className,
 																		  *namespaceScope,
+																		  false,
 																		  sourceLocation,
 																		  DeclTree( classTree ).compilerSpecificFlags(),
 																		  GetAttributes( PurposeValueList( TYPE_ATTRIBUTES( (const tree&)typeDeclared ) )),
@@ -1207,6 +1208,7 @@ namespace GCCInternalsTools
 																		  unionUID,
 																		  unionTree.identifier(),
 																		  *namespaceScope,
+																		  false,
 																		  unionTree.sourceLocation(),
 																		  unionTree.compilerSpecificFlags(),
 																		  unionTree.treeType().attributes(),
@@ -1263,6 +1265,7 @@ namespace GCCInternalsTools
 																		  globalVarTree.identifier(),
 																		  *namespaceScope,
 																		  TREE_STATIC( globalVarNode ) != 0,
+																		  DECL_EXTERNAL( globalVarNode ) != 0,
 																		  globalVarTree.sourceLocation(),
 																		  globalVarTree.compilerSpecificFlags(),
 																		  globalVarTree.attributes(),
@@ -1337,6 +1340,7 @@ namespace GCCInternalsTools
 																			 functionUID,
 																			 functionTree.identifier(),
 																			 *namespaceScope,
+																			 false,
 																			 functionTree.sourceLocation(),
 																			 functionTree.compilerSpecificFlags(),
 																			 functionTree.attributes(),
@@ -1453,9 +1457,9 @@ namespace GCCInternalsTools
 				return( CreateGlobalClassInstanceVar( dynamic_cast<const CPPModel::ClassGlobalVarDeclaration&>( globalDecl )));
 				break;
 
-//			case 2:
-//				declType = dynamic_cast<const DictionaryUnionEntryImpl&>( boost::get<const CPPModel::DictionaryUnionEntry&>( globalDecl.typeVariant() )).getTree();
-//				break;
+			case CPPModel::IDeclarationType::Kind::UNION :
+				return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::UNRECOGNIZED_TYPE_TO_CREATE, "Unions not yet supported" ) );
+				break;
 		}
 
 		return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::UNRECOGNIZED_TYPE_TO_CREATE, "Unrecognized type for variable to create" ) );
@@ -1489,18 +1493,12 @@ namespace GCCInternalsTools
 
 
 
-
-	enum class AsInitialValueResultCodes { SUCCESS, ERROR_CONVERTING_TYPE };
-
-	typedef SEFUtility::ResultWithReturnValue<AsInitialValueResultCodes, tree>						AsInitialValueResult;
-
-
-	AsInitialValueResult			AsInitialValue( const tree								globalType,
-													const CPPModel::ParameterValueBase&		value )
+	AsInitialValueResult			ASTDictionaryImpl::AsInitialValue( const tree								globalType,
+																	   const CPPModel::ParameterValueBase&		value )
 	{
 		tree		initValue;
 
-		if( CPPModel::AsTypeSpecifier( value.type() ) != CPPModel::TypeSpecifier::ARRAY )
+		if( value.modifier() == CPPModel::ParameterModifier::CONSTANT )
 		{
 			ConvertParameterValueResult			initialValue = ConvertParameterValue( value );
 
@@ -1513,55 +1511,151 @@ namespace GCCInternalsTools
 				return( AsInitialValueResult::Failure( AsInitialValueResultCodes::ERROR_CONVERTING_TYPE, "Error converting initial value to a tree value.", initialValue ) );
 			}
 		}
-		else
+		else if( value.modifier() == CPPModel::ParameterModifier::POINTER )
 		{
-			const CPPModel::ParameterArrayValueBase&		initialValueArray = dynamic_cast<const CPPModel::ParameterArrayValueBase&>( value );
+			const CPPModel::ParameterPointerBase&	pointerInitialValue = dynamic_cast<const CPPModel::ParameterPointerBase&>( value );
 
+			CPPModel::UID 		entryUID = pointerInitialValue.value();
+
+			UIDIndexConstIterator		dictionaryEntry = UIDIdx().find( entryUID );
+
+
+
+			if( dictionaryEntry == UIDIdx().end() )
+			{
+				return( AsInitialValueResult::Failure( AsInitialValueResultCodes::DICTIONARY_ENTRY_NOT_FOUND_FOR_POINTER, "Dictionary entry not found for pointer type parameter" ));
+			}
+
+			if( (*dictionaryEntry)->entryKind() != CPPModel::DictionaryEntry::EntryKind::GLOBAL_VAR )
+			{
+				return( AsInitialValueResult::Failure( AsInitialValueResultCodes::CAN_ONLY_MAKE_POINTER_TO_GLOBAL_VARIABLE, "Dictionary element for pointer must be a global variable" ));
+			}
+
+			const DictionaryGlobalVarEntryImpl&			globalVarEntry = dynamic_cast<const DictionaryGlobalVarEntryImpl&>( *(*dictionaryEntry) );
+
+			switch( CPPModel::AsTypeSpecifier( value.type() ))
+			{
+				case CPPModel::TypeSpecifier::BOOLEAN :
+				case CPPModel::TypeSpecifier::CHAR :
+				case CPPModel::TypeSpecifier::INT :
+				case CPPModel::TypeSpecifier::LONG_INT :
+				case CPPModel::TypeSpecifier::FLOAT :
+				case CPPModel::TypeSpecifier::DOUBLE :
+				case CPPModel::TypeSpecifier::STRING :
+					initValue = build1( ADDR_EXPR, globalType, globalVarEntry.getTree() );
+				break;
+
+				default :
+					return( AsInitialValueResult::Failure( AsInitialValueResultCodes::UNSUPPORTED_TYPE, "Unsupported Type for Initialization Parameter Value Conversion" ));
+			}
+		}
+		else if( value.modifier() == CPPModel::ParameterModifier::ARRAY )
+		{
 			vec<constructor_elt, va_gc> *v;
 
-			vec_alloc ( v, initialValueArray.size() );
-
-			for( int i = 0; i < initialValueArray.size(); ++i )
+			switch( CPPModel::AsTypeSpecifier( value.type() ))
 			{
-				tree		value;
-
-				switch( CPPModel::AsTypeSpecifier( initialValueArray.elementType() ))
+				case CPPModel::TypeSpecifier::BOOLEAN :
 				{
-					case CPPModel::TypeSpecifier::BOOLEAN :
-						value = AsTree( dynamic_cast<const CPPModel::ParameterBoolArrayValue&>( initialValueArray ).value()[i] );
-						break;
+					std::vector<bool>	boolArray = dynamic_cast<const CPPModel::BooleanArrayParameter&>( value ).value();
 
-					case CPPModel::TypeSpecifier::CHAR :
-						value = AsTree( dynamic_cast<const CPPModel::ParameterCharArrayValue&>( initialValueArray ).value()[i] );
-						break;
+					vec_alloc ( v, boolArray.size() );
 
-					case CPPModel::TypeSpecifier::INT :
-						value = AsTree( dynamic_cast<const CPPModel::ParameterIntArrayValue&>( initialValueArray ).value()[i] );
-						break;
-
-					case CPPModel::TypeSpecifier::LONG_INT :
-						value = AsTree( dynamic_cast<const CPPModel::ParameterLongArrayValue&>( initialValueArray ).value()[i] );
-						break;
-
-					case CPPModel::TypeSpecifier::FLOAT :
-						value = AsTree( dynamic_cast<const CPPModel::ParameterFloatArrayValue&>( initialValueArray ).value()[i] );
-						break;
-
-					case CPPModel::TypeSpecifier::DOUBLE :
-						value = AsTree( dynamic_cast<const CPPModel::ParameterDoubleArrayValue&>( initialValueArray ).value()[i] );
-						break;
-
-					case CPPModel::TypeSpecifier::STRING :
-						value = AsTree( dynamic_cast<const CPPModel::ParameterStringArrayValue&>( initialValueArray ).value()[i] );
-						break;
-
-					default :
-						vec_free( v );
-						return( AsInitialValueResult::Failure( AsInitialValueResultCodes::ERROR_CONVERTING_TYPE, "Internal Error - Unsupported Type for Initialization Parameter Value Conversion" ));
+					for( unsigned int i = 0; i < boolArray.size(); ++i )
+					{
+						constructor_elt elt = { build_int_cst( integer_type_node, i ), AsTree( boolArray[i] ) };
+						v->quick_push (elt);
+					}
 				}
+				break;
 
-				constructor_elt elt = { build_int_cst( integer_type_node, i ), value };
-				v->quick_push (elt);
+				case CPPModel::TypeSpecifier::CHAR :
+				{
+					std::vector<char>	charArray = dynamic_cast<const CPPModel::CharArrayParameter&>( value ).value();
+
+					vec_alloc ( v, charArray.size() );
+
+					for( unsigned int i = 0; i < charArray.size(); ++i )
+					{
+						constructor_elt elt = { build_int_cst( integer_type_node, i ), AsTree( charArray[i] ) };
+						v->quick_push (elt);
+					}
+				}
+				break;
+
+				case CPPModel::TypeSpecifier::INT :
+				{
+					std::vector<int>	intArray = dynamic_cast<const CPPModel::IntArrayParameter&>( value ).value();
+
+					vec_alloc ( v, intArray.size() );
+
+					for( unsigned int i = 0; i < intArray.size(); ++i )
+					{
+						constructor_elt elt = { build_int_cst( integer_type_node, i ), AsTree( intArray[i] ) };
+						v->quick_push (elt);
+					}
+				}
+				break;
+
+				case CPPModel::TypeSpecifier::LONG_INT :
+				{
+					std::vector<long>	longArray = dynamic_cast<const CPPModel::LongArrayParameter&>( value ).value();
+
+					vec_alloc ( v, longArray.size() );
+
+					for( unsigned int i = 0; i < longArray.size(); ++i )
+					{
+						constructor_elt elt = { build_int_cst( integer_type_node, i ), AsTree( longArray[i] ) };
+						v->quick_push (elt);
+					}
+				}
+				break;
+
+				case CPPModel::TypeSpecifier::FLOAT :
+				{
+					std::vector<float>	floatArray = dynamic_cast<const CPPModel::FloatArrayParameter&>( value ).value();
+
+					vec_alloc ( v, floatArray.size() );
+
+					for( unsigned int i = 0; i < floatArray.size(); ++i )
+					{
+						constructor_elt elt = { build_int_cst( integer_type_node, i ), AsTree( floatArray[i] ) };
+						v->quick_push (elt);
+					}
+				}
+				break;
+
+				case CPPModel::TypeSpecifier::DOUBLE :
+				{
+					std::vector<double>	doubleArray = dynamic_cast<const CPPModel::DoubleArrayParameter&>( value ).value();
+
+					vec_alloc ( v, doubleArray.size() );
+
+					for( unsigned int i = 0; i < doubleArray.size(); ++i )
+					{
+						constructor_elt elt = { build_int_cst( integer_type_node, i ), AsTree( doubleArray[i] ) };
+						v->quick_push (elt);
+					}
+				}
+				break;
+
+				case CPPModel::TypeSpecifier::STRING :
+				{
+					std::vector<std::string>	stringArray = dynamic_cast<const CPPModel::StringArrayParameter&>( value ).value();
+
+					vec_alloc ( v, stringArray.size() );
+
+					for( unsigned int i = 0; i < stringArray.size(); ++i )
+					{
+						constructor_elt elt = { build_int_cst( integer_type_node, i ), AsTree( stringArray[i] ) };
+						v->quick_push (elt);
+					}
+				}
+				break;
+
+				default :
+					vec_free( v );
+					return( AsInitialValueResult::Failure( AsInitialValueResultCodes::UNSUPPORTED_TYPE, "Unsupported Type for Initialization Parameter Value Conversion" ));
 			}
 
 			initValue = build_constructor( globalType, v );
@@ -1629,18 +1723,46 @@ namespace GCCInternalsTools
 
 		GCCInternalsTools::DecodeNodeResult			decodedNode = DecodeGlobalVar( globalDeclaration );
 
-		if( decodedNode.Succeeded() )
-		{
-			Insert( decodedNode.ReturnPtr().release() );
-		}
-		else
+		if( decodedNode.Failed() )
 		{
 			return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::ERROR_ADDING_GLOBAL_TO_DICTIONARY, "Error Adding Fundamental Typed Global Variable to the AST Dictionary." ) );
 		}
 
 		//	If we are down here, all went well so return SUCCESS
 
-  		return( CPPModel::CreateGlobalVarResult::Success() );
+		const CPPModel::UID									globalUID = decodedNode.ReturnPtr()->uid();
+
+		if( !Insert( decodedNode.ReturnPtr() ) )
+		{
+			//	Insertion into the dictionary failed - let's assume this is a conflict on the FQName with an extern.
+
+			std::string						fqName = decodedNode.ReturnPtr()->fullyQualifiedName();
+
+			FQNameIndexConstIterator		itrExistingEntry = FQNameIdx().find( decodedNode.ReturnPtr()->fullyQualifiedName() );
+
+			if( itrExistingEntry == FQNameIdx().end() )
+			{
+				//	No duplicate name - something else bad has happened
+
+				return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::ERROR_ADDING_GLOBAL_TO_DICTIONARY, "Error Adding Fundamental Typed Global Variable to the AST Dictionary.  Insertion failed but no existing FQNamed entry was found." ) );
+			}
+
+			//	OK, check to see if the declaration is an extern
+
+			const CPPModel::DictionaryEntry&	existingEntry = *(*itrExistingEntry);
+
+			if( existingEntry.isExtern() )
+			{
+				deleteEntry( existingEntry.uid() );
+			}
+
+			if( !Insert( decodedNode.ReturnPtr() ) )
+			{
+				return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::ERROR_ADDING_GLOBAL_TO_DICTIONARY, "Error Adding Fundamental Typed Global Variable to the AST Dictionary.  Insertion failed after prior entry deletion." ) );
+			}
+		}
+
+  		return( CPPModel::CreateGlobalVarResult( globalUID ) );
 	}
 
 
@@ -1841,14 +1963,18 @@ namespace GCCInternalsTools
 
 		GCCInternalsTools::DecodeNodeResult			decodedNode = DecodeGlobalVar( globalDeclaration );
 
-		if( decodedNode.Succeeded() )
+		if( decodedNode.Failed() )
 		{
-			Insert( decodedNode.ReturnPtr().release() );
+			return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::INTERNAL_ERROR, "Error adding new global class to dictionary.", decodedNode ) );
 		}
+
+		const CPPModel::UID			globalUID = decodedNode.ReturnPtr()->uid();
+
+		Insert( decodedNode.ReturnPtr() );
 
 		//	If we are down here, all went well so return SUCCESS
 
-  		return( CPPModel::CreateGlobalVarResult::Success() );
+  		return( CPPModel::CreateGlobalVarResult( globalUID ) );
 	}
 
 }

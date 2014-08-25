@@ -86,7 +86,7 @@ fi
 
 cd ..
 
-#/bin/rm -f ./temp/*.*
+/bin/rm -f ./temp/*.*
 
 
 cmp -s ./results/$TEST_DIRECTORY/$TEST_NAME.xml ./expectedResults/$TEST_DIRECTORY/$TEST_NAME.xml

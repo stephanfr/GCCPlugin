@@ -27,12 +27,16 @@ namespace CPPModel
 		enum class UIDType { TYPE, DECLARATION };
 
 		UID() = delete;
-		UID( UID& ) = delete;
 
 		explicit UID( long		uid,
 					  UIDType	type )
 			: m_uid( uid ),
 			  m_type( type )
+		{}
+
+		UID( UID&			uidToCopy )
+			: m_uid( uidToCopy.m_uid ),
+			  m_type( uidToCopy.m_type )
 		{}
 
 		UID( const UID&		uidToCopy )
@@ -92,8 +96,8 @@ namespace CPPModel
 
 	private :
 
-		const long			m_uid;
-		const UIDType		m_type;
+		long			m_uid;
+		UIDType			m_type;
 	};
 
 

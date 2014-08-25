@@ -26,6 +26,27 @@ namespace CPPModel
 	typedef std::vector<TypeSpecifier>		ParameterType;
 
 
+	extern const ParameterType		BOOLEAN_PARAM;
+	extern const ParameterType		CHAR_PARAM;
+	extern const ParameterType		STRING_PARAM;
+	extern const ParameterType		INT_PARAM;
+	extern const ParameterType		LONG_PARAM;
+	extern const ParameterType		FLOAT_PARAM;
+	extern const ParameterType		DOUBLE_PARAM;
+	extern const ParameterType		CLASS_PARAM;
+
+
+	enum class ParameterModifier
+	{
+		CONSTANT,
+		POINTER,
+		ARRAY
+	};
+
+
+
+
+
 	TypeSpecifier	AsTypeSpecifier( const ParameterType&	paramType );
 
 
@@ -38,39 +59,49 @@ namespace CPPModel
 
 		virtual std::unique_ptr<ParameterValueBase>			deepCopy() const = 0;
 
+		virtual const ParameterModifier&					modifier() const = 0;
+
 		virtual const ParameterType&						type() const = 0;
 	};
 
 
 
 
-	template<class T, const ParameterType& paramType> class ParameterValue : public ParameterValueBase
+	template<class T, const ParameterModifier paramModifier, const ParameterType& paramType> class ParameterValue : public ParameterValueBase
 	{
 	public :
 
 		ParameterValue( const T&				value )
-		: m_paramType( paramType ),
+		: m_modifier( paramModifier ),
+		  m_paramType( paramType ),
 		  m_value( value )
 		{}
 
 
 		ParameterValue( const ParameterValue&		valueToCopy )
-		: m_value( valueToCopy.m_value ),
+		: m_modifier( valueToCopy.m_modifier ),
+		  m_value( valueToCopy.m_value ),
 		  m_paramType( valueToCopy.m_paramType )
 		{}
 
 
 		std::unique_ptr<ParameterValueBase>			deepCopy() const
 		{
-			return( std::unique_ptr<ParameterValueBase>( new ParameterValue<T,paramType>( m_value ) ));
+			return( std::unique_ptr<ParameterValueBase>( new ParameterValue<T,paramModifier,paramType>( m_value ) ));
 		}
 
 
+
+		const ParameterModifier&					modifier() const
+		{
+			return( m_modifier );
+		}
 
 		const ParameterType&						type() const
 		{
 			return( m_paramType );
 		}
+
 
 
 		const T&		value() const
@@ -81,167 +112,74 @@ namespace CPPModel
 
 	private :
 
-		const ParameterType&	m_paramType;
-		const T					m_value;
+		const ParameterModifier		m_modifier;
+		const ParameterType&		m_paramType;
+		T							m_value;
 
 	};
 
 
 
 
+	typedef ParameterValue< bool, ParameterModifier::CONSTANT, BOOLEAN_PARAM>									BooleanConstantParameter;
+	typedef ParameterValue< char, ParameterModifier::CONSTANT, CHAR_PARAM>										CharConstantParameter;
+	typedef ParameterValue< std::string, ParameterModifier::CONSTANT, STRING_PARAM>								StringConstantParameter;
+	typedef ParameterValue< int, ParameterModifier::CONSTANT, INT_PARAM>										IntConstantParameter;
+	typedef ParameterValue< long, ParameterModifier::CONSTANT, LONG_PARAM>										LongConstantParameter;
+	typedef ParameterValue< float, ParameterModifier::CONSTANT, FLOAT_PARAM>									FloatConstantParameter;
+	typedef ParameterValue< double, ParameterModifier::CONSTANT, DOUBLE_PARAM>									DoubleConstantParameter;
+	typedef ParameterValue< const ASTDictionaryEntry&, ParameterModifier::CONSTANT, CLASS_PARAM>				ClassParameter;
 
-	extern const ParameterType		BOOLEAN_PARAM;
-	extern const ParameterType		CHAR_PARAM;
-	extern const ParameterType		STRING_PARAM;
-	extern const ParameterType		INT_PARAM;
-	extern const ParameterType		LONG_PARAM;
-	extern const ParameterType		FLOAT_PARAM;
-	extern const ParameterType		DOUBLE_PARAM;
-	extern const ParameterType		CLASS_PARAM;
-
-	extern const ParameterType		ARRAY_PARAM;
+	typedef ParameterValue< std::vector<bool>, ParameterModifier::ARRAY, BOOLEAN_PARAM>							BooleanArrayParameter;
+	typedef ParameterValue< std::vector<char>, ParameterModifier::ARRAY, CHAR_PARAM>							CharArrayParameter;
+	typedef ParameterValue< std::vector<std::string>, ParameterModifier::ARRAY, STRING_PARAM>					StringArrayParameter;
+	typedef ParameterValue< std::vector<int>, ParameterModifier::ARRAY, INT_PARAM>								IntArrayParameter;
+	typedef ParameterValue< std::vector<long>, ParameterModifier::ARRAY, LONG_PARAM>							LongArrayParameter;
+	typedef ParameterValue< std::vector<float>, ParameterModifier::ARRAY, FLOAT_PARAM>							FloatArrayParameter;
+	typedef ParameterValue< std::vector<double>, ParameterModifier::ARRAY, DOUBLE_PARAM>						DoubleArrayParameter;
+	typedef ParameterValue< std::vector<const ASTDictionaryEntry&>, ParameterModifier::ARRAY, CLASS_PARAM>		ClassArrayParameter;
 
 
 
-	class ParameterArrayValueBase : public ParameterValueBase
+
+	class ParameterPointerBase
 	{
 	public :
 
-		virtual ~ParameterArrayValueBase()
+		virtual ~ParameterPointerBase()
 		{}
 
-		virtual std::unique_ptr<ParameterValueBase>			deepCopy() const = 0;
-
-		const ParameterType&								type() const
-		{
-			return( ARRAY_PARAM );
-		}
-
-		virtual const ParameterType&						elementType() const = 0;
-
-		virtual const unsigned int							size() const = 0;
+		virtual const CPPModel::UID&		value() const = 0;
 	};
 
 
-
-	template<class T, const ParameterType& paramType> class ParameterArrayValue : public ParameterArrayValueBase
+	template<const ParameterType& paramType> class ParameterPointer : public ParameterValue< CPPModel::UID, ParameterModifier::POINTER, paramType>, public ParameterPointerBase
 	{
 	public :
 
-		ParameterArrayValue( int				numElements,
-							 const T			value[] )
-		: m_elementParamType( paramType ),
-		  m_value( value, value + numElements )
-		{}
-
-		ParameterArrayValue( const std::vector<T>&			value )
-		: m_elementParamType( paramType ),
-		  m_value( value )
-		{}
-
-
-		ParameterArrayValue( const ParameterArrayValue&		valueToCopy )
-		: m_value( valueToCopy.m_value ),
-		  m_elementParamType( valueToCopy.m_elementParamType )
-		{}
-
-
-		std::unique_ptr<ParameterValueBase>			deepCopy() const
-		{
-			return( std::unique_ptr<ParameterValueBase>( new ParameterArrayValue<T,paramType>( m_value ) ));
-		}
-
-
-
-		const ParameterType&						elementType() const
-		{
-			return( m_elementParamType );
-		}
-
-
-		const unsigned int							size() const
-		{
-			return( m_value.size() );
-		}
-
-		const std::vector<T>&						value() const
-		{
-			return( m_value );
-		}
-
-
-	private :
-
-		const ParameterType&		m_elementParamType;
-		const std::vector<T>		m_value;
-	};
-
-
-	typedef ParameterValue<bool, BOOLEAN_PARAM>								ParameterBooleanValue;
-	typedef ParameterValue<char, CHAR_PARAM>								ParameterCharValue;
-	typedef ParameterValue<std::string, STRING_PARAM>						ParameterStringValue;
-	typedef ParameterValue<int, INT_PARAM>									ParameterIntValue;
-	typedef ParameterValue<long, LONG_PARAM>								ParameterLongValue;
-	typedef ParameterValue<float, FLOAT_PARAM>								ParameterFloatValue;
-	typedef ParameterValue<double, DOUBLE_PARAM>							ParameterDoubleValue;
-	typedef ParameterValue<const ASTDictionaryEntry&, CLASS_PARAM>			ParameterClassValue;
-
-
-	typedef ParameterArrayValue<bool, BOOLEAN_PARAM>						ParameterBoolArrayValue;
-	typedef ParameterArrayValue<char, CHAR_PARAM>							ParameterCharArrayValue;
-	typedef ParameterArrayValue<std::string, STRING_PARAM>					ParameterStringArrayValue;
-	typedef ParameterArrayValue<int, INT_PARAM>								ParameterIntArrayValue;
-	typedef ParameterArrayValue<long, LONG_PARAM>							ParameterLongArrayValue;
-	typedef ParameterArrayValue<float, FLOAT_PARAM>							ParameterFloatArrayValue;
-	typedef ParameterArrayValue<double, DOUBLE_PARAM>						ParameterDoubleArrayValue;
-	typedef ParameterArrayValue<const ASTDictionaryEntry&, CLASS_PARAM>		ParameterClassArrayValue;
-
-
-
-/*
-	class ParameterPointer : public ParameterValueBase
-	{
-	public :
-
-		ParameterPointer( std::unique_ptr<ParameterValueBase>		value )
-		: m_value( value.release() )
-		{}
+		ParameterPointer( const CPPModel::UID&				value )
+		: ParameterValue< CPPModel::UID, ParameterModifier::POINTER, paramType>( value )
+		  {}
 
 
 		ParameterPointer( const ParameterPointer&		valueToCopy )
-		: m_value( valueToCopy.deepCopy() )
+		: ParameterValue< CPPModel::UID, ParameterModifier::POINTER, paramType>( valueToCopy )
 		{}
 
-
-		std::unique_ptr<ParameterValueBase>			deepCopy() const
+		const CPPModel::UID&		value() const
 		{
-			return( std::unique_ptr<ParameterValueBase>( new ParameterPointer( m_value->deepCopy() ) ));
+			 return( ParameterValue< CPPModel::UID, ParameterModifier::POINTER, paramType>::value() );
 		}
-
-
-		const TypeSpecifier			typeSpecifier() const
-		{
-			return( TypeSpecifier::POINTER );
-		}
-
-		const TypeSpecifier							pointeeTypeSpecifier() const
-		{
-			return( m_value->typeSpecifier() );
-		}
-
-
-		const ParameterValueBase&					value() const
-		{
-			return( *m_value );
-		}
-
-
-	private :
-
-		std::unique_ptr<ParameterValueBase>			m_value;
 	};
-*/
 
+
+	typedef ParameterPointer<BOOLEAN_PARAM>							BooleanPointerParameter;
+	typedef ParameterPointer<CHAR_PARAM>							CharPointerParameter;
+	typedef ParameterPointer<STRING_PARAM>							StringPointerParameter;
+	typedef ParameterPointer<INT_PARAM>								IntPointerParameter;
+	typedef ParameterPointer<LONG_PARAM>							LongPointerParameter;
+	typedef ParameterPointer<FLOAT_PARAM>							FloatPointerParameter;
+	typedef ParameterPointer<DOUBLE_PARAM>							DoublePointerParameter;
 
 
 
