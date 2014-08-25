@@ -38,91 +38,154 @@
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testBoolArray</name>
-                <uid>28419</uid>
+                <uid>30656</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalArrayValueGlobalVarTest.cpp</file>
-                    <line>24</line>
-                    <char-count>1</char-count>
-                    <location>6650432</location>
+                    <unknown>true</unknown>
                 </source-info>
+                <static>true</static>
+            </dictionary_entry>
+            <dictionary_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testBoolArrayPointer</name>
+                <uid>30657</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
             </dictionary_entry>
             <dictionary_entry>
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testCharArray</name>
-                <uid>28420</uid>
+                <uid>30658</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalArrayValueGlobalVarTest.cpp</file>
-                    <line>25</line>
-                    <char-count>1</char-count>
-                    <location>6650560</location>
+                    <unknown>true</unknown>
                 </source-info>
+                <static>true</static>
+            </dictionary_entry>
+            <dictionary_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testCharArrayPointer</name>
+                <uid>30659</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
             </dictionary_entry>
             <dictionary_entry>
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testDoubleArray</name>
-                <uid>28424</uid>
+                <uid>30666</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalArrayValueGlobalVarTest.cpp</file>
-                    <line>29</line>
-                    <char-count>1</char-count>
-                    <location>6651073</location>
+                    <unknown>true</unknown>
                 </source-info>
+                <static>true</static>
+            </dictionary_entry>
+            <dictionary_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testDoubleArrayPointer</name>
+                <uid>30667</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
             </dictionary_entry>
             <dictionary_entry>
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testFloatArray</name>
-                <uid>28423</uid>
+                <uid>30664</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalArrayValueGlobalVarTest.cpp</file>
-                    <line>28</line>
-                    <char-count>1</char-count>
-                    <location>6650944</location>
+                    <unknown>true</unknown>
                 </source-info>
+                <static>true</static>
+            </dictionary_entry>
+            <dictionary_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testFloatArrayPointer</name>
+                <uid>30665</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
             </dictionary_entry>
             <dictionary_entry>
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testIntArray</name>
-                <uid>28421</uid>
+                <uid>30660</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalArrayValueGlobalVarTest.cpp</file>
-                    <line>26</line>
-                    <char-count>1</char-count>
-                    <location>6650687</location>
+                    <unknown>true</unknown>
                 </source-info>
+                <static>true</static>
+            </dictionary_entry>
+            <dictionary_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testIntArrayPointer</name>
+                <uid>30661</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
             </dictionary_entry>
             <dictionary_entry>
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testLongArray</name>
-                <uid>28422</uid>
+                <uid>30662</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalArrayValueGlobalVarTest.cpp</file>
-                    <line>27</line>
-                    <char-count>1</char-count>
-                    <location>6650816</location>
+                    <unknown>true</unknown>
                 </source-info>
+                <static>true</static>
+            </dictionary_entry>
+            <dictionary_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testLongArrayPointer</name>
+                <uid>30663</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
             </dictionary_entry>
             <dictionary_entry>
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testStringArray</name>
-                <uid>28425</uid>
+                <uid>30668</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalArrayValueGlobalVarTest.cpp</file>
-                    <line>30</line>
-                    <char-count>1</char-count>
-                    <location>6651200</location>
+                    <unknown>true</unknown>
                 </source-info>
+                <static>true</static>
+            </dictionary_entry>
+            <dictionary_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testStringArrayPointer</name>
+                <uid>30669</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
             </dictionary_entry>
         </namespace>
     </dictionary>
@@ -133,14 +196,11 @@
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testBoolArray</name>
-                <uid>28419</uid>
+                <uid>30656</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalArrayValueGlobalVarTest.cpp</file>
-                    <line>24</line>
-                    <char-count>1</char-count>
-                    <location>6650432</location>
+                    <unknown>true</unknown>
                 </source-info>
-                <static>false</static>
+                <static>true</static>
                 <type>
                     <kind>derived</kind>
                     <declaration>
@@ -156,15 +216,33 @@
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
-                <name>testCharArray</name>
-                <uid>28420</uid>
+                <name>testBoolArrayPointer</name>
+                <uid>30657</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalArrayValueGlobalVarTest.cpp</file>
-                    <line>25</line>
-                    <char-count>1</char-count>
-                    <location>6650560</location>
+                    <unknown>true</unknown>
                 </source-info>
-                <static>false</static>
+                <static>true</static>
+                <type>
+                    <kind>derived</kind>
+                    <declaration>
+                        <operator>pointer</operator>
+                        <type>
+                            <kind>fundamental</kind>
+                            <declaration>boolean</declaration>
+                        </type>
+                    </declaration>
+                </type>
+            </global_var_entry>
+            <global_var_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testCharArray</name>
+                <uid>30658</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
                 <type>
                     <kind>derived</kind>
                     <declaration>
@@ -180,15 +258,33 @@
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
-                <name>testDoubleArray</name>
-                <uid>28424</uid>
+                <name>testCharArrayPointer</name>
+                <uid>30659</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalArrayValueGlobalVarTest.cpp</file>
-                    <line>29</line>
-                    <char-count>1</char-count>
-                    <location>6651073</location>
+                    <unknown>true</unknown>
                 </source-info>
-                <static>false</static>
+                <static>true</static>
+                <type>
+                    <kind>derived</kind>
+                    <declaration>
+                        <operator>pointer</operator>
+                        <type>
+                            <kind>fundamental</kind>
+                            <declaration>char</declaration>
+                        </type>
+                    </declaration>
+                </type>
+            </global_var_entry>
+            <global_var_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testDoubleArray</name>
+                <uid>30666</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
                 <type>
                     <kind>derived</kind>
                     <declaration>
@@ -204,15 +300,33 @@
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
-                <name>testFloatArray</name>
-                <uid>28423</uid>
+                <name>testDoubleArrayPointer</name>
+                <uid>30667</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalArrayValueGlobalVarTest.cpp</file>
-                    <line>28</line>
-                    <char-count>1</char-count>
-                    <location>6650944</location>
+                    <unknown>true</unknown>
                 </source-info>
-                <static>false</static>
+                <static>true</static>
+                <type>
+                    <kind>derived</kind>
+                    <declaration>
+                        <operator>pointer</operator>
+                        <type>
+                            <kind>fundamental</kind>
+                            <declaration>double</declaration>
+                        </type>
+                    </declaration>
+                </type>
+            </global_var_entry>
+            <global_var_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testFloatArray</name>
+                <uid>30664</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
                 <type>
                     <kind>derived</kind>
                     <declaration>
@@ -228,15 +342,33 @@
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
-                <name>testIntArray</name>
-                <uid>28421</uid>
+                <name>testFloatArrayPointer</name>
+                <uid>30665</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalArrayValueGlobalVarTest.cpp</file>
-                    <line>26</line>
-                    <char-count>1</char-count>
-                    <location>6650687</location>
+                    <unknown>true</unknown>
                 </source-info>
-                <static>false</static>
+                <static>true</static>
+                <type>
+                    <kind>derived</kind>
+                    <declaration>
+                        <operator>pointer</operator>
+                        <type>
+                            <kind>fundamental</kind>
+                            <declaration>float</declaration>
+                        </type>
+                    </declaration>
+                </type>
+            </global_var_entry>
+            <global_var_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testIntArray</name>
+                <uid>30660</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
                 <type>
                     <kind>derived</kind>
                     <declaration>
@@ -252,15 +384,33 @@
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
-                <name>testLongArray</name>
-                <uid>28422</uid>
+                <name>testIntArrayPointer</name>
+                <uid>30661</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalArrayValueGlobalVarTest.cpp</file>
-                    <line>27</line>
-                    <char-count>1</char-count>
-                    <location>6650816</location>
+                    <unknown>true</unknown>
                 </source-info>
-                <static>false</static>
+                <static>true</static>
+                <type>
+                    <kind>derived</kind>
+                    <declaration>
+                        <operator>pointer</operator>
+                        <type>
+                            <kind>fundamental</kind>
+                            <declaration>int</declaration>
+                        </type>
+                    </declaration>
+                </type>
+            </global_var_entry>
+            <global_var_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testLongArray</name>
+                <uid>30662</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
                 <type>
                     <kind>derived</kind>
                     <declaration>
@@ -276,19 +426,59 @@
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
-                <name>testStringArray</name>
-                <uid>28425</uid>
+                <name>testLongArrayPointer</name>
+                <uid>30663</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalArrayValueGlobalVarTest.cpp</file>
-                    <line>30</line>
-                    <char-count>1</char-count>
-                    <location>6651200</location>
+                    <unknown>true</unknown>
                 </source-info>
-                <static>false</static>
+                <static>true</static>
+                <type>
+                    <kind>derived</kind>
+                    <declaration>
+                        <operator>pointer</operator>
+                        <type>
+                            <kind>fundamental</kind>
+                            <declaration>long int</declaration>
+                        </type>
+                    </declaration>
+                </type>
+            </global_var_entry>
+            <global_var_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testStringArray</name>
+                <uid>30668</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
                 <type>
                     <kind>derived</kind>
                     <declaration>
                         <operator>array</operator>
+                        <operator>pointer</operator>
+                        <type>
+                            <kind>fundamental</kind>
+                            <declaration>char</declaration>
+                        </type>
+                    </declaration>
+                </type>
+            </global_var_entry>
+            <global_var_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testStringArrayPointer</name>
+                <uid>30669</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
+                <type>
+                    <kind>derived</kind>
+                    <declaration>
+                        <operator>pointer</operator>
                         <operator>pointer</operator>
                         <type>
                             <kind>fundamental</kind>

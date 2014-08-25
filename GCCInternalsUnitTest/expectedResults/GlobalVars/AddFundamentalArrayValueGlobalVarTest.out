@@ -98,3 +98,104 @@ Value of test string array 6: seven
 Value of test string array 7: eight
 Value of test string array 8: nine
 Value of test string array 9: ten
+
+
+
+Value of test bool array pointer 0: 1
+Value of test bool array pointer 1: 0
+Value of test bool array pointer 2: 1
+Value of test bool array pointer 3: 1
+Value of test bool array pointer 4: 0
+Value of test bool array pointer 5: 0
+Value of test bool array pointer 6: 1
+Value of test bool array pointer 7: 1
+Value of test bool array pointer 8: 1
+Value of test bool array pointer 9: 0
+Value of test bool array pointer 10: 0
+Value of test bool array pointer 11: 0
+
+Value of test char array pointer 0: a
+Value of test char array pointer 1: b
+Value of test char array pointer 2: c
+Value of test char array pointer 3: d
+Value of test char array pointer 4: e
+Value of test char array pointer 5: f
+Value of test char array pointer 6: g
+Value of test char array pointer 7: h
+Value of test char array pointer 8: i
+Value of test char array pointer 9: j
+Value of test char array pointer 10: k
+Value of test char array pointer 11: l
+Value of test char array pointer 12: m
+Value of test char array pointer 13: n
+Value of test char array pointer 14: o
+Value of test char array pointer 15: p
+Value of test char array pointer 16: q
+Value of test char array pointer 17: r
+Value of test char array pointer 18: s
+Value of test char array pointer 19: t
+Value of test char array pointer 20: u
+Value of test char array pointer 21: v
+Value of test char array pointer 22: w
+Value of test char array pointer 23: x
+Value of test char array pointer 24: y
+Value of test char array pointer 25: z
+
+Value of test int array pointer 0: 1
+Value of test int array pointer 1: 2
+Value of test int array pointer 2: 3
+Value of test int array pointer 3: 4
+Value of test int array pointer 4: 5
+Value of test int array pointer 5: 6
+Value of test int array pointer 6: 7
+Value of test int array pointer 7: 8
+Value of test int array pointer 8: 9
+Value of test int array pointer 9: 10
+Value of test int array pointer 10: 11
+Value of test int array pointer 11: 12
+
+Value of test long array pointer 0: 101
+Value of test long array pointer 1: 102
+Value of test long array pointer 2: 103
+Value of test long array pointer 3: 104
+Value of test long array pointer 4: 105
+Value of test long array pointer 5: 106
+Value of test long array pointer 6: 107
+Value of test long array pointer 7: 108
+Value of test long array pointer 8: 109
+Value of test long array pointer 9: 110
+Value of test long array pointer 10: 111
+Value of test long array pointer 11: 112
+
+Value of test float array pointer 0: 1.1
+Value of test float array pointer 1: 2.2
+Value of test float array pointer 2: 3.3
+Value of test float array pointer 3: 4.4
+Value of test float array pointer 4: 5.5
+Value of test float array pointer 5: 6.6
+Value of test float array pointer 6: 7.7
+Value of test float array pointer 7: 8.8
+Value of test float array pointer 8: 9.9
+Value of test float array pointer 9: 10.1
+
+Value of test double array pointer 0: 2.22507e-308
+Value of test double array pointer 1: 1.79769e+308
+Value of test double array pointer 2: 3.003
+Value of test double array pointer 3: 4.004
+Value of test double array pointer 4: 5.005
+Value of test double array pointer 5: 6.006
+Value of test double array pointer 6: 7.007
+Value of test double array pointer 7: 8.008
+Value of test double array pointer 8: 9.009
+Value of test double array pointer 9: 10.001
+
+Value of test string array pointer 0: one
+Value of test string array pointer 1: two
+Value of test string array pointer 2: three
+Value of test string array pointer 3: four
+Value of test string array pointer 4: five
+Value of test string array pointer 5: six
+Value of test string array pointer 6: seven
+Value of test string array pointer 7: eight
+Value of test string array pointer 8: nine
+Value of test string array pointer 9: ten

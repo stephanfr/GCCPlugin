@@ -37,92 +37,155 @@
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
-                <name>testBoolVar</name>
-                <uid>28419</uid>
+                <name>testBoolPointerVar</name>
+                <uid>30540</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalValueGlobalVarTest.cpp</file>
-                    <line>24</line>
-                    <char-count>1</char-count>
-                    <location>6650431</location>
+                    <unknown>true</unknown>
                 </source-info>
+                <static>true</static>
+            </dictionary_entry>
+            <dictionary_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testBoolVar</name>
+                <uid>30539</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
             </dictionary_entry>
             <dictionary_entry>
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testCharPointerVar</name>
-                <uid>28425</uid>
+                <uid>30542</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalValueGlobalVarTest.cpp</file>
-                    <line>31</line>
-                    <char-count>1</char-count>
-                    <location>6651328</location>
+                    <unknown>true</unknown>
                 </source-info>
+                <static>true</static>
             </dictionary_entry>
             <dictionary_entry>
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testCharVar</name>
-                <uid>28420</uid>
+                <uid>30541</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalValueGlobalVarTest.cpp</file>
-                    <line>25</line>
-                    <char-count>1</char-count>
-                    <location>6650559</location>
+                    <unknown>true</unknown>
                 </source-info>
+                <static>true</static>
+            </dictionary_entry>
+            <dictionary_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testDoublePointerVar</name>
+                <uid>30552</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
             </dictionary_entry>
             <dictionary_entry>
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testDoubleVar</name>
-                <uid>28424</uid>
+                <uid>30551</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalValueGlobalVarTest.cpp</file>
-                    <line>29</line>
-                    <char-count>1</char-count>
-                    <location>6651073</location>
+                    <unknown>true</unknown>
                 </source-info>
+                <static>true</static>
+            </dictionary_entry>
+            <dictionary_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testFloatPointerVar</name>
+                <uid>30550</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
             </dictionary_entry>
             <dictionary_entry>
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testFloatVar</name>
-                <uid>28423</uid>
+                <uid>30549</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalValueGlobalVarTest.cpp</file>
-                    <line>28</line>
-                    <char-count>1</char-count>
-                    <location>6650944</location>
+                    <unknown>true</unknown>
                 </source-info>
+                <static>true</static>
+            </dictionary_entry>
+            <dictionary_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testIntPointerVar</name>
+                <uid>30546</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
             </dictionary_entry>
             <dictionary_entry>
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testIntVar</name>
-                <uid>28421</uid>
+                <uid>30545</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalValueGlobalVarTest.cpp</file>
-                    <line>26</line>
-                    <char-count>1</char-count>
-                    <location>6650686</location>
+                    <unknown>true</unknown>
                 </source-info>
+                <static>true</static>
+            </dictionary_entry>
+            <dictionary_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testLongPointerVar</name>
+                <uid>30548</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
             </dictionary_entry>
             <dictionary_entry>
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testLongVar</name>
-                <uid>28422</uid>
+                <uid>30547</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalValueGlobalVarTest.cpp</file>
-                    <line>27</line>
-                    <char-count>1</char-count>
-                    <location>6650815</location>
+                    <unknown>true</unknown>
                 </source-info>
+                <static>true</static>
+            </dictionary_entry>
+            <dictionary_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testStringPointerVar</name>
+                <uid>30544</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
+            </dictionary_entry>
+            <dictionary_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testStringVar</name>
+                <uid>30543</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
             </dictionary_entry>
         </namespace>
     </dictionary>
@@ -132,15 +195,33 @@
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
-                <name>testBoolVar</name>
-                <uid>28419</uid>
+                <name>testBoolPointerVar</name>
+                <uid>30540</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalValueGlobalVarTest.cpp</file>
-                    <line>24</line>
-                    <char-count>1</char-count>
-                    <location>6650431</location>
+                    <unknown>true</unknown>
                 </source-info>
-                <static>false</static>
+                <static>true</static>
+                <type>
+                    <kind>derived</kind>
+                    <declaration>
+                        <operator>pointer</operator>
+                        <type>
+                            <kind>fundamental</kind>
+                            <declaration>boolean</declaration>
+                        </type>
+                    </declaration>
+                </type>
+            </global_var_entry>
+            <global_var_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testBoolVar</name>
+                <uid>30539</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
                 <type>
                     <kind>fundamental</kind>
                     <declaration>boolean</declaration>
@@ -151,14 +232,11 @@
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testCharPointerVar</name>
-                <uid>28425</uid>
+                <uid>30542</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalValueGlobalVarTest.cpp</file>
-                    <line>31</line>
-                    <char-count>1</char-count>
-                    <location>6651328</location>
+                    <unknown>true</unknown>
                 </source-info>
-                <static>false</static>
+                <static>true</static>
                 <type>
                     <kind>derived</kind>
                     <declaration>
@@ -175,14 +253,11 @@
                     <name>TestCreatedNamespace::</name>
                 </namespace>
                 <name>testCharVar</name>
-                <uid>28420</uid>
+                <uid>30541</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalValueGlobalVarTest.cpp</file>
-                    <line>25</line>
-                    <char-count>1</char-count>
-                    <location>6650559</location>
+                    <unknown>true</unknown>
                 </source-info>
-                <static>false</static>
+                <static>true</static>
                 <type>
                     <kind>fundamental</kind>
                     <declaration>char</declaration>
@@ -192,15 +267,33 @@
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
-                <name>testDoubleVar</name>
-                <uid>28424</uid>
+                <name>testDoublePointerVar</name>
+                <uid>30552</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalValueGlobalVarTest.cpp</file>
-                    <line>29</line>
-                    <char-count>1</char-count>
-                    <location>6651073</location>
+                    <unknown>true</unknown>
                 </source-info>
-                <static>false</static>
+                <static>true</static>
+                <type>
+                    <kind>derived</kind>
+                    <declaration>
+                        <operator>pointer</operator>
+                        <type>
+                            <kind>fundamental</kind>
+                            <declaration>double</declaration>
+                        </type>
+                    </declaration>
+                </type>
+            </global_var_entry>
+            <global_var_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testDoubleVar</name>
+                <uid>30551</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
                 <type>
                     <kind>fundamental</kind>
                     <declaration>double</declaration>
@@ -210,15 +303,33 @@
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
-                <name>testFloatVar</name>
-                <uid>28423</uid>
+                <name>testFloatPointerVar</name>
+                <uid>30550</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalValueGlobalVarTest.cpp</file>
-                    <line>28</line>
-                    <char-count>1</char-count>
-                    <location>6650944</location>
+                    <unknown>true</unknown>
                 </source-info>
-                <static>false</static>
+                <static>true</static>
+                <type>
+                    <kind>derived</kind>
+                    <declaration>
+                        <operator>pointer</operator>
+                        <type>
+                            <kind>fundamental</kind>
+                            <declaration>float</declaration>
+                        </type>
+                    </declaration>
+                </type>
+            </global_var_entry>
+            <global_var_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testFloatVar</name>
+                <uid>30549</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
                 <type>
                     <kind>fundamental</kind>
                     <declaration>float</declaration>
@@ -228,15 +339,33 @@
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
-                <name>testIntVar</name>
-                <uid>28421</uid>
+                <name>testIntPointerVar</name>
+                <uid>30546</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalValueGlobalVarTest.cpp</file>
-                    <line>26</line>
-                    <char-count>1</char-count>
-                    <location>6650686</location>
+                    <unknown>true</unknown>
                 </source-info>
-                <static>false</static>
+                <static>true</static>
+                <type>
+                    <kind>derived</kind>
+                    <declaration>
+                        <operator>pointer</operator>
+                        <type>
+                            <kind>fundamental</kind>
+                            <declaration>int</declaration>
+                        </type>
+                    </declaration>
+                </type>
+            </global_var_entry>
+            <global_var_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testIntVar</name>
+                <uid>30545</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
                 <type>
                     <kind>fundamental</kind>
                     <declaration>int</declaration>
@@ -246,18 +375,79 @@
                 <namespace>
                     <name>TestCreatedNamespace::</name>
                 </namespace>
-                <name>testLongVar</name>
-                <uid>28422</uid>
+                <name>testLongPointerVar</name>
+                <uid>30548</uid>
                 <source-info>
-                    <file>../testCaseSourceCode/GlobalVars/AddFundamentalValueGlobalVarTest.cpp</file>
-                    <line>27</line>
-                    <char-count>1</char-count>
-                    <location>6650815</location>
+                    <unknown>true</unknown>
                 </source-info>
-                <static>false</static>
+                <static>true</static>
+                <type>
+                    <kind>derived</kind>
+                    <declaration>
+                        <operator>pointer</operator>
+                        <type>
+                            <kind>fundamental</kind>
+                            <declaration>long int</declaration>
+                        </type>
+                    </declaration>
+                </type>
+            </global_var_entry>
+            <global_var_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testLongVar</name>
+                <uid>30547</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
                 <type>
                     <kind>fundamental</kind>
                     <declaration>long int</declaration>
+                </type>
+            </global_var_entry>
+            <global_var_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testStringPointerVar</name>
+                <uid>30544</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
+                <type>
+                    <kind>derived</kind>
+                    <declaration>
+                        <operator>pointer</operator>
+                        <operator>pointer</operator>
+                        <type>
+                            <kind>fundamental</kind>
+                            <declaration>char</declaration>
+                        </type>
+                    </declaration>
+                </type>
+            </global_var_entry>
+            <global_var_entry>
+                <namespace>
+                    <name>TestCreatedNamespace::</name>
+                </namespace>
+                <name>testStringVar</name>
+                <uid>30543</uid>
+                <source-info>
+                    <unknown>true</unknown>
+                </source-info>
+                <static>true</static>
+                <type>
+                    <kind>derived</kind>
+                    <declaration>
+                        <operator>pointer</operator>
+                        <type>
+                            <kind>fundamental</kind>
+                            <declaration>char</declaration>
+                        </type>
+                    </declaration>
                 </type>
             </global_var_entry>
         </namespace>

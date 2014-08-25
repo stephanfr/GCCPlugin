@@ -2,8 +2,16 @@ AddFundamentalValueGlobalVarTest
 
 Value of testBoolVar:        1                      Should be: 1
 Value of testCharVar:        a                      Should be: 'a'
-Value of testCharPointerVar: Test String            Should be: 'Test String'
+Value of testStringVar:      Test String            Should be: 'Test String'
 Value of testIntVar:         2147483647             Should be: 2147483647
 Value of testLongVar:        9223372036854775807    Should be: 9223372036854775807
 Value of testFloatVar:       3.40282e+38            Should be: 3.40282e+38
 Value of testDoubleVar:      1.79769e+308           Should be: 1.79769e+308
+
+Value pointed to by testBoolPointerVar: 1
+Value pointed to by testCharPointerVar: a
+Value pointed to by testStringPointerVar: Test String
+Value pointed to by testIntPointerVar: 2147483647
+Value pointed to by testLongPointerVar: 9223372036854775807
+Value pointed to by testFloatPointerVar: 3.40282e+38
+Value pointed to by testDoublePointerVar: 1.79769e+308

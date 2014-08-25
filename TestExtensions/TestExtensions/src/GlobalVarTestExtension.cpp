@@ -309,6 +309,18 @@ bool 	AddFundamentalArrayValueGlobalVarTest( int							callbackType,
 				std::cerr << "In AddGlobalVarsTest: Boolean Array AddFundamentalArrayValueGlobalVarTest failed." << std::endl;
 				return( false );
 			}
+
+			CPPModel::BooleanPointerGlobalVarDeclaration		globalPointerVarDec( "testBoolArrayPointer",
+																  	  	  	  	 	 *testCreatedNamespace,
+																  	  	  	  	 	 gvResult.ReturnValue() );
+
+			gvResult = astDictionary->CreateGlobalVar( globalPointerVarDec );
+
+			if( !gvResult.Succeeded() )
+			{
+				std::cerr << "In AddGlobalVarsTest: Bool Array Pointer CreateGlobalVar failed." << std::endl;
+				return( false );
+			}
 		}
 
 		//	Create an array of chars
@@ -325,6 +337,18 @@ bool 	AddFundamentalArrayValueGlobalVarTest( int							callbackType,
 			if( !gvResult.Succeeded() )
 			{
 				std::cerr << "In AddGlobalVarsTest: Character Array AddFundamentalArrayValueGlobalVarTest failed." << std::endl;
+				return( false );
+			}
+
+			CPPModel::CharPointerGlobalVarDeclaration		globalPointerVarDec( "testCharArrayPointer",
+																  	  	  	  	 *testCreatedNamespace,
+																  	  	  	  	 gvResult.ReturnValue() );
+
+			gvResult = astDictionary->CreateGlobalVar( globalPointerVarDec );
+
+			if( !gvResult.Succeeded() )
+			{
+				std::cerr << "In AddGlobalVarsTest: Char Array Pointer CreateGlobalVar failed." << std::endl;
 				return( false );
 			}
 		}
@@ -345,6 +369,18 @@ bool 	AddFundamentalArrayValueGlobalVarTest( int							callbackType,
 				std::cerr << "In AddGlobalVarsTest: Int Array AddFundamentalArrayValueGlobalVarTest failed." << std::endl;
 				return( false );
 			}
+
+			CPPModel::IntPointerGlobalVarDeclaration		globalPointerVarDec( "testIntArrayPointer",
+																  	  	  	  	 *testCreatedNamespace,
+																  	  	  	  	 gvResult.ReturnValue() );
+
+			gvResult = astDictionary->CreateGlobalVar( globalPointerVarDec );
+
+			if( !gvResult.Succeeded() )
+			{
+				std::cerr << "In AddGlobalVarsTest: Int Array Pointer CreateGlobalVar failed." << std::endl;
+				return( false );
+			}
 		}
 
 		//	Create an array of longs
@@ -361,6 +397,18 @@ bool 	AddFundamentalArrayValueGlobalVarTest( int							callbackType,
 			if( !gvResult.Succeeded() )
 			{
 				std::cerr << "In AddGlobalVarsTest: Long Array AddFundamentalArrayValueGlobalVarTest failed." << std::endl;
+				return( false );
+			}
+
+			CPPModel::LongPointerGlobalVarDeclaration		globalPointerVarDec( "testLongArrayPointer",
+																  	  	  	  	 *testCreatedNamespace,
+																  	  	  	  	 gvResult.ReturnValue() );
+
+			gvResult = astDictionary->CreateGlobalVar( globalPointerVarDec );
+
+			if( !gvResult.Succeeded() )
+			{
+				std::cerr << "In AddGlobalVarsTest: Long Array Pointer CreateGlobalVar failed." << std::endl;
 				return( false );
 			}
 		}
@@ -383,6 +431,18 @@ bool 	AddFundamentalArrayValueGlobalVarTest( int							callbackType,
 				std::cerr << "In AddGlobalVarsTest: Float Array AddFundamentalArrayValueGlobalVarTest failed." << std::endl;
 				return( false );
 			}
+
+			CPPModel::FloatPointerGlobalVarDeclaration		globalPointerVarDec( "testFloatArrayPointer",
+																  	  	  	  	 *testCreatedNamespace,
+																  	  	  	  	 gvResult.ReturnValue() );
+
+			gvResult = astDictionary->CreateGlobalVar( globalPointerVarDec );
+
+			if( !gvResult.Succeeded() )
+			{
+				std::cerr << "In AddGlobalVarsTest: Float Array Pointer CreateGlobalVar failed." << std::endl;
+				return( false );
+			}
 		}
 
 		//	Create an array of doubles
@@ -401,6 +461,18 @@ bool 	AddFundamentalArrayValueGlobalVarTest( int							callbackType,
 				std::cerr << "In AddGlobalVarsTest: Double Array AddFundamentalArrayValueGlobalVarTest failed." << std::endl;
 				return( false );
 			}
+
+			CPPModel::DoublePointerGlobalVarDeclaration		globalPointerVarDec( "testDoubleArrayPointer",
+																  	  	  	  	 *testCreatedNamespace,
+																  	  	  	  	 gvResult.ReturnValue() );
+
+			gvResult = astDictionary->CreateGlobalVar( globalPointerVarDec );
+
+			if( !gvResult.Succeeded() )
+			{
+				std::cerr << "In AddGlobalVarsTest: Double Array Pointer CreateGlobalVar failed." << std::endl;
+				return( false );
+			}
 		}
 
 		//	Create an array of strings
@@ -417,6 +489,18 @@ bool 	AddFundamentalArrayValueGlobalVarTest( int							callbackType,
 			if( !gvResult.Succeeded() )
 			{
 				std::cerr << "In AddGlobalVarsTest: String Array AddFundamentalArrayValueGlobalVarTest failed." << std::endl;
+				return( false );
+			}
+
+			CPPModel::StringPointerGlobalVarDeclaration		globalPointerVarDec( "testStringArrayPointer",
+																  	  	  	  	 *testCreatedNamespace,
+																  	  	  	  	 gvResult.ReturnValue() );
+
+			gvResult = astDictionary->CreateGlobalVar( globalPointerVarDec );
+
+			if( !gvResult.Succeeded() )
+			{
+				std::cerr << "In AddGlobalVarsTest: String Array Pointer CreateGlobalVar failed." << std::endl;
 				return( false );
 			}
 		}

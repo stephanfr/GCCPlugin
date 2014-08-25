@@ -28,6 +28,14 @@ namespace TestCreatedNamespace
 	extern float	testFloatArray[];
 	extern double	testDoubleArray[];
 	extern char*	testStringArray[];
+
+	extern bool*	testBoolArrayPointer[];
+	extern char*	testCharArrayPointer[];
+	extern int*		testIntArrayPointer[];
+	extern long*	testLongArrayPointer[];
+	extern float*	testFloatArrayPointer[];
+	extern double*	testDoubleArrayPointer[];
+	extern char**	testStringArrayPointer[];
 }
 
 
@@ -85,5 +93,59 @@ int main()
 		std::cout << "Value of test string array " << i << ": " << TestCreatedNamespace::testStringArray[i] << std::endl;
 	}
 
-    return( 1 );
+
+	std::cout << std::endl;
+	std::cout << std::endl;
+	std::cout << std::endl;
+
+
+	for( int i = 0; i < 12; ++i )
+	{
+		std::cout << "Value of test bool array pointer " << i << ": " << (*TestCreatedNamespace::testBoolArrayPointer)[i] << std::endl;
+	}
+
+	std::cout << std::endl;
+
+	for( int i = 0; i < 26; ++i )
+	{
+		std::cout << "Value of test char array pointer " << i << ": " << (*TestCreatedNamespace::testCharArrayPointer)[i] << std::endl;
+	}
+
+	std::cout << std::endl;
+
+	for( int i = 0; i < 12; ++i )
+	{
+		std::cout << "Value of test int array pointer " << i << ": " << (*TestCreatedNamespace::testIntArrayPointer)[i] << std::endl;
+	}
+
+	std::cout << std::endl;
+
+	for( int i = 0; i < 12; ++i )
+	{
+		std::cout << "Value of test long array pointer " << i << ": " << (*TestCreatedNamespace::testLongArrayPointer)[i] << std::endl;
+	}
+
+	std::cout << std::endl;
+
+	for( int i = 0; i < 10; ++i )
+	{
+		std::cout << "Value of test float array pointer " << i << ": " << (*TestCreatedNamespace::testFloatArrayPointer)[i] << std::endl;
+	}
+
+	std::cout << std::endl;
+
+	for( int i = 0; i < 10; ++i )
+	{
+		std::cout << "Value of test double array pointer " << i << ": " << (*TestCreatedNamespace::testDoubleArrayPointer)[i] << std::endl;
+	}
+
+	std::cout << std::endl;
+
+	for( int i = 0; i < 10; ++i )
+	{
+		std::cout << "Value of test string array pointer " << i << ": " << (*TestCreatedNamespace::testStringArrayPointer)[i] << std::endl;
+	}
+
+
+	return( 1 );
 }
