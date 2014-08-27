@@ -79,8 +79,7 @@ namespace GCCInternalsTools
 			{}
 
 
-		bool							GetClassDefinition( const CPPModel::ParseOptions&							options,
-															std::unique_ptr<const CPPModel::ClassDefinition>&		classDef ) const;
+		CPPModel::GetClassDefinitionResult			GetClassDefinition( const CPPModel::ParseOptions&							options ) const;
 	};
 
 

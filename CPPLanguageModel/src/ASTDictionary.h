@@ -170,6 +170,13 @@ namespace CPPModel
 
 
 
+	enum class GetClassDefinitionResultCodes { SUCCESS,
+											   INTERNAL_ERROR };
+
+	typedef SEFUtility::ResultWithUniqueReturnPtr<GetClassDefinitionResultCodes, ClassDefinition>				GetClassDefinitionResult;
+
+
+
 	class DictionaryClassEntry : public DictionaryEntry
 	{
 	public :
@@ -220,8 +227,7 @@ namespace CPPModel
 		const bool				isStatic() const = delete;
 
 
-		virtual bool			GetClassDefinition( const CPPModel::ParseOptions&							options,
-													std::unique_ptr<const CPPModel::ClassDefinition>&		classDef ) const = 0;
+		virtual GetClassDefinitionResult			GetClassDefinition( const CPPModel::ParseOptions&							options ) const = 0;
 
 
 
@@ -391,9 +397,14 @@ namespace CPPModel
 	};
 
 
-	enum class CreateNamespaceResultCodes { SUCCESS, NAMESPACE_ALREADY_EXISTS };
 
-	typedef SEFUtility::Result<CreateNamespaceResultCodes>						CreateNamespaceResult;
+
+	enum class CreateNamespaceResultCodes { SUCCESS,
+											NAMESPACE_ALREADY_EXISTS };
+
+	typedef SEFUtility::Result<CreateNamespaceResultCodes>													CreateNamespaceResult;
+
+
 
 	enum class CreateGlobalVarResultCodes { SUCCESS,
 											UNRECOGNIZED_TYPE_TO_CREATE,
@@ -493,27 +504,27 @@ namespace CPPModel
 
 
 
-		const ASTDictionary::IdentityIndex&			IdentityIdx() const
+		const ASTDictionary::IdentityIndex&				IdentityIdx() const
 		{
 			return( m_dictionary->get<Indices::Identity>() );
 		}
 
-		const ASTDictionary::UIDIndex&				UIDIdx() const
+		const ASTDictionary::UIDIndex&					UIDIdx() const
 		{
 			return( m_dictionary->get<Indices::UID>() );
 		}
 
-		const ASTDictionary::NamespaceIndex&		NamespaceIdx() const
+		const ASTDictionary::NamespaceIndex&			NamespaceIdx() const
 		{
 			return( m_dictionary->get<Indices::Namespace>() );
 		}
 
-		const ASTDictionary::FQNameIndex&			FQNameIdx() const
+		const ASTDictionary::FQNameIndex&				FQNameIdx() const
 		{
 			return( m_dictionary->get<Indices::FQName>() );
 		}
 
-		const ASTDictionary::LocationIndex&			LocationIdx() const
+		const ASTDictionary::LocationIndex&				LocationIdx() const
 		{
 			return( m_dictionary->get<Indices::Location>() );
 		}

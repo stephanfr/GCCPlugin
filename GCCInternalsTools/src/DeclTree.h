@@ -132,6 +132,16 @@ namespace GCCInternalsTools
 		}
 
 		CPPModel::ConstListPtr<CPPModel::Attribute>		attributes();
+
+		const CPPModel::FieldOffsetInfo					offsetInfo() const
+		{
+			return( CPPModel::FieldOffsetInfo( TREE_INT_CST_LOW ( DECL_SIZE_UNIT( m_tree )),
+									 	 	   DECL_ALIGN_UNIT( m_tree ),
+									 	 	   TREE_INT_CST_LOW ( DECL_FIELD_OFFSET( m_tree )),
+									 	 	   DECL_OFFSET_ALIGN( m_tree ),
+									 	 	   TREE_INT_CST_LOW ( DECL_FIELD_BIT_OFFSET( m_tree ) ) ));
+		}
+
 	};
 
 }

@@ -212,6 +212,83 @@ namespace CPPModel
 
 
 
+	class FieldOffsetInfo : public IXMLSerializable
+	{
+	public :
+
+		FieldOffsetInfo() = delete;
+		FieldOffsetInfo( FieldOffsetInfo&			offsetInfo ) = delete;
+
+		FieldOffsetInfo( long			size,
+						 long			alignment,
+						 long			offset,
+						 long			bitOffsetAlignment,
+						 long			bitOffset )
+			: m_size( size ),
+			  m_alignment( alignment ),
+			  m_offset( offset ),
+			  m_bitOffsetAlignment( bitOffsetAlignment ),
+			  m_bitOffset( bitOffset )
+		{}
+
+		FieldOffsetInfo( const FieldOffsetInfo&			offsetInfo )
+			: m_size( offsetInfo.m_size ),
+			  m_alignment( offsetInfo.m_alignment ),
+			  m_offset( offsetInfo.m_offset ),
+			  m_bitOffsetAlignment( offsetInfo.m_bitOffsetAlignment ),
+			  m_bitOffset( offsetInfo.m_bitOffset )
+		{}
+
+
+
+		const long						size() const
+		{
+			return( m_size );
+		}
+
+		const long						alignment() const
+		{
+			return( m_alignment );
+		}
+
+		const long						offset() const
+		{
+			return( m_offset );
+		}
+
+		const long						bitOffsetAlignment() const
+		{
+			return( m_bitOffsetAlignment );
+		}
+
+		const long						bitOffset() const
+		{
+			return( m_bitOffset );
+		}
+
+
+		const long						totalOffsetInBytes() const
+		{
+			//	Total offset of the data field in bytes is the offset value + the bit offset turned into bytes
+
+			return( m_offset + ( m_bitOffset / 8 ) );
+		}
+
+
+		std::ostream&	toXML( std::ostream&			outputStream,
+							   SerializationOptions		options ) const;
+
+	private :
+
+		const long				m_size;						//	bytes
+		const long				m_alignment;				//	bytes
+		const long				m_offset;					//	bytes
+		const long				m_bitOffsetAlignment;		//	bits
+		const long				m_bitOffset;				// 	bits
+	};
+
+
+
 	class FieldDeclaration : public SourceElement, public Static, public Access, public IAttributes
 	{
 	public :
@@ -226,19 +303,22 @@ namespace CPPModel
 						  std::unique_ptr<const Type>	type,
 						  bool							isStatic,
 						  AccessSpecifier				accessSpec,
+						  const FieldOffsetInfo&		offsetInfo,
 						  ConstListPtr<Attribute>&		attributes )
 					: SourceElement( name, uid, sourceLocation ),
 					  Static( isStatic ),
 					  Access( accessSpec ),
 					  m_attributes( attributes ),
-					  m_type( std::move( type ))
+					  m_type( std::move( type )),
+					  m_offsetInfo( offsetInfo )
 		{}
 
 		~FieldDeclaration()
 		{}
 
 
-		const Type&			type() const
+
+		const Type&						type() const
 		{
 			return( *m_type );
 		}
@@ -248,6 +328,13 @@ namespace CPPModel
 			return( m_attributes );
 		}
 
+		const FieldOffsetInfo&			offsetInfo() const
+		{
+			return( m_offsetInfo );
+		}
+
+
+
 		std::ostream&	toXML( std::ostream&			outputStream,
 							   SerializationOptions		options ) const;
 
@@ -256,6 +343,8 @@ namespace CPPModel
 		const Attributes							m_attributes;
 
 		const std::unique_ptr<const Type>			m_type;
+
+		const FieldOffsetInfo						m_offsetInfo;
 	};
 
 

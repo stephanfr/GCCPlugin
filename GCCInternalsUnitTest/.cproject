@@ -97,6 +97,9 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="cdt.managedbuild.config.gnu.exe.debug.1677267514.779124645" name="ClassTests.cpp" rcbsApplicability="disable" resourcePath="test/ClassTests.cpp" toolsToInvoke="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.379257487.684216535">
+						<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.379257487.684216535" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.379257487"/>
+					</fileInfo>
 					<folderInfo id="cdt.managedbuild.config.gnu.exe.debug.1677267514.1214818750" name="/" resourcePath="contrib">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.exe.debug.1147130065" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.exe.debug" unusedChildren="">
 							<targetPlatform id="cdt.managedbuild.target.gnu.platform.exe.debug" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.exe.debug"/>
@@ -129,7 +132,7 @@
 					<sourceEntries>
 						<entry excluding="gtest|test/GlobalVarTests.cpp|test/TestUTTest.cpp|Functions|testCaseSourceCode|test|contrib-old|GlobalVars|testCaseSourceCode-old|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
-						<entry excluding="NamespaceTests.cpp|FunctionTests.cpp|GlobalVarTests.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="test"/>
+						<entry excluding="ClassTests.cpp|NamespaceTests.cpp|FunctionTests.cpp|GlobalVarTests.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="test"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

@@ -156,11 +156,9 @@ namespace CPPModel
 			{
 				if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::CLASS )
 				{
-					std::unique_ptr<const CPPModel::ClassDefinition>		classDef;
+					GetClassDefinitionResult			classDef = ((CPPModel::DictionaryClassEntry*)&(**namespaceIndex))->GetClassDefinition( parseOptions );
 
-					((CPPModel::DictionaryClassEntry*)&(**namespaceIndex))->GetClassDefinition( parseOptions, classDef );
-
-					classDef->toXML( outputStream, CPPModel::SerializationOptions::NONE );
+					classDef.ReturnPtr()->toXML( outputStream, CPPModel::SerializationOptions::NONE );
 				}
 				else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::UNION )
 				{

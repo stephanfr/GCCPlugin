@@ -560,13 +560,13 @@ namespace GCCInternalsTools
 				{
 					if( !itrField->isArtificial() )
 					{
-						fieldList->push_back( new CPPModel::FieldDeclaration( itrField->identifier(), itrField->uid(), sourceLocation, itrField->type( dictionaryEntry.Dictionary() ), isStatic, accessSpec, attributes ) );
+						fieldList->push_back( new CPPModel::FieldDeclaration( itrField->identifier(), itrField->uid(), sourceLocation, itrField->type( dictionaryEntry.Dictionary() ), isStatic, accessSpec, itrField->offsetInfo(), attributes ) );
 					}
 					break;
 				}
 				default:
 				{
-					fieldList->push_back( new CPPModel::FieldDeclaration( itrField->identifier(), itrField->uid(), sourceLocation, itrField->type( dictionaryEntry.Dictionary() ), isStatic, accessSpec, attributes ) );
+					fieldList->push_back( new CPPModel::FieldDeclaration( itrField->identifier(), itrField->uid(), sourceLocation, itrField->type( dictionaryEntry.Dictionary() ), isStatic, accessSpec, itrField->offsetInfo(), attributes ) );
 					break;
 				}
 			}
@@ -770,8 +770,7 @@ namespace GCCInternalsTools
 
 
 
-	bool		DictionaryClassEntryImpl::GetClassDefinition( const CPPModel::ParseOptions&							options,
-												   	     	  std::unique_ptr<const CPPModel::ClassDefinition>&		classDef ) const
+	CPPModel::GetClassDefinitionResult			DictionaryClassEntryImpl::GetClassDefinition( const CPPModel::ParseOptions&							options ) const
 	{
 		//	Let's get base classes, friends, fields, methods and attributes
 
@@ -785,20 +784,20 @@ namespace GCCInternalsTools
 
 		//	Build the class definition and return a shared pointer to it
 
-		classDef.reset( new CPPModel::ClassDefinition( name(),
-													   uid(),
-													   enclosingNamespace(),
-													   compilerSpecific(),
-													   !CLASSTYPE_DECLARED_CLASS( getTree() ),
-													   attr,
-													   baseClasses,
-													   friends,
-													   fields,
-													   methods,
-													   templateMethods,
-													   sourceLocation() ));
+		std::unique_ptr<CPPModel::ClassDefinition>		classDef( new CPPModel::ClassDefinition( name(),
+																								 uid(),
+																								 enclosingNamespace(),
+																								 compilerSpecific(),
+																								 !CLASSTYPE_DECLARED_CLASS( getTree() ),
+																								 attr,
+																								 baseClasses,
+																								 friends,
+																								 fields,
+																								 methods,
+																								 templateMethods,
+																								 sourceLocation() ));
 
-		return( true );
+		return( CPPModel::GetClassDefinitionResult( std::move( classDef ) ) );
 	}
 
 

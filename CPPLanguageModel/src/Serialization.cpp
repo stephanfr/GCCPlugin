@@ -256,6 +256,24 @@ namespace CPPModel
 	}
 
 
+	std::ostream&	FieldOffsetInfo::toXML( std::ostream&				outputStream,
+					   	   	   	   	   	    SerializationOptions		options ) const
+	{
+		outputStream << "<offset_info>\n";
+
+		{
+			SEFUtility::IndentingOutputStreambuf		indent( outputStream );
+
+			outputStream << "<size>" << size() << "</size>\n";
+			outputStream << "<alignment>" << alignment() << "</alignment>\n";
+			outputStream << "<offset>" << offset() << "</offset>\n";
+			outputStream << "<bit_offset_alignment>" << bitOffsetAlignment() << "</bit_offset_alignment>\n";
+			outputStream << "<bit_offset>" << bitOffset() << "</bit_offset>\n";
+		}
+
+		outputStream << "</offset_info>\n";
+	}
+
 
 	std::ostream&	FieldDeclaration::toXML( std::ostream&				outputStream,
 					   	   	   	   	   	   	 SerializationOptions		options ) const
@@ -271,6 +289,7 @@ namespace CPPModel
 			Access::toXML( outputStream, options );
 			Static::toXML( outputStream, options );
 			attributes().toXML( outputStream, options );
+			offsetInfo().toXML( outputStream, options );
 		}
 
 		outputStream << "</field>\n";
