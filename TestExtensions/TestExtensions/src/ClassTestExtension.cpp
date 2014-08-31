@@ -98,6 +98,43 @@ bool 	WriteToFieldByOffsetTest( int							callbackType,
 			return( false );
 		}
 
+
+		//	Now for the function pointer
+
+		CPPModel::ASTDictionary::FQNameIndexConstIterator		itrFactory = astDictionary->FQNameIdx().find( "TestNamespace::SimpleClassFactory" );
+
+
+		if( itrFactory == astDictionary->FQNameIdx().end() )
+		{
+			return( false );
+		}
+
+		if( (*itrFactory)->entryKind() != CPPModel::DictionaryEntry::EntryKind::FUNCTION )
+		{
+			return( false );
+		}
+
+
+		CPPModel::DerivedType								voidPointer( CPPModel::TypeSpecifier::POINTER, std::unique_ptr<const CPPModel::Type>( new CPPModel::FundamentalType( CPPModel::TypeSpecifier::VOID )) );
+
+		CPPModel::FunctionPrototype							prototype( voidPointer );
+
+		CPPModel::UID										functionUID = (*itrFactory)->uid();
+
+		CPPModel::FunctionPointerGlobalVarDeclaration		globalPointerVarDec( "factoryFunction",
+	  	  	  	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 prototype,
+																				 *testCreatedNamespace,
+															  	  	  	  	 	 functionUID );
+
+		gvResult = astDictionary->CreateGlobalVar( globalPointerVarDec );
+
+		if( !gvResult.Succeeded() )
+		{
+			std::cerr << "In WriteToFieldByOffsetTest: Function Pointer CreateGlobalVar failed." << std::endl;
+			return( false );
+		}
+
+
 	}
 
 	return( true );

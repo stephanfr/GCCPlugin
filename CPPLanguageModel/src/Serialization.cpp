@@ -272,6 +272,8 @@ namespace CPPModel
 		}
 
 		outputStream << "</offset_info>\n";
+
+		return( outputStream );
 	}
 
 
@@ -1297,8 +1299,8 @@ namespace CPPModel
 
 
 
-	std::ostream&	GlobalVarEntry::toXML( std::ostream&			outputStream,
-										   SerializationOptions		options ) const
+	std::ostream&	GlobalVarDefinition::toXML( std::ostream&				outputStream,
+										   	    SerializationOptions		options ) const
 	{
 //		std::string		currentIndent = XMLIndentTable::GetIndent( indentLevel );
 //		std::string		currentIndentPlusOne = XMLIndentTable::GetIndent( indentLevel + 1 );

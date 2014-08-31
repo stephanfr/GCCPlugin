@@ -162,28 +162,21 @@ namespace CPPModel
 				}
 				else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::UNION )
 				{
-					std::unique_ptr<const CPPModel::UnionDefinition>		unionDef;
+					GetUnionDefinitionResult	 		unionDef = ((CPPModel::DictionaryUnionEntry*)&(**namespaceIndex))->GetUnionDefinition( parseOptions );
 
-					((CPPModel::DictionaryUnionEntry*)&(**namespaceIndex))->GetUnionDefinition( parseOptions, unionDef );
-
-					unionDef->toXML( outputStream, CPPModel::SerializationOptions::NONE );
+					unionDef.ReturnPtr()->toXML( outputStream, CPPModel::SerializationOptions::NONE );
 				}
 				else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::FUNCTION )
 				{
-					std::unique_ptr<const CPPModel::FunctionDefinition>		functionDef;
+					GetFunctionDefinitionResult			functionDef = ((CPPModel::DictionaryFunctionEntry*)&(**namespaceIndex))->GetFunctionDefinition( parseOptions );
 
-					if( ((CPPModel::DictionaryFunctionEntry*)&(**namespaceIndex))->GetFunctionDefinition( parseOptions, functionDef ))
-					{
-						functionDef->toXML( outputStream, CPPModel::SerializationOptions::NONE );
-					}
+					functionDef.ReturnPtr()->toXML( outputStream, CPPModel::SerializationOptions::NONE );
 				}
 				else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::GLOBAL_VAR )
 				{
-					std::unique_ptr<const CPPModel::GlobalVarEntry>		globalVarDef;
+					GetGlobalVarDefinitionResult		globalVarDef = ((CPPModel::DictionaryGlobalVarEntry*)&(**namespaceIndex))->GetGlobalVarDefinition( parseOptions );
 
-					((CPPModel::DictionaryGlobalVarEntry*)&(**namespaceIndex))->GetGlobalVarEntry( parseOptions, globalVarDef );
-
-					globalVarDef->toXML( outputStream, CPPModel::SerializationOptions::NONE );
+					globalVarDef.ReturnPtr()->toXML( outputStream, CPPModel::SerializationOptions::NONE );
 				}
 			}
 		}

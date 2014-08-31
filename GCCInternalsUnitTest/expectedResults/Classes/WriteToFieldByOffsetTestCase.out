@@ -1,3 +1,4 @@
+In SimpleClass constructor.
 m_booleanValue : 1
 m_charValue : b
 m_stringValue : A quick brown fox
@@ -5,3 +6,4 @@ m_intValue : 12345
 m_longValue : 67890
 m_floatValue : 1.234
 m_doubleValue : 5.678e-100
+In SimpleClass constructor.

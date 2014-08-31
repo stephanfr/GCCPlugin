@@ -17,6 +17,7 @@ Contributors:
 
 
 #include <memory>
+#include <boost/optional.hpp>
 
 #include "Serialization.h"
 #include "Static.h"
@@ -32,6 +33,7 @@ Contributors:
 namespace CPPModel
 {
 
+	class DictionaryFunctionEntry;
 	class DictionaryClassEntry;
 	class DictionaryUnionEntry;
 
@@ -112,7 +114,7 @@ namespace CPPModel
 	{
 	public :
 
-		enum class Kind { FUNDAMENTAL, CLASS, UNION };
+		enum class Kind { FUNDAMENTAL, FUNCTION, CLASS, UNION };
 		enum class Modifier { VALUE, POINTER, ARRAY };
 
 		virtual ~IDeclarationType() {};
@@ -441,23 +443,23 @@ namespace CPPModel
 		ClassGlobalVarDeclaration( ClassGlobalVarDeclaration& ) = delete;
 		ClassGlobalVarDeclaration( const ClassGlobalVarDeclaration& ) = delete;
 
-		ClassGlobalVarDeclaration( const DictionaryClassEntry&		classType,
-							  	   const char*						name,
+		ClassGlobalVarDeclaration( const char*						name,
+			  	   	   	   	   	   const DictionaryClassEntry&		classType,
 							  	   const Namespace&					namespaceScope )
 			: GlobalVarDeclaration( Kind::CLASS, IDeclarationType::Modifier::VALUE, TypeSpecifier::CLASS, name, namespaceScope ),
 			  m_classType( classType )
 		{}
 
-		ClassGlobalVarDeclaration( const DictionaryClassEntry&		classType,
-							  	   const char*						name,
+		ClassGlobalVarDeclaration( const char*						name,
+			  	   	   	   	   	   const DictionaryClassEntry&		classType,
 							  	   const Namespace&					namespaceScope,
 							  	   const Attributes&				attributes )
 			: GlobalVarDeclaration( Kind::CLASS, IDeclarationType::Modifier::VALUE, TypeSpecifier::CLASS, name, namespaceScope, attributes ),
 			  m_classType( classType )
 		{}
 
-		ClassGlobalVarDeclaration( const DictionaryClassEntry&		classType,
-							  	   const char*						name,
+		ClassGlobalVarDeclaration( const char*						name,
+			  	   	   	   	   	   const DictionaryClassEntry&		classType,
 							  	   const Namespace&					namespaceScope,
 							  	   const Attributes&				attributes,
 							  	   const ParameterValueList&		initialValues )
@@ -466,8 +468,8 @@ namespace CPPModel
 			  m_initialValues( initialValues )
 		{}
 
-		ClassGlobalVarDeclaration( const DictionaryClassEntry&		classType,
-							  	   const char*						name,
+		ClassGlobalVarDeclaration( const char*						name,
+			  	   	   	   	   	   const DictionaryClassEntry&		classType,
 							  	   const Namespace&					namespaceScope,
 							  	   const ParameterValueList&		initialValues )
 			: GlobalVarDeclaration( Kind::CLASS, IDeclarationType::Modifier::VALUE, TypeSpecifier::CLASS, name, namespaceScope ),
@@ -507,6 +509,133 @@ namespace CPPModel
 		const ParameterValueList			m_initialValues;
 	};
 
+
+
+
+	class FunctionPrototype
+	{
+	public :
+
+		FunctionPrototype( const Type&		returnType )
+			: m_returnType( returnType.deepCopy() )
+		{}
+
+		FunctionPrototype( const Type&		returnType,
+						   const TypeList&	arguments )
+			: m_returnType( returnType.deepCopy() )
+		{
+			for( TypeList::const_iterator itrArg = arguments.begin(); itrArg != arguments.end(); itrArg++ )
+			{
+				Type*		argCopy = (*itrArg).deepCopy();
+				m_arguments.push_back( argCopy );
+			}
+		}
+
+
+		FunctionPrototype( const FunctionPrototype&		prototypeToCopy )
+			: m_returnType( prototypeToCopy.m_returnType->deepCopy() )
+		{
+			for( TypeList::const_iterator itrArg = prototypeToCopy.m_arguments.begin(); itrArg != prototypeToCopy.m_arguments.end(); itrArg++ )
+			{
+				Type*		argCopy = (*itrArg).deepCopy();
+				m_arguments.push_back( argCopy );
+			}
+		}
+
+
+
+		const Type&				returnType() const
+		{
+			return( *m_returnType );
+		}
+
+		const TypeList&			arguments() const
+		{
+			return( m_arguments );
+		}
+
+
+	private :
+
+		const std::unique_ptr<Type>		m_returnType;
+		TypeList						m_arguments;
+	};
+
+
+
+	class FunctionPointerGlobalVarDeclaration : public GlobalVarDeclaration
+	{
+	public :
+
+		FunctionPointerGlobalVarDeclaration() = delete;
+		FunctionPointerGlobalVarDeclaration( FunctionPointerGlobalVarDeclaration& ) = delete;
+		FunctionPointerGlobalVarDeclaration( const FunctionPointerGlobalVarDeclaration& ) = delete;
+
+		FunctionPointerGlobalVarDeclaration( const char*						name,
+ 	   	   	     	 	 	 	 	 	 	 const FunctionPrototype&			prototype,
+							  	   	   	     const Namespace&					namespaceScope )
+			: GlobalVarDeclaration( Kind::FUNCTION, IDeclarationType::Modifier::POINTER, TypeSpecifier::FUNCTION, name, namespaceScope ),
+			  m_prototype( prototype )
+		{}
+
+		FunctionPointerGlobalVarDeclaration( const char*						name,
+ 	   	   	   	 	 	 	 	 	 	 	 const FunctionPrototype&			prototype,
+							  	   	   	   	 const Namespace&					namespaceScope,
+							  	   	   	   	 const Attributes&					attributes )
+			: GlobalVarDeclaration( Kind::FUNCTION, IDeclarationType::Modifier::POINTER, TypeSpecifier::FUNCTION, name, namespaceScope, attributes ),
+			  m_prototype( prototype )
+		{}
+
+		FunctionPointerGlobalVarDeclaration( const char*						name,
+			     	 	 	 	 	 	 	 const FunctionPrototype&			prototype,
+										     const Namespace&					namespaceScope,
+										     const Attributes&					attributes,
+										     const UID&							initialValue )
+			: GlobalVarDeclaration( Kind::FUNCTION, IDeclarationType::Modifier::POINTER, TypeSpecifier::FUNCTION, name, namespaceScope, attributes ),
+			  m_prototype( prototype ),
+			  m_initialValue( initialValue )
+		{}
+
+		FunctionPointerGlobalVarDeclaration( const char*						name,
+			     	 	 	 	 	 	 	 const FunctionPrototype&			prototype,
+										     const Namespace&					namespaceScope,
+										     const UID&							initialValue )
+			: GlobalVarDeclaration( Kind::FUNCTION, IDeclarationType::Modifier::POINTER, TypeSpecifier::FUNCTION, name, namespaceScope ),
+			  m_prototype( prototype ),
+			  m_initialValue( initialValue )
+		{}
+
+
+
+		virtual ~FunctionPointerGlobalVarDeclaration() {};
+
+
+
+
+
+		const FunctionPrototype&				prototype() const
+		{
+			return( m_prototype );
+		}
+
+
+		bool									hasInitialValue() const
+		{
+			return( m_initialValue.is_initialized() );
+		}
+
+		const UID&								initialValue() const
+		{
+			return( m_initialValue.get() );
+		}
+
+
+	private :
+
+		const FunctionPrototype&			m_prototype;
+
+		const boost::optional<UID>			m_initialValue;
+	};
 
 
 }

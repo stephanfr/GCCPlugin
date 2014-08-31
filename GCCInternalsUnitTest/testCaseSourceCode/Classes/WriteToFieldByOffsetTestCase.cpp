@@ -12,12 +12,18 @@ namespace TestNamespace
 {
 	extern int		fieldOffsets[];
 	extern char*	fieldNames[];
+	extern void*	(*factoryFunction)();
 
 
 
 	class SimpleClass
 	{
 	public:
+
+		SimpleClass()
+		{
+				std::cout << "In SimpleClass constructor." << std::endl;
+		}
 
 		bool			booleanValue() const
 		{
@@ -68,6 +74,12 @@ namespace TestNamespace
 
 	};
 
+
+	SimpleClass*		SimpleClassFactory()
+	{
+		return( new SimpleClass() );
+	}
+
 }
 
 
@@ -95,5 +107,8 @@ int main()
 	std::cout << TestNamespace::fieldNames[4] << " : " << testInstance.longValue() << std::endl;
 	std::cout << TestNamespace::fieldNames[5] << " : " << testInstance.floatValue() << std::endl;
 	std::cout << TestNamespace::fieldNames[6] << " : " << testInstance.doubleValue() << std::endl;
+
+
+	void*			byFactory = (*TestNamespace::factoryFunction)();
 
 }

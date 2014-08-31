@@ -239,6 +239,13 @@ namespace CPPModel
 
 
 
+	enum class GetUnionDefinitionResultCodes { SUCCESS,
+											   INTERNAL_ERROR };
+
+	typedef SEFUtility::ResultWithUniqueReturnPtr<GetUnionDefinitionResultCodes, UnionDefinition>				GetUnionDefinitionResult;
+
+
+
 	class DictionaryUnionEntry : public DictionaryEntry
 	{
 	public :
@@ -287,8 +294,7 @@ namespace CPPModel
 		}
 
 
-		virtual bool			GetUnionDefinition( const CPPModel::ParseOptions&							options,
-													std::unique_ptr<const CPPModel::UnionDefinition>&		unionDef ) const = 0;
+		virtual GetUnionDefinitionResult			GetUnionDefinition( const CPPModel::ParseOptions&				options ) const = 0;
 
 
 	private :
@@ -296,6 +302,12 @@ namespace CPPModel
 		const TypeSpecifier			m_typeSpec;
 	};
 
+
+
+	enum class GetFunctionDefinitionResultCodes { SUCCESS,
+											   	  INTERNAL_ERROR };
+
+	typedef SEFUtility::ResultWithUniqueReturnPtr<GetFunctionDefinitionResultCodes, FunctionDefinition>				GetFunctionDefinitionResult;
 
 
 
@@ -341,8 +353,7 @@ namespace CPPModel
 		}
 
 
-		virtual bool		GetFunctionDefinition( const CPPModel::ParseOptions&							options,
-												   std::unique_ptr<const CPPModel::FunctionDefinition>&		functionDef ) const = 0;
+		virtual GetFunctionDefinitionResult		GetFunctionDefinition( const CPPModel::ParseOptions&							options ) const = 0;
 
 	private :
 
@@ -350,6 +361,14 @@ namespace CPPModel
 
 		const bool					m_hiddenFriend;
 	};
+
+
+
+
+	enum class GetGlobalVarDefinitionResultCodes { SUCCESS,
+											   	   INTERNAL_ERROR };
+
+	typedef SEFUtility::ResultWithUniqueReturnPtr<GetGlobalVarDefinitionResultCodes, GlobalVarDefinition>				GetGlobalVarDefinitionResult;
 
 
 
@@ -388,8 +407,7 @@ namespace CPPModel
 		}
 
 
-		virtual bool		GetGlobalVarEntry( const CPPModel::ParseOptions&						options,
-											   std::unique_ptr<const CPPModel::GlobalVarEntry>&		globalVarEntry ) const = 0;
+		virtual GetGlobalVarDefinitionResult		GetGlobalVarDefinition( const CPPModel::ParseOptions&						options ) const = 0;
 
 	private :
 
@@ -415,6 +433,8 @@ namespace CPPModel
 											WRONG_FUNCTION_FOR_GLOBAL_CREATION,
 											UNABLE_TO_FIND_INITIALIZATION_INSERTION_POINT,
 											UNABLE_TO_FIND_CORRECT_CONSTRUCTOR,
+											INITIAL_VALUE_NOT_FOUND_IN_DICTIONARY,
+											FUNCTION_POINTER_INITIAL_VALUE_NOT_A_FUNCTION,
 											INTERNAL_ERROR };
 
 	typedef SEFUtility::ResultWithReturnValue<CreateGlobalVarResultCodes,CPPModel::UID>						CreateGlobalVarResult;

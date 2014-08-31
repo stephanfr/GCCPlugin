@@ -130,6 +130,8 @@ namespace CPPModel
 		{}
 
 
+		virtual Type*					deepCopy() const = 0;
+
 
 		TypeSpecifier					typeSpec() const
 		{
@@ -150,10 +152,15 @@ namespace CPPModel
 
 	private :
 
-		const TypeSpecifier		m_typeSpecifier;
+		const TypeSpecifier				m_typeSpecifier;
 
 		const Attributes				m_attributes;
 	};
+
+
+
+	typedef boost::ptr_list<Type>			TypeList;
+
 
 
 	class UnrecognizedType : public Type
@@ -170,6 +177,11 @@ namespace CPPModel
 		virtual ~UnrecognizedType()
 		{}
 
+
+		Type*						deepCopy() const
+		{
+			return( new UnrecognizedType() );
+		}
 
 		Kind	kind() const
 		{
@@ -202,6 +214,13 @@ namespace CPPModel
 		{}
 
 
+
+		Type*						deepCopy() const
+		{
+			return( new FundamentalType( *this ) );
+		}
+
+
 		Kind	kind() const
 		{
 			return( Kind::FUNDAMENTAL );
@@ -220,6 +239,18 @@ namespace CPPModel
 
 		ClassOrStructType() = delete;
 		ClassOrStructType( ClassOrStructType& ) = delete;
+
+		ClassOrStructType( TypeSpecifier				typeSpec,
+						   const std::string&			name,
+						   const UID&					uid,
+						   const Namespace&				namespaceScope,
+						   const SourceLocation&		sourceLocation )
+			: Type( typeSpec ),
+			  SourceElement( name, uid, sourceLocation ),
+			  NamespaceScoped( namespaceScope )
+		{
+			assert( uid.uidType() == UID::UIDType::TYPE );
+		}
 
 		ClassOrStructType( TypeSpecifier				typeSpec,
 						   const std::string&			name,
@@ -246,6 +277,11 @@ namespace CPPModel
 		{}
 
 
+		Type*									deepCopy() const
+		{
+			return( new ClassOrStructType( *this ) );
+		}
+
 		Kind									kind() const
 		{
 			return( Kind::CLASS_OR_STRUCT );
@@ -270,7 +306,12 @@ namespace CPPModel
 
 		DerivedType() = delete;
 		DerivedType( DerivedType& ) = delete;
-		DerivedType( const DerivedType& ) = delete;
+
+		DerivedType( TypeSpecifier					typeSpec,
+					 std::unique_ptr<const Type>	baseType )
+			: Type( typeSpec ),
+			  m_baseType( std::move( baseType ))
+		{}
 
 		DerivedType( TypeSpecifier					typeSpec,
 					 ConstListPtr<Attribute>&		attributes,
@@ -286,11 +327,22 @@ namespace CPPModel
 			  m_baseType( std::move( baseType ))
 		{}
 
+		DerivedType( const DerivedType&		typeToCopy )
+			: Type( typeToCopy.typeSpec(), typeToCopy.attributes() ),
+			  m_baseType( typeToCopy.m_baseType->deepCopy() )
+		{
+
+		}
 
 
 		virtual ~DerivedType()
 		{}
 
+
+		Type*			deepCopy() const
+		{
+			return( new DerivedType( *this ) );
+		}
 
 		Kind			kind() const
 		{
@@ -323,6 +375,18 @@ namespace CPPModel
 				   const std::string&			name,
 				   const UID&					uid,
 				   const Namespace&				namespaceScope,
+				   const SourceLocation&		sourceLocation )
+			: Type( typeSpec ),
+			  SourceElement( name, uid, sourceLocation ),
+			  NamespaceScoped( namespaceScope )
+		{
+			assert( uid.uidType() == UID::UIDType::TYPE );
+		}
+
+		UnionType( TypeSpecifier				typeSpec,
+				   const std::string&			name,
+				   const UID&					uid,
+				   const Namespace&				namespaceScope,
 				   const SourceLocation&		sourceLocation,
 				   ConstListPtr<Attribute>&		attributes )
 			: Type( typeSpec, attributes ),
@@ -341,6 +405,12 @@ namespace CPPModel
 
 		virtual ~UnionType()
 		{}
+
+
+		Type*									deepCopy() const
+		{
+			return( new UnionType( *this ) );
+		}
 
 
 		Kind										kind() const

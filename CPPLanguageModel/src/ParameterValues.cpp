@@ -20,6 +20,7 @@ namespace CPPModel
 	const ParameterType		FLOAT_PARAM = { TypeSpecifier::FLOAT };
 	const ParameterType		DOUBLE_PARAM = { TypeSpecifier::DOUBLE };
 	const ParameterType		CLASS_PARAM = { TypeSpecifier::CLASS };
+	const ParameterType		FUNCTION_PARAM = { TypeSpecifier::FUNCTION };
 
 
 	TypeSpecifier	AsTypeSpecifier( const ParameterType&	paramType )

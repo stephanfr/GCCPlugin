@@ -103,8 +103,7 @@ namespace GCCInternalsTools
 			{}
 
 
-		bool		GetUnionDefinition( const CPPModel::ParseOptions&							options,
-										std::unique_ptr<const CPPModel::UnionDefinition>&		unionDef ) const;
+		CPPModel::GetUnionDefinitionResult			GetUnionDefinition( const CPPModel::ParseOptions&				options ) const;
 	};
 
 
@@ -130,8 +129,7 @@ namespace GCCInternalsTools
 			{}
 
 
-		bool		GetFunctionDefinition( const CPPModel::ParseOptions&							options,
-										   std::unique_ptr<const CPPModel::FunctionDefinition>&		functionDef ) const;
+		CPPModel::GetFunctionDefinitionResult			GetFunctionDefinition( const CPPModel::ParseOptions&				options ) const;
 
 	};
 
@@ -159,8 +157,7 @@ namespace GCCInternalsTools
 		{};
 
 
-		bool		GetGlobalVarEntry( const CPPModel::ParseOptions&							options,
-									   std::unique_ptr<const CPPModel::GlobalVarEntry>&			globalVarEntry ) const;
+		CPPModel::GetGlobalVarDefinitionResult			GetGlobalVarDefinition( const CPPModel::ParseOptions&				options ) const;
 
 	};
 
@@ -277,6 +274,9 @@ namespace GCCInternalsTools
 		void									AddFQNamespace( const NamespaceTree&				fqNamespace );
 
 
+
+		//	AST element decoding
+
 		DecodeNodeResult						DecodeClass( const tree&							classTree );
 
 		DecodeNodeResult						DecodeUnion( const tree&							unionNode );
@@ -287,15 +287,24 @@ namespace GCCInternalsTools
 
 
 
+		//	Global Variable creation
+
+		AsInitialValueResult					AsInitialValue( const tree									globalType,
+																const CPPModel::ParameterValueBase&			value );
+
+		tree									CreateGlobalDeclaration( const std::string					name,
+											 	 	 	 	 			 const tree&						type );
+
+		CPPModel::CreateGlobalVarResult			FinishCreatingGlobal( tree 									globalDeclaration );
+
+
 		CPPModel::CreateGlobalVarResult			CreateGlobalFundamentalTypeVar( const CPPModel::FundamentalGlobalVarDeclarationBase&			globalDecl );
 
 		CPPModel::CreateGlobalVarResult			CreateGlobalFundamentalPointerVar( const CPPModel::FundamentalGlobalVarDeclarationBase&			globalDecl );
 
+		CPPModel::CreateGlobalVarResult			CreateGlobalFunctionPointerVar( const CPPModel::FunctionPointerGlobalVarDeclaration&			globalDecl );
+
 		CPPModel::CreateGlobalVarResult			CreateGlobalClassInstanceVar( const CPPModel::ClassGlobalVarDeclaration&						globalDecl );
-
-
-		AsInitialValueResult					AsInitialValue( const tree								globalType,
-																const CPPModel::ParameterValueBase&		value );
 
 
 	};

@@ -34,6 +34,7 @@ namespace CPPModel
 	extern const ParameterType		FLOAT_PARAM;
 	extern const ParameterType		DOUBLE_PARAM;
 	extern const ParameterType		CLASS_PARAM;
+	extern const ParameterType		FUNCTION_PARAM;
 
 
 	enum class ParameterModifier
@@ -181,6 +182,7 @@ namespace CPPModel
 	typedef ParameterPointer<FLOAT_PARAM>							FloatPointerParameter;
 	typedef ParameterPointer<DOUBLE_PARAM>							DoublePointerParameter;
 
+	typedef ParameterPointer<FUNCTION_PARAM>						FunctionPointerParameter;
 
 
 

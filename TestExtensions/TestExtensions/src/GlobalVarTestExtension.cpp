@@ -562,8 +562,8 @@ bool	AddGlobalVarClassInstanceTest( int							callbackType,
 		//			return( false );
 		//		}
 
-				CPPModel::ClassGlobalVarDeclaration		globalTestClassVarDec( testClassEntry,
-																			   "testCTestClassVar",
+				CPPModel::ClassGlobalVarDeclaration		globalTestClassVarDec( "testCTestClassVar",
+						   	   	   	   	   	   	   	   	   	   	   	   	   	   testClassEntry,
 																			   *testCreatedNamespace );
 
 				CPPModel::CreateGlobalVarResult		gvResult2 = astDictionary->CreateGlobalVar( globalTestClassVarDec );
@@ -595,8 +595,8 @@ bool	AddGlobalVarClassInstanceTest( int							callbackType,
 
 				paramValues.push_back ( new CPPModel::StringConstantParameter( "Injected String Value." ) );
 
-				CPPModel::ClassGlobalVarDeclaration		globalTestClassVarDec( testClassEntry,
-																			   "testCTestClassVarWithStringInit",
+				CPPModel::ClassGlobalVarDeclaration		globalTestClassVarDec( "testCTestClassVarWithStringInit",
+						   	   	   	   	   	   	   	   	   	   	   	   	   	   testClassEntry,
 																			   *testCreatedNamespace,
 																			   paramValues );
 
@@ -634,8 +634,8 @@ bool	AddGlobalVarClassInstanceTest( int							callbackType,
 				paramValues.push_back ( new CPPModel::FloatConstantParameter( 50.0 ) );
 				paramValues.push_back ( new CPPModel::DoubleConstantParameter( 60.0 ) );
 
-				CPPModel::ClassGlobalVarDeclaration		globalTestClassVarDec( testClassEntry,
-																			   "testCTestClassVarWithAllValuesInit",
+				CPPModel::ClassGlobalVarDeclaration		globalTestClassVarDec( "testCTestClassVarWithAllValuesInit",
+						   	   	   	   	   	   	   	   	   	   	   	   	   	   testClassEntry,
 																			   *testCreatedNamespace,
 																			   paramValues );
 

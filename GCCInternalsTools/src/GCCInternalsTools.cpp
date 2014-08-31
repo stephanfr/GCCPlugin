@@ -19,6 +19,7 @@ Contributors:
 #include "NamespaceTree.h"
 #include "AttributeParser.h"
 
+#include "vec.h"
 #include "gimple.h"
 
 #include "rtl.h"
@@ -27,6 +28,8 @@ Contributors:
 #include "float.h"
 
 #include "gimple-pretty-print.h"
+
+#include "boost/format.hpp"
 
 
 
@@ -153,6 +156,8 @@ namespace GCCInternalsTools
 	}
 
 
+
+
 	tree				ASTTreeForType( CPPModel::TypeSpecifier		typeSpec )
 	{
 		tree		returnValue;
@@ -160,7 +165,7 @@ namespace GCCInternalsTools
 		switch( typeSpec )
 		{
 			case	CPPModel::TypeSpecifier::UNRECOGNIZED :
-				returnValue = NULL;
+				returnValue = error_mark_node;
 				break;
 
 			case	CPPModel::TypeSpecifier::VOID :
@@ -168,7 +173,7 @@ namespace GCCInternalsTools
 				break;
 
 			case	CPPModel::TypeSpecifier::ENUM :
-				returnValue = NULL;
+				returnValue = error_mark_node;
 				break;
 
 			case	CPPModel::TypeSpecifier::CHAR :
@@ -220,39 +225,39 @@ namespace GCCInternalsTools
 				break;
 
 			case	CPPModel::TypeSpecifier::FUNCTION :
-				returnValue = NULL;
+				returnValue = error_mark_node;
 				break;
 
 			case	CPPModel::TypeSpecifier::METHOD :
-				returnValue = NULL;
+				returnValue = error_mark_node;
 				break;
 
 			case	CPPModel::TypeSpecifier::CLASS :
-				returnValue = NULL;
+				returnValue = error_mark_node;
 				break;
 
 			case	CPPModel::TypeSpecifier::POINTER :
-				returnValue = NULL;
+				returnValue = error_mark_node;
 				break;
 
 			case	CPPModel::TypeSpecifier::REFERENCE :
-				returnValue = NULL;
+				returnValue = error_mark_node;
 				break;
 
 			case	CPPModel::TypeSpecifier::ARRAY :
-				returnValue = NULL;
+				returnValue = error_mark_node;
 				break;
 
 			case	CPPModel::TypeSpecifier::UNION :
-				returnValue = NULL;
+				returnValue = error_mark_node;
 				break;
 
 			case	CPPModel::TypeSpecifier::NULL_POINTER :
-				returnValue = NULL;
+				returnValue = error_mark_node;
 				break;
 
 			case	CPPModel::TypeSpecifier::NO_RETURN :
-				returnValue = NULL;
+				returnValue = error_mark_node;
 				break;
 
 			case	CPPModel::TypeSpecifier::STRING :
@@ -262,6 +267,44 @@ namespace GCCInternalsTools
 
 		return( returnValue );
 	}
+
+
+	bool				IsFundamentalType( CPPModel::TypeSpecifier		typeSpec )
+	{
+		return( CPPModel::CPPTypes[(int)typeSpec].classification == CPPModel::TypeInfo::Classification::FUNDAMENTAL );
+	}
+
+
+
+	tree			ASTTreeForType( const CPPModel::Type&		type )
+	{
+		if( type.kind() == CPPModel::Type::Kind::FUNDAMENTAL )
+		{
+			return( ASTTreeForType( type.typeSpec() ) );
+		}
+		else if( type.kind() == CPPModel::Type::Kind::DERIVED )
+		{
+			if( type.typeSpec() == CPPModel::TypeSpecifier::POINTER )
+			{
+				return( build_pointer_type( ASTTreeForType( (dynamic_cast<const CPPModel::DerivedType&>(type)).baseType() ) ));
+			}
+			else if( type.typeSpec() == CPPModel::TypeSpecifier::REFERENCE )
+			{
+				return( build_reference_type( ASTTreeForType( (dynamic_cast<const CPPModel::DerivedType&>(type)).baseType() ) ));
+			}
+			else if( type.typeSpec() == CPPModel::TypeSpecifier::ARRAY )
+			{
+				return( build_array_type( ASTTreeForType( (dynamic_cast<const CPPModel::DerivedType&>(type)).baseType() ), NULL_TREE ));
+			}
+			else
+			{
+				return( error_mark_node );
+			}
+		}
+
+		return( error_mark_node );
+	}
+
 
 
 
@@ -802,25 +845,23 @@ namespace GCCInternalsTools
 
 
 
-	bool		DictionaryUnionEntryImpl::GetUnionDefinition( const CPPModel::ParseOptions&							options,
-															  std::unique_ptr<const CPPModel::UnionDefinition>&		unionDef ) const
+	CPPModel::GetUnionDefinitionResult			DictionaryUnionEntryImpl::GetUnionDefinition( const CPPModel::ParseOptions&				options ) const
 	{
 		CPPModel::ConstListPtr<CPPModel::UnionMember>	unionMembers(  );
 
-		unionDef.reset( new CPPModel::UnionDefinition( name(),
-													   uid(),
-													   enclosingNamespace(),
-													   sourceLocation(),
-													   CPPModel::Attributes::deepCopy( attributes() ),
-													   GetUnionMembers( getTree(), Dictionary(), options ) ) );
+		std::unique_ptr<CPPModel::UnionDefinition>	unionDef( new CPPModel::UnionDefinition( name(),
+																							 uid(),
+																							 enclosingNamespace(),
+																							 sourceLocation(),
+																							 CPPModel::Attributes::deepCopy( attributes() ),
+																							 GetUnionMembers( getTree(), Dictionary(), options ) ) );
 
-		return( true );
+		return( CPPModel::GetUnionDefinitionResult( std::move( unionDef ) ) );
 	}
 
 
 
-	bool		DictionaryFunctionEntryImpl::GetFunctionDefinition( const CPPModel::ParseOptions&							options,
-											   	   	   	   	   	   	std::unique_ptr<const CPPModel::FunctionDefinition>&	functionDef ) const
+	CPPModel::GetFunctionDefinitionResult		DictionaryFunctionEntryImpl::GetFunctionDefinition( const CPPModel::ParseOptions&		options ) const
 	{
 		CPPModel::ListPtr<CPPModel::FunctionParameter>	parameterList( new boost::ptr_list<CPPModel::FunctionParameter>() );
 
@@ -850,33 +891,32 @@ namespace GCCInternalsTools
 
 		//	Build out the function definition
 
-		functionDef.reset( new CPPModel::FunctionDefinition( name(),
-															 uid(),
-															 enclosingNamespace(),
-															 sourceLocation(),
-															 isHiddenFriend(),
-															 CPPModel::Attributes::deepCopy( attributes() ),
-															 std::move( returnType ),
-															 CPPModel::MakeConst<CPPModel::FunctionParameter>( parameterList )));
+		std::unique_ptr<CPPModel::FunctionDefinition>	functionDef( new CPPModel::FunctionDefinition( name(),
+																	 uid(),
+																	 enclosingNamespace(),
+																	 sourceLocation(),
+																	 isHiddenFriend(),
+																	 CPPModel::Attributes::deepCopy( attributes() ),
+																	 std::move( returnType ),
+																	 CPPModel::MakeConst<CPPModel::FunctionParameter>( parameterList )));
 
 		//	Finished with success
 
-		return( true );
+		return( std::move( functionDef ) );
 	}
 
 
-	bool		DictionaryGlobalVarEntryImpl::GetGlobalVarEntry( const CPPModel::ParseOptions&							options,
-											   	   	   	   	   	 std::unique_ptr<const CPPModel::GlobalVarEntry>&		globalVarEntry ) const
+	CPPModel::GetGlobalVarDefinitionResult		DictionaryGlobalVarEntryImpl::GetGlobalVarDefinition( const CPPModel::ParseOptions&		options ) const
 	{
-		globalVarEntry.reset( new CPPModel::GlobalVarEntry( name(),
-															uid(),
-															enclosingNamespace(),
-															sourceLocation(),
-															isStatic(),
-															attributes(),
-															DeclOrTypeBaseTree::convert( TREE_TYPE( getTree() ))->type( Dictionary() ) ));
+		std::unique_ptr<CPPModel::GlobalVarDefinition>		globalVarDef( new CPPModel::GlobalVarDefinition( name(),
+																											 uid(),
+																											 enclosingNamespace(),
+																											 sourceLocation(),
+																											 isStatic(),
+																											 attributes(),
+																											 DeclOrTypeBaseTree::convert( TREE_TYPE( getTree() ))->type( Dictionary() ) ));
 
-		return( true );
+		return( std::move( globalVarDef ) );
 	}
 
 
@@ -1452,6 +1492,10 @@ namespace GCCInternalsTools
 				return( CreateGlobalFundamentalTypeVar( dynamic_cast<const CPPModel::FundamentalGlobalVarDeclarationBase&>( globalDecl ) ));
 				break;
 
+			case CPPModel::IDeclarationType::Kind::FUNCTION :
+				return( CreateGlobalFunctionPointerVar( dynamic_cast<const CPPModel::FunctionPointerGlobalVarDeclaration&>( globalDecl ) ));
+				break;
+
 			case CPPModel::IDeclarationType::Kind::CLASS :
 				return( CreateGlobalClassInstanceVar( dynamic_cast<const CPPModel::ClassGlobalVarDeclaration&>( globalDecl )));
 				break;
@@ -1667,16 +1711,15 @@ namespace GCCInternalsTools
 
 
 
-	CPPModel::CreateGlobalVarResult			ASTDictionaryImpl::CreateGlobalFundamentalTypeVar( const CPPModel::FundamentalGlobalVarDeclarationBase&			globalDecl )
+	tree								ASTDictionaryImpl::CreateGlobalDeclaration( const std::string		name,
+										 	 	 	 	 							const tree&				type )
 	{
-		const tree			globalType = GetGlobalType( globalDecl );
-
 		//	Create the global declaration
 
 		tree globalDeclaration = build_decl( UNKNOWN_LOCATION,
 											 VAR_DECL,
-											 get_identifier( globalDecl.name().c_str() ),
-											 globalType );
+											 get_identifier( name.c_str() ),
+											 type );
 
 		//	Set the static, public, addressable and used flags.  Insure the external flag is false.
 
@@ -1687,27 +1730,13 @@ namespace GCCInternalsTools
 
 		DECL_EXTERNAL( globalDeclaration ) = 0;
 
-		//	Set the context for the variable, it will be a namespace scope
+		return( globalDeclaration );
+	}
 
-		DECL_CONTEXT( globalDeclaration ) = (dynamic_cast<const GCCInternalsTools::DictionaryTreeMixin&>( globalDecl.namespaceScope() )).getTree();
 
-		//	Initialize the variable if we have an initializer
 
-		if( globalDecl.hasInitialValue() )
-		{
-			const CPPModel::ParameterValueBase&			paramValue = globalDecl.initialValue();
-
-			AsInitialValueResult						initialValue = AsInitialValue( globalType, paramValue );
-
-			if( initialValue.Succeeded() )
-			{
-				DECL_INITIAL( globalDeclaration ) = initialValue.ReturnValue();
-			}
-			else
-			{
-				return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::INTERNAL_ERROR, "Error encountered converting parameter value to a GCC tree.", initialValue ));
-			}
-		}
+	CPPModel::CreateGlobalVarResult			ASTDictionaryImpl::FinishCreatingGlobal( tree 		globalDeclaration )
+	{
 
 		//	This is a global so go to the top level scope, create the gimple code and then return to whatever scope we are currently in
 
@@ -1762,6 +1791,96 @@ namespace GCCInternalsTools
 		}
 
   		return( CPPModel::CreateGlobalVarResult( globalUID ) );
+	}
+
+
+
+
+	CPPModel::CreateGlobalVarResult			ASTDictionaryImpl::CreateGlobalFundamentalTypeVar( const CPPModel::FundamentalGlobalVarDeclarationBase&			globalDecl )
+	{
+		const tree			globalType = GetGlobalType( globalDecl );
+
+		//	Create the global declaration
+
+		tree globalDeclaration = CreateGlobalDeclaration( globalDecl.name().c_str(), globalType );
+
+		//	Set the context for the variable, it will be a namespace scope
+
+		DECL_CONTEXT( globalDeclaration ) = (dynamic_cast<const GCCInternalsTools::DictionaryTreeMixin&>( globalDecl.namespaceScope() )).getTree();
+
+		//	Initialize the variable if we have an initializer
+
+		if( globalDecl.hasInitialValue() )
+		{
+			const CPPModel::ParameterValueBase&			paramValue = globalDecl.initialValue();
+
+			AsInitialValueResult						initialValue = AsInitialValue( globalType, paramValue );
+
+			if( initialValue.Succeeded() )
+			{
+				DECL_INITIAL( globalDeclaration ) = initialValue.ReturnValue();
+			}
+			else
+			{
+				return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::INTERNAL_ERROR, "Error encountered converting parameter value to a GCC tree.", initialValue ));
+			}
+		}
+
+		//	Finish creating the global variable
+
+  		return( FinishCreatingGlobal( globalDeclaration ) );
+	}
+
+
+
+
+	CPPModel::CreateGlobalVarResult			ASTDictionaryImpl::CreateGlobalFunctionPointerVar( const CPPModel::FunctionPointerGlobalVarDeclaration&			globalDecl )
+	{
+		//	Build the function specification from the prototype
+
+		vec<tree>		argumentTypes;
+
+		argumentTypes.create( globalDecl.prototype().arguments().size() );
+
+		for( const CPPModel::Type&	currentArg : globalDecl.prototype().arguments() )
+		{
+			argumentTypes.quick_push( ASTTreeForType( currentArg ));
+		}
+
+		tree		functionTypePointer = build_pointer_type( build_function_type_array( ASTTreeForType( globalDecl.prototype().returnType() ), argumentTypes.length(), argumentTypes.address() ) );
+
+		//	Create the global declaration
+
+		tree globalDeclaration = CreateGlobalDeclaration( globalDecl.name().c_str(), functionTypePointer );
+
+		//	Set the context for the variable, it will be a namespace scope
+
+		DECL_CONTEXT( globalDeclaration ) = (dynamic_cast<const GCCInternalsTools::DictionaryTreeMixin&>( globalDecl.namespaceScope() )).getTree();
+
+		//	Initialize the variable if we have an initializer
+
+		if( globalDecl.hasInitialValue() )
+		{
+			UIDIndexConstIterator		dictionaryEntry = UIDIdx().find( globalDecl.initialValue() );
+
+			if( dictionaryEntry == UIDIdx().end() )
+			{
+				return( CPPModel::CreateGlobalVarResult::Failure( CPPModel::CreateGlobalVarResultCodes::INITIAL_VALUE_NOT_FOUND_IN_DICTIONARY, boost::format( "Dictionary entry not found for function pointer type parameter.  Searching by UID: %i" ) % globalDecl.initialValue().uidValue() ));
+			}
+
+			if( (*dictionaryEntry)->entryKind() != CPPModel::DictionaryEntry::EntryKind::FUNCTION )
+			{
+				return( CPPModel::CreateGlobalVarResult::Failure(CPPModel::CreateGlobalVarResultCodes::FUNCTION_POINTER_INITIAL_VALUE_NOT_A_FUNCTION,  boost::format( "Dictionary element for function pointer must be a function declaration.  Searching by UID: %i" ) % globalDecl.initialValue().uidValue() ) );
+			}
+
+			const DictionaryFunctionEntryImpl&			globalVarEntry = dynamic_cast<const DictionaryFunctionEntryImpl&>( *(*dictionaryEntry) );
+
+			DECL_INITIAL( globalDeclaration ) = build1( ADDR_EXPR, functionTypePointer, globalVarEntry.getTree() );
+		}
+
+		//	Finish creating the global variable
+
+  		return( FinishCreatingGlobal( globalDeclaration ) );
 	}
 
 
@@ -1853,6 +1972,7 @@ namespace GCCInternalsTools
 	}
 
 
+
 	CPPModel::CreateGlobalVarResult			ASTDictionaryImpl::CreateGlobalClassInstanceVar( const CPPModel::ClassGlobalVarDeclaration&			globalDecl )
 	{
 		tree		declType = dynamic_cast<const DictionaryClassEntryImpl&>( globalDecl.classType() ).getTree();
@@ -1861,18 +1981,7 @@ namespace GCCInternalsTools
 
 		//	Create the global declaration
 
-		tree globalDeclaration = build_decl( UNKNOWN_LOCATION,
-											 VAR_DECL,
-											 get_identifier( globalDecl.name().c_str() ),
-											 declType );
-
-		//	Set the flags
-
-		TREE_STATIC( globalDeclaration ) = 1;
-		TREE_PUBLIC( globalDeclaration ) = 1;
-		DECL_EXTERNAL( globalDeclaration ) = 0;
-		TREE_ADDRESSABLE( globalDeclaration ) = 1;
-		TREE_USED( globalDeclaration ) = 1;
+		tree globalDeclaration = CreateGlobalDeclaration( globalDecl.name().c_str(), declType );
 
 		DECL_CONTEXT( globalDeclaration ) = (dynamic_cast<const GCCInternalsTools::DictionaryTreeMixin&>( globalDecl.namespaceScope() )).getTree();
 

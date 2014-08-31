@@ -29,21 +29,21 @@ namespace CPPModel
 
 
 
-	class GlobalVarEntry : public SourceElement, public NamespaceScoped, public Static, public IAttributes
+	class GlobalVarDefinition : public SourceElement, public NamespaceScoped, public Static, public IAttributes
 	{
 	public :
 
-		GlobalVarEntry() = delete;
-		GlobalVarEntry( GlobalVarEntry& ) = delete;
-		GlobalVarEntry( const GlobalVarEntry& ) = delete;
+		GlobalVarDefinition() = delete;
+		GlobalVarDefinition( GlobalVarDefinition& ) = delete;
+		GlobalVarDefinition( const GlobalVarDefinition& ) = delete;
 
-		GlobalVarEntry( const std::string&				name,
-						const UID&						uid,
-						const Namespace&				namespaceScope,
-						const SourceLocation&			sourceLocation,
-						bool							isStatic,
-						const Attributes&				attributes,
-						std::unique_ptr<const Type>		varType )
+		GlobalVarDefinition( const std::string&				name,
+							 const UID&						uid,
+							 const Namespace&				namespaceScope,
+							 const SourceLocation&			sourceLocation,
+							 bool							isStatic,
+							 const Attributes&				attributes,
+							 std::unique_ptr<const Type>		varType )
 			: SourceElement( name, uid, sourceLocation ),
 			  NamespaceScoped( namespaceScope ),
 			  Static( isStatic ),
@@ -51,10 +51,10 @@ namespace CPPModel
 			  m_varType( std::move( varType ) )
 		{}
 
-		virtual ~GlobalVarEntry() {};
+		virtual ~GlobalVarDefinition() {};
 
 
-		const Type&			type() const
+		const Type&						type() const
 		{
 			return( *m_varType );
 		}
@@ -65,8 +65,8 @@ namespace CPPModel
 		}
 
 
-		std::ostream&		toXML( std::ostream&			outputStream,
-							   	   SerializationOptions		options ) const;
+		std::ostream&					toXML( std::ostream&			outputStream,
+							   	   	   	   	   SerializationOptions		options ) const;
 
 	private :
 

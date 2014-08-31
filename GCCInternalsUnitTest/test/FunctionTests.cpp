@@ -18,6 +18,7 @@ namespace
   {
 	  ForkGCCTestCase( "-c", "Functions", "SimpleFunctionTestCase", "namespaces=TestNamespace::", "list-all-namespaces" );
 	  ForkGCCTestCase( "-c", "Functions", "FunctionsWithParametersTestCase", "namespaces=TestNamespace::", "list-all-namespaces" );
+	  ForkGCCTestCase( "-c", "Functions", "FunctionPrototypeTestCase", "namespaces=TestNamespace::", "list-all-namespaces" );
   }
 }
 
