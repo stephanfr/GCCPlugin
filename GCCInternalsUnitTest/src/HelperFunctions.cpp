@@ -28,6 +28,12 @@ static void ForkGCCTestCaseInternal( const char*	gccOptions,
 	int				argIndex = 0;
 
 	execvArgArray[argIndex++] = (char*)"./gcc_wrapper.sh";
+
+#ifdef DEBUG
+	execvArgArray[argIndex++] = (char*)"Debug";
+#else
+	execvArgArray[argIndex++] = (char*)"Release";
+#endif
 	execvArgArray[argIndex++] = (char*)gccOptions;
 	execvArgArray[argIndex++] = (char*)testDirectoryName;
 	execvArgArray[argIndex++] = (char*)testCaseName;

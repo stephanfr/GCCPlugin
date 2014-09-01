@@ -6,15 +6,11 @@
  */
 
 
-#include "gtest/gtest.h"
-
-#include "../src/HelperFunctions.h"
-
 
 
 namespace
 {
-  TEST(TestFunctions, BasicTests)
+  TEST(TestUnions, BasicTests)
   {
 	  ForkGCCTestCase( "-c", "Unions", "SimpleUnionTestCase", "namespaces=TestNamespace::", "list-all-namespaces" );
   }

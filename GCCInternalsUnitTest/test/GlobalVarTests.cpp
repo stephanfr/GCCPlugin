@@ -6,10 +6,6 @@
  */
 
 
-#include "gtest/gtest.h"
-
-#include "../src/HelperFunctions.h"
-
 
 
 namespace

@@ -48,6 +48,8 @@ namespace GCCInternalsTools
 		{
 			if( TREE_CODE( m_tree ) == INTEGER_CST )
 			{
+				//	The following generates a warning regarding left shift count >= width of type.  It works so I am leaving it.
+
 				long	fullValue = (( TREE_INT_CST_HIGH( m_tree ) <<  HOST_BITS_PER_WIDE_INT ) + TREE_INT_CST_LOW( m_tree ) );
 
 				return( std::unique_ptr<CPPModel::ConstantValue>( new CPPModel::IntegerConstant( fullValue ) ));

@@ -160,7 +160,7 @@ namespace GCCInternalsTools
 
 	tree				ASTTreeForType( CPPModel::TypeSpecifier		typeSpec )
 	{
-		tree		returnValue;
+		tree		returnValue = error_mark_node;
 
 		switch( typeSpec )
 		{
@@ -1539,7 +1539,7 @@ namespace GCCInternalsTools
 	AsInitialValueResult			ASTDictionaryImpl::AsInitialValue( const tree								globalType,
 																	   const CPPModel::ParameterValueBase&		value )
 	{
-		tree		initValue;
+		tree		initValue = error_mark_node;
 
 		if( value.modifier() == CPPModel::ParameterModifier::CONSTANT )
 		{

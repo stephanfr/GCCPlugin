@@ -56,7 +56,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CPPLanguageModel/Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsTools/Debug}&quot;"/>
 								</option>
-								<option id="gnu.cpp.link.option.flags.2046232303" superClass="gnu.cpp.link.option.flags" value="-Wl,-z,defs" valueType="string"/>
+								<option id="gnu.cpp.link.option.flags.2046232303" name="Linker flags" superClass="gnu.cpp.link.option.flags" value="-Wl,-z,defs" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1112984446" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -100,9 +100,16 @@
 							<targetPlatform id="cdt.managedbuild.target.gnu.platform.so.release.1934079235" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.so.release"/>
 							<builder buildPath="${workspace_loc:/TestExtensions}/Release" id="cdt.managedbuild.target.gnu.builder.so.release.544792004" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.so.release"/>
 							<tool id="cdt.managedbuild.tool.gnu.archiver.base.418000888" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.so.release.1858179787" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.so.release">
+							<tool command="${GCC_PATH}" id="cdt.managedbuild.tool.gnu.cpp.compiler.so.release.1858179787" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.so.release">
 								<option id="gnu.cpp.compiler.so.release.option.optimization.level.1276637275" name="Optimization Level" superClass="gnu.cpp.compiler.so.release.option.optimization.level" value="gnu.cpp.compiler.optimization.level.most" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.so.release.option.debugging.level.54887067" name="Debug Level" superClass="gnu.cpp.compiler.so.release.option.debugging.level" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.include.paths.303612574" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Utility/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CPPLanguageModel/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsTools/src}&quot;"/>
+								</option>
+								<option id="gnu.cpp.compiler.option.other.other.303616116" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -std=c++0x" valueType="string"/>
+								<option id="gnu.cpp.compiler.option.other.pic.966210697" superClass="gnu.cpp.compiler.option.other.pic" value="true" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1278603954" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.so.release.895147707" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.so.release">
@@ -113,8 +120,17 @@
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.so.release.16334602" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.so.release">
 								<option defaultValue="true" id="gnu.c.link.so.release.option.shared.805138764" name="Shared (-shared)" superClass="gnu.c.link.so.release.option.shared" valueType="boolean"/>
 							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.so.release.1653893213" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.so.release">
+							<tool command="${GCC_PATH}" id="cdt.managedbuild.tool.gnu.cpp.linker.so.release.1653893213" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.so.release">
 								<option defaultValue="true" id="gnu.cpp.link.so.release.option.shared.1129453019" name="Shared (-shared)" superClass="gnu.cpp.link.so.release.option.shared" valueType="boolean"/>
+								<option id="gnu.cpp.link.option.libs.1517530580" superClass="gnu.cpp.link.option.libs" valueType="libs">
+									<listOptionValue builtIn="false" value="CPPLanguageModel"/>
+									<listOptionValue builtIn="false" value="GCCInternalsTools"/>
+								</option>
+								<option id="gnu.cpp.link.option.paths.916583454" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CPPLanguageModel/Release}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsTools/Release}&quot;"/>
+								</option>
+								<option id="gnu.cpp.link.option.flags.314673696" superClass="gnu.cpp.link.option.flags" value="-Wl,-z,defs" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1380324486" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
