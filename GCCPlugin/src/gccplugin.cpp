@@ -10,71 +10,14 @@ Contributors:
     Stephan Friedl
 -------------------------------------------------------------------------------*/
 
-#include <cassert>
 
-#include <algorithm>
-#include <cstdlib>
-#include <gmp.h>
-#include <map>
-#include <memory>
-#include <iostream>
-#include <stdlib.h>
-#include <string>
-#include <utility>
-
-#include <boost/multi_index_container.hpp>
-#include <boost/multi_index/identity.hpp>
-#include <boost/multi_index/ordered_index.hpp>
-#include <boost/multi_index/member.hpp>
-
-#include <boost/lexical_cast.hpp>
-#include <boost/ptr_container/ptr_list.hpp>
-#include <boost/ptr_container/ptr_map.hpp>
 
 #include "config.h"
 
-#include "gcc-plugin.h"
-
-#include "tree.h"
-#include "cp/cp-tree.h"
-#include "diagnostic.h"
-#include "real.h"
-
-#include "ListAliases.h"
-
-//#include "Constants.h"
-#include "Serialization.h"
-#include "ConstantValue.h"
-#include "NamedEntity.h"
-#include "Attribute.h"
-#include "UID.h"
-#include "SourceLocation.h"
-#include "Static.h"
-#include "Access.h"
-#include "SourceElement.h"
-#include "Namespace.h"
-//#include "NamespaceScoped.h"
-#include "ASTEntry.h"
-#include "Types.h"
-#include "Union.h"
-#include "Function.h"
-#include "GlobalVar.h"
-#include "Class.h"
 #include "ASTDictionary.h"
+#include "PluginManager.h"
 
-#include "ConstantTree.h"
-#include "IdentifierTree.h"
-#include "DeclOrTypeBaseTree.h"
-#include "TypeTree.h"
-#include "DeclTree.h"
-#include "TreeList.h"
-
-#include "Utility/Result.h"
-#include "GCCInternalsTools.h"
-//#include "ASTModifiers.h"
-
-#include "plugin.h"
-#include "tree-pass.h"
+#include "gcc-plugin.h"
 
 
 
@@ -87,127 +30,39 @@ int	plugin_is_GPL_compatible;
 
 
 
-static tree HandleSerializerAttribute( tree*	node,
-									   tree		attrName,
-									   tree		attrArguments,
-									   int		flags,
-									   bool*	no_add_attrs )
+
+class Callbacks : public CPPModel::CallbackIfx
 {
-	//	Just return a null tree now.
+public :
 
-	return( NULL_TREE );
-}
+	Callbacks()
+	{}
+
+	virtual ~Callbacks()
+	{}
 
 
-static struct attribute_spec g_JSONSerializerAttribute =
-{
-	"json_serialize", 0, -1, false, true, false, HandleSerializerAttribute, false
+	void		ASTReady()
+	{
+		std::list<std::string>			namespacesToDump( { "TestNamespace::" } );
+
+		CPPModel::GetPluginManager().GetASTDictionary().DumpASTXMLByNamespaces( std::cerr, namespacesToDump );
+	};
+
+	void		CreateNamespaces()
+	{
+	};
+
+	void		InjectCode()
+	{
+	};
+
 };
 
 
-static struct attribute_spec g_GeneralizedAttribute =
-{
-	"generalized_attribute", 0, -1, false, false, false, HandleSerializerAttribute, false
-};
 
+Callbacks		g_pluginCallbacks;
 
-attribute_spec jsonScopedAttributes[] = { g_GeneralizedAttribute, g_JSONSerializerAttribute, NULL };
-
-
-static void RegisterAttributes( void*		eventData,
-						 	    void*		userData )
-{
-//	register_attribute( &g_JSONSerializerAttribute );
-	register_scoped_attributes( jsonScopedAttributes, "json" );
-}
-
-
-void DumpAST( std::shared_ptr<GCCInternalsTools::ASTDictionaryImpl>&	astDict,
-			  const std::string											sourceCodeNamespace )
-{
-	for( CPPModel::ASTDictionary::NamespaceMapConstIterator itrNamespace = astDict->namespaces().begin(); itrNamespace != astDict->namespaces().end(); itrNamespace++ )
-	{
-		itrNamespace->second->toXML( std::cerr, 0, CPPModel::SerializationOptions::NONE );
-	}
-
-	for( CPPModel::ASTDictionary::NamespaceIndexConstIterator namespaceIndex = astDict->NamespaceIdx().lower_bound( sourceCodeNamespace ); namespaceIndex != astDict->NamespaceIdx().upper_bound( sourceCodeNamespace ); namespaceIndex++ )
-	{
-		(*namespaceIndex)->toXML( std::cerr, 0, CPPModel::SerializationOptions::NONE );
-	}
-
-	CPPModel::ParseOptions		parseOptions;
-
-	for( CPPModel::ASTDictionary::NamespaceIndexConstIterator namespaceIndex = astDict->NamespaceIdx().lower_bound( sourceCodeNamespace ); namespaceIndex != astDict->NamespaceIdx().upper_bound( sourceCodeNamespace ); namespaceIndex++ )
-	{
-		if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::CLASS )
-		{
-			std::unique_ptr<const CPPModel::ClassDefinition>		classDef;
-
-			((CPPModel::DictionaryClassEntry*)&(**namespaceIndex))->GetClassDefinition( parseOptions, classDef );
-
-			classDef->toXML( std::cerr, 0, CPPModel::SerializationOptions::NONE );
-		}
-		else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::UNION )
-		{
-			std::unique_ptr<const CPPModel::UnionDefinition>		unionDef;
-
-			((CPPModel::DictionaryUnionEntry*)&(**namespaceIndex))->GetUnionDefinition( parseOptions, unionDef );
-
-			unionDef->toXML( std::cerr, 0, CPPModel::SerializationOptions::NONE );
-		}
-		else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::FUNCTION )
-		{
-			std::unique_ptr<const CPPModel::FunctionDefinition>		functionDef;
-
-			((CPPModel::DictionaryFunctionEntry*)&(**namespaceIndex))->GetFunctionDefinition( parseOptions, functionDef );
-
-			functionDef->toXML( std::cerr, 0, CPPModel::SerializationOptions::NONE );
-		}
-		else if( (*namespaceIndex)->entryKind() == CPPModel::DictionaryEntry::EntryKind::GLOBAL_VAR )
-		{
-			std::unique_ptr<const CPPModel::GlobalVarEntry>		globalVarEntry;
-
-			((CPPModel::DictionaryGlobalVarEntry*)&(**namespaceIndex))->GetGlobalVarEntry( parseOptions, globalVarEntry );
-
-			globalVarEntry->toXML( std::cerr, 0, CPPModel::SerializationOptions::NONE );
-		}
-	}
-}
-
-
-static void GateCallback( void*		eventData,
-		  	   	   	      void*		userData )
-{
-	//	If there has been an error, fall through and let the compiler handle it
-
-	if( errorcount || sorrycount )
-	{
-		return;
-	}
-
-	std::cerr << "Processing File: " << main_input_filename << std::endl;
-
-	std::shared_ptr<GCCInternalsTools::ASTDictionaryImpl>	astDict( new GCCInternalsTools::ASTDictionaryImpl() );
-
-	astDict->Build();
-
-	astDict->CreateNamespace( "TestCreatedNamespace::NestedNamespace::SecondNestedNamespace::" );
-	astDict->CreateNamespace( "TestCreatedNamespace::" );
-
-	const CPPModel::Namespace		*testNamespace;
-
-	astDict->GetNamespace( "TestCreatedNamespace::", testNamespace );
-
-	CPPModel::GlobalVarDeclaration		globalVarDec( "testVar",
-													  *testNamespace,
-													  true,
-													  CPPModel::Attributes(),
-													  std::unique_ptr<CPPModel::Type>( new CPPModel::FundamentalType( CPPModel::TypeSpecifier::INT ) ) );
-
-	astDict->CreateGlobalVar( globalVarDec );
-
-	DumpAST( astDict, "TestCreatedNamespace::" );
-}
 
 
 
@@ -217,11 +72,7 @@ int plugin_init( plugin_name_args*		info,
 {
 	std::cerr << "Starting Plugin: "<< info->base_name << std::endl;
 
-	register_callback( info->base_name, PLUGIN_ATTRIBUTES, &RegisterAttributes, NULL );
-
-	register_callback( info->base_name, PLUGIN_ALL_IPA_PASSES_START, &GateCallback, NULL );
-
-	std::cerr << "Plugin Initialized, attribute registered" << std::endl;
+	CPPModel::GetPluginManager().Initialize( "HelloWorld Plugin", &g_pluginCallbacks );
 
 	return( 0 );
 }
