@@ -16,8 +16,6 @@ namespace TestNamespace
 		double			m_doubleValue;
 
 		char*			m_charPointer;
-
-		std::string		m_stringValue;
 	}
 	SimpleUnionInstance;
 
