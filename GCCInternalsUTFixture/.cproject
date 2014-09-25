@@ -58,7 +58,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CPPLanguageModel/Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsTools/Debug}&quot;"/>
 								</option>
-								<option id="gnu.cpp.link.option.flags.214065917" superClass="gnu.cpp.link.option.flags" value="-std=c++11 -gdwarf-3" valueType="string"/>
+								<option id="gnu.cpp.link.option.flags.214065917" name="Linker flags" superClass="gnu.cpp.link.option.flags" value="-std=c++11 -gdwarf-3" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1184474525" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -134,6 +134,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CPPLanguageModel/Release}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GCCInternalsTools/Release}&quot;"/>
 								</option>
+								<option id="gnu.cpp.link.option.flags.1037303636" superClass="gnu.cpp.link.option.flags" value="-std=c++11" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1224797384" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
