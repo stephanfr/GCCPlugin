@@ -47,17 +47,21 @@ namespace GCCInternalsTools
 		void					Initialize( const char* 				pluginName,
 				   	   	   	   	   	   	    CPPModel::CallbackIfx*		callbacks );
 
+		void					RegisterAttributes( void );
+
 		bool					BuildASTGate( void );
 		unsigned int 			BuildASTCallback( void );
 
 		unsigned int 			GlobalDeclarationCallback( void );
 
+
 	private :
 
+		std::string					m_pluginName;
 
 		ASTDictionaryImpl			m_ASTDictionary;
 
-		bool						m_ASTBuilt = false;
+		bool						m_ASTBuilt;
 
 		bool 						m_globalsGenerated;
 

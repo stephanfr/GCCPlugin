@@ -26,6 +26,26 @@ namespace GCCInternalsTools
 		return( !g_PluginManager.dictionaryBuilt() );
 	}
 
+
+	static tree HandleAttribute( tree*		node,
+								 tree		attrName,
+								 tree		attrArguments,
+								 int		flags,
+								 bool*		no_add_attrs )
+	{
+		//	Just return a null tree now.
+
+		return( NULL_TREE );
+	}
+
+
+
+	static void RegisterAttributesGCCCallback( void*		eventData,
+							 	    		   void*		userData )
+	{
+		g_PluginManager.RegisterAttributes();
+	}
+
 	unsigned int 			BuildASTCallback( void )
 	{
 		return( g_PluginManager.BuildASTCallback() );
@@ -43,7 +63,7 @@ namespace GCCInternalsTools
 	   {
 		   GIMPLE_PASS,
 		   "BuildAST",
-		   NULL,
+		   (unsigned int)NULL,
 		   &BuildASTPassGate,
 		   &BuildASTCallback,
 		   NULL,
@@ -64,7 +84,7 @@ namespace GCCInternalsTools
 	   {
 		   GIMPLE_PASS,
 		   "DeclareGlobals",
-		   NULL,
+		   (unsigned int)NULL,
 		   NULL,
 		   &GlobalDeclarationCallback,
 		   NULL,
@@ -81,8 +101,14 @@ namespace GCCInternalsTools
 
 
 
+	attribute_spec			*g_attributeSpecs;
+
+
+
+
 	PluginManagerImpl::PluginManagerImpl()
-		: m_globalsGenerated( false ),
+		: m_ASTBuilt( false ),
+		  m_globalsGenerated( false ),
 		  m_userCallbacks( NULL )
 	{}
 
@@ -96,6 +122,8 @@ namespace GCCInternalsTools
 	void		PluginManagerImpl::Initialize( const char* 					pluginName,
 			   	   	   	   	   	   	  	  	   CPPModel::CallbackIfx*		callbacks )
 	{
+		m_pluginName = pluginName;
+
 		m_userCallbacks = callbacks;
 
 		RegisterCallbacks( pluginName );
@@ -105,6 +133,10 @@ namespace GCCInternalsTools
 
 	void		PluginManagerImpl::RegisterCallbacks( const char* 		pluginName )
 	{
+		register_callback( pluginName, PLUGIN_ATTRIBUTES, &RegisterAttributesGCCCallback, NULL );
+
+
+
 		struct register_pass_info buildASTPassInfo;
 
 		buildASTPassInfo.pass = const_cast<opt_pass*>( &g_BuildASTPass.pass );
@@ -124,6 +156,77 @@ namespace GCCInternalsTools
 		globalDeclarationPassInfo.pos_op = PASS_POS_INSERT_BEFORE;
 
 		register_callback ( pluginName, PLUGIN_PASS_MANAGER_SETUP, NULL, &globalDeclarationPassInfo );
+	}
+
+
+
+
+
+	void		PluginManagerImpl::RegisterAttributes( void )
+	{
+		std::unique_ptr<CPPModel::AttributeSpecList>		attributes = std::move( m_userCallbacks->RegisterAttributes() );
+
+		if( attributes->empty() )
+		{
+			g_attributeSpecs = NULL;
+			return;
+		}
+
+		g_attributeSpecs = new attribute_spec[ attributes->size() + 1 ];
+
+		int 	i = 0;
+
+		for( CPPModel::AttributeSpec currentSpec : *attributes )
+		{
+			g_attributeSpecs[i].name = currentSpec.name().c_str();
+			g_attributeSpecs[i].min_length = currentSpec.minNumArguments();
+			g_attributeSpecs[i].max_length = currentSpec.maxNumArguments();
+
+			switch( currentSpec.elementRequired() )
+			{
+				case CPPModel::AttributeSpec::RequiredElement::DECL_REQUIRED :
+				{
+					g_attributeSpecs[i].decl_required = true;
+					g_attributeSpecs[i].type_required = false;
+					g_attributeSpecs[i].function_type_required = false;
+				}
+				break;
+
+				case CPPModel::AttributeSpec::RequiredElement::TYPE_REQUIRED :
+				{
+					g_attributeSpecs[i].decl_required = false;
+					g_attributeSpecs[i].type_required = true;
+					g_attributeSpecs[i].function_type_required = false;
+				}
+				break;
+
+				case CPPModel::AttributeSpec::RequiredElement::FUNCTION_TYPE_REQUIRED :
+				{
+					g_attributeSpecs[i].decl_required = false;
+					g_attributeSpecs[i].type_required = false;
+					g_attributeSpecs[i].function_type_required = true;
+				}
+				break;
+
+				case CPPModel::AttributeSpec::RequiredElement::ANY :
+				{
+					g_attributeSpecs[i].decl_required = false;
+					g_attributeSpecs[i].type_required = false;
+					g_attributeSpecs[i].function_type_required = false;
+				}
+				break;
+			}
+
+			g_attributeSpecs[i].affects_type_identity = currentSpec.affectsTypeIdentity();
+
+			g_attributeSpecs[i].handler = HandleAttribute;
+
+			i++;
+		}
+
+		g_attributeSpecs[i].name = NULL;
+
+		register_scoped_attributes( g_attributeSpecs, m_pluginName.c_str() );
 	}
 
 

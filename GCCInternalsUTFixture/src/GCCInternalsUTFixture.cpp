@@ -60,38 +60,38 @@ std::list<EntryPointRecord>		entryPointsToCall;
 
 
 
-static tree HandleAttribute( tree*		node,
-							 tree		attrName,
-							 tree		attrArguments,
-							 int		flags,
-							 bool*		no_add_attrs )
-{
+//static tree HandleAttribute( tree*		node,
+//							 tree		attrName,
+//							 tree		attrArguments,
+//							 int		flags,
+//							 bool*		no_add_attrs )
+//{
 	//	Just return a null tree now.
 
-	return( NULL_TREE );
-}
+//	return( NULL_TREE );
+//}
 
 
-static struct attribute_spec g_Attribute1 =
-{
-	"attribute1", 0, -1, false, false, false, HandleAttribute, false
-};
+//static struct attribute_spec g_Attribute1 =
+//{
+//	"attribute1", 0, -1, false, false, false, HandleAttribute, false
+//};
 
 
-static struct attribute_spec g_Attribute2 =
-{
-	"attribute2", 0, -1, false, false, false, HandleAttribute, false
-};
+//static struct attribute_spec g_Attribute2 =
+//{
+//	"attribute2", 0, -1, false, false, false, HandleAttribute, false
+//};
 
 
-attribute_spec scopedAttributes[] = { g_Attribute1, g_Attribute2, NULL };
+//attribute_spec scopedAttributes[] = { g_Attribute1, g_Attribute2, NULL };
 
 
-static void RegisterAttributes( void*		eventData,
-						 	    void*		userData )
-{
-	register_scoped_attributes( scopedAttributes, "unit_test" );
-}
+//static void RegisterAttributes( void*		eventData,
+//						 	    void*		userData )
+//{
+//	register_scoped_attributes( scopedAttributes, "unit_test" );
+//}
 
 
 //std::unique_ptr<GCCInternalsTools::ASTDictionaryImpl>	astDict( new GCCInternalsTools::ASTDictionaryImpl() );
@@ -509,6 +509,15 @@ public :
 	{}
 
 
+	std::unique_ptr<CPPModel::AttributeSpecList>		RegisterAttributes()
+	{
+		std::unique_ptr<CPPModel::AttributeSpecList>		attributesToRegister( new CPPModel::AttributeSpecList() );
+
+		attributesToRegister->push_back( CPPModel::AttributeSpec( "attribute1", 0, -1, CPPModel::AttributeSpec::RequiredElement::ANY, false ) );
+
+		return( attributesToRegister );
+	}
+
 	void		ASTReady()
 	{
 		for( EntryPointRecord currentEntryPoint : entryPointsToCall )
@@ -654,7 +663,7 @@ int plugin_init( plugin_name_args*		info,
 
 
 
-	register_callback( info->base_name, PLUGIN_ATTRIBUTES, &RegisterAttributes, NULL );
+//	register_callback( info->base_name, PLUGIN_ATTRIBUTES, &RegisterAttributes, NULL );
 
 //	register_callback( info->base_name, PLUGIN_FINISH_DECL, &DeclFinishedGateCallback, NULL );
 
@@ -666,7 +675,7 @@ int plugin_init( plugin_name_args*		info,
 
 	register_callback( info->base_name, PLUGIN_FINISH_UNIT, &GateCallback, NULL );
 
-	std::cerr << "Plugin Initialized, attribute registered" << std::endl;
+	std::cerr << "Plugin Initialized" << std::endl;
 
 	return( 0 );
 }
